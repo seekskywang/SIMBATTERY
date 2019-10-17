@@ -1,0 +1,173 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.25.3.0
+Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 Microsoft, Microsoft, LIC=S5ITG-V5G2Q-BXVUY-I5T0J-4HUEL-MI8C5
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.25.2.0
+Toolchain Path:  D:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 6 (build 750)
+Assembler:       Armasm.exe V5.06 update 6 (build 750)
+Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
+Library Manager: ArmAr.exe V5.06 update 6 (build 750)
+Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
+CPU DLL:         SARMCM3.DLL V5.25.2.0
+Dialog DLL:      DARMP1.DLL V1.27.0.0
+Target DLL:      Segger\JL2CM3.dll V2.99.29.0
+Dialog DLL:      TARMP1.DLL V1.26.0.0
+ 
+<h2>Project:</h2>
+F:\JK2817N\Project\project.uvprojx
+Project File Date:  01/12/2019
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Open1788'
+compiling EX_SDRAM.c...
+compiling main.c...
+..\User\main.c(118): warning:  #177-D: variable "buff"  was declared but never referenced
+        char buff[10];
+..\User\main.c: 1 warning, 0 errors
+compiling timer.c...
+compiling lpc177x_8x_lcd.c...
+..\User\hzk.h(1100): warning:  #375-D: declaration requires a typedef name
+  };
+..\User\LCD\lpc177x_8x_lcd.c(52): warning:  #177-D: variable "pDst"  was declared but never referenced
+        unsigned long *pDst = (unsigned long *)LCD_VRAM_BASE_ADDR;
+..\User\LCD\lpc177x_8x_lcd.c(526): warning:  #177-D: variable "i"  was declared but never referenced
+      uint16_t i,j;
+..\User\LCD\lpc177x_8x_lcd.c(775): warning:  #177-D: variable "usIndex"  was declared but never referenced
+        uint16_t usIndex=0;
+..\User\LCD\lpc177x_8x_lcd.c: 4 warnings, 0 errors
+compiling logo.c...
+compiling TouchPanel.c...
+..\User\TouchPanel\TouchPanel.c(373): warning:  #223-D: function "LCD_SetPoint" declared implicitly
+    LCD_SetPoint(Xpos,Ypos,Blue);     /* Center point */
+..\User\TouchPanel\TouchPanel.c: 1 warning, 0 errors
+compiling use_disp.c...
+..\User\UseDisp\use_disp.c(5029): warning:  #177-D: variable "i"  was declared but never referenced
+        uint32_t i;
+..\User\UseDisp\use_disp.c(7182): warning:  #177-D: variable "i"  was declared but never referenced
+        uint8_t i=3;            
+..\User\UseDisp\use_disp.c(7234): warning:  #177-D: variable "i"  was declared but never referenced
+        uint8_t i=5;
+..\User\UseDisp\use_disp.c: 3 warnings, 0 errors
+compiling test.c...
+..\User\Test\test.c(266): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(274): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(285): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(294): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(309): warning:  #175-D: subscript out of range
+          ComBuf3.send.buf[7+12]=0XBF;
+..\User\Test\test.c(380): warning:  #223-D: function "GPIO_ClearInt" declared implicitly
+      GPIO_ClearInt(0, 1<<19);
+..\User\Test\test.c(317): warning:  #550-D: variable "Main_Second"  was set but never used
+        Main_Second_TypeDed Main_Second;//主参数和幅参赛的序号
+..\User\Test\test.c(320): warning:  #177-D: variable "i"  was declared but never referenced
+      uint8_t page=1,i;
+..\User\Test\test.c(3228): warning:  #177-D: variable "Set_Time"  was declared but never referenced
+      RTC_TIME_Type Set_Time;
+..\User\Test\test.c(4160): warning:  #223-D: function "UARTPuts" declared implicitly
+      UARTPuts( LPC_UART0, debugbuff);//发送校正命令
+..\User\Test\test.c(4143): warning:  #177-D: variable "sendnum"  was declared but never referenced
+      uint8_t setupflag=0,sendnum;
+..\User\Test\test.c(4476): warning:  #177-D: variable "str"  was declared but never referenced
+        u8 str[(FRAME_LEN_MAX-FRAME_LEN_MIN)+1];//收发数据缓冲
+..\User\Test\test.c(5756): warning:  #550-D: variable "j"  was set but never used
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5756): warning:  #177-D: variable "k"  was declared but never referenced
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5941): warning:  #550-D: variable "bytes_written"  was set but never used
+      uint32_t  bytes_written;
+..\User\Test\test.c(5975): warning:  #223-D: function "GPIO_ClearInt" declared implicitly
+        GPIO_ClearInt(0, 1<<19);        
+..\User\Test\test.c(6461): warning:  #550-D: variable "password_flag"  was set but never used
+      char password_flag=0;
+..\User\Test\test.c: 17 warnings, 0 errors
+compiling GlobalValue.c...
+compiling lpc177x_8x_rtc.c...
+compiling key.c...
+compiling rtc.c...
+compiling system_LPC177x_8x.c...
+compiling core_cm3.c...
+compiling lpc177x_8x_gpio.c...
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(346): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(348): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO2IntStatR)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(350): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO0IntStatF)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(352): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO2IntStatF)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(706): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(714): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(750): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(757): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(785): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(813): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(836): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c: 11 warnings, 0 errors
+compiling lpc177x_8x_systick.c...
+compiling lpc177x_8x_clkpwr.c...
+compiling lpc177x_8x_ssp.c...
+compiling lpc177x_8x_uart.c...
+compiling debug_frmwrk.c...
+..\Libraries\Drivers\source\debug_frmwrk.c(470): warning:  #223-D: function "vsprintf" declared implicitly
+      vsprintf((char *)buffer, (char const *)format, vArgs);
+..\Libraries\Drivers\source\debug_frmwrk.c(468): warning:  #177-D: variable "tmp"  was declared but never referenced
+              char      *tmp;
+..\Libraries\Drivers\source\debug_frmwrk.c: 2 warnings, 0 errors
+compiling lpc177x_8x_pinsel.c...
+compiling lpc177x_8x_eeprom.c...
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(109): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint8_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(119): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint16_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(129): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint32_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(198): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint8_t *)data)++) = (uint8_t)(LPC_EEPROM -> RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(208): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint16_t *)data)++) = (uint16_t)(LPC_EEPROM -> RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(217): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint32_t *)data)++) = (uint32_t)(LPC_EEPROM ->RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c: 6 warnings, 0 errors
+compiling usbhost_fat.c...
+compiling usbhost_lpc17xx.c...
+compiling usbhost_ms.c...
+linking...
+Program Size: Code=81956 RO-data=425668 RW-data=308 ZI-data=18204  
+FromELF: creating hex file...
+".\Output\project.axf" - 0 Error(s), 45 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.LPC1700_DFP.2.5.0.pack
+                Keil.LPC1700_DFP.2.5.0
+                NXP LPC1700 Series Device Support, Drivers and Examples for MCB1700 and LPC1788-32
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Open1788
+  D:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.5.0\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:09
+</pre>
+</body>
+</html>
