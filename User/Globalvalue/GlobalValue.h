@@ -104,7 +104,7 @@
 #define RES_ADDR_X 			(1)
 #define VOL_ADDR_X 			(12)
 
-#define DISP_UNIT_XPOS	380-8
+#define DISP_UNIT_XPOS	370-8-30
 #define DISP_UNIT_YPOS	92
 //==========================================================
 //标题长度
@@ -117,6 +117,11 @@
 #endif
 extern uint8_t Comp_flag;
 extern uint8_t Debug_over;
+extern uint8_t mainswitch;
+extern uint8_t Irange;
+extern uint8_t overflag;
+extern uint8_t busyflag;
+extern uint8_t ptflag;
 //数值框属性定义
 //typedef struct
 //{
@@ -255,6 +260,7 @@ typedef struct
 	Sort_TypeDef Secondvalue;
 	Sort_TypeDef Vmvalue;
 	Sort_TypeDef Imvalue;
+	Sort_TypeDef Pvalue;
 	uint8_t Rangedisp;
 	uint8_t Main_valuebuff[10];
 	uint8_t Secondvaluebuff[10];
@@ -377,6 +383,14 @@ typedef struct
 	uint8_t ypos;
 
 }Limit_ScanValue_Typedef;
+
+typedef struct
+{
+	uint16_t setvoltage;
+	uint16_t setcurrent;
+
+}Set_Bat_Value_Typedef;
+
 typedef struct
 {
 	
@@ -386,8 +400,31 @@ typedef struct
 	Sys_Setup_Typedef	Sys_Setup;
 	Main_Func_TypeDef	Main_Func;
 	Limit_ScanValue_Typedef Limit_ScanValue;
+	Set_Bat_Value_Typedef Set_Bat;
     
 }SaveData_Typedef;
+
+typedef struct 
+{
+	uint32_t Num;
+	uint32_t Dot;
+	uint32_t Unit;
+}SetNum_TypeDef;
+
+typedef struct
+{	
+	Sort_TypeDef Voltage;//电压
+	Sort_TypeDef ChargePC;//充电保护电流
+	Sort_TypeDef LoadPC;//放电保护电流
+    Sort_TypeDef QuickV[6];//快捷电压值
+	Sort_TypeDef ChargePT;//充电保护时间
+	Sort_TypeDef LoadPT;//放电保护时间
+	uint8_t qvflag;//快捷电压选项
+	Sort_TypeDef CALV[4];//测量电压校准
+	Sort_TypeDef CTRLV[2];//控制电压校准
+	Sort_TypeDef CALI[6];//测量电流校准
+}SaveSet;
+extern SaveSet SaveSIM;
 extern SaveData_Typedef SaveData;
 typedef struct
 {
@@ -517,6 +554,13 @@ extern unsigned long Count_buff[12];
 extern uint8_t Uart_Send_Flag;
 extern uint8_t Usb_Open_flag;
 extern uint8_t debug_over;
+
+//参数
+extern int32_t V_CS,I_CS;
+extern uint8_t Mode, LM_S;
+extern uint16_t I_ADC,V_ADC;
+extern uint8_t LOW_I,H_L,SWITCH_A; 
+extern float LVL_DA;
 //extern  uint16_t Voltage;//测试电压
 //extern  uint16_t Current;//测试电流
 //extern  uint16_t Resistance,xxxx;//测试电阻
@@ -614,6 +658,6 @@ void ReadSaveData(void);//读取保存参数
 
 void Check_Calibrate_Limit(void);//校准值检查
 void Hex_Format(uint32_t dat , uint8_t Dot , uint8_t len , uint8_t dispzero);
-
+extern uint8_t USART_RX_BUF[200];
 
 #endif

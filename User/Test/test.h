@@ -2,6 +2,20 @@
 #define __test_h
 #include "stdint.h"
 #include  "Globalvalue/globalvalue.h"
+
+#define  CmdNumb         16
+#define  CmdLen          12 
+
+#define ChrStartR      0x3E
+#define ChrStartS      0x3C
+
+#define ChrEndR    	   0x0D
+#define ChrEndS    	   0x0A
+
+#define PARA_ERR       1
+#define CMD_ERR        2
+#define REM_ERR        3
+
 extern const uint8_t Disp_Main_Ord[][3];
 extern uint8_t CorrectionflagC,CorrectionflagR,Correc_successflag;
 
@@ -26,14 +40,17 @@ void Range_CountProcess(void);
 void ItemProcess(void);
 //用户校正
 void Use_DebugProcess(void) ;
-unsigned char Uart_Process(void);
+uint16_t Uart_Process(uint8_t len,char* buf);
 void Fac_DebugProcess(void);
 void Use_SysSetProcess(void);//系统设置
 void Use_LimitSetProcess(void);//极限列表设置
 void Use_ITEMSetProcess(void);//列表扫描设置
 int8_t PackStandFrame(int8_t * framebuf, int8_t * datbuf, int8_t len);
 Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Disp_Coordinates);
+Sort_TypeDef Disp_NumKeyboard_time(Disp_Coordinates_Typedef *Disp_Coordinates);
 Sort_TypeDef Disp_Set_Num(Disp_Coordinates_Typedef *Coordinates);
+Sort_TypeDef Disp_Set_C(Disp_Coordinates_Typedef *Coordinates);
+Sort_TypeDef Disp_Set_T(Disp_Coordinates_Typedef *Coordinates);
 uint8_t Freq_Set_Num(Disp_Coordinates_Typedef *Coordinates);
 uint8_t Avg_Set_Num(Disp_Coordinates_Typedef *Coordinates);//平均数设置
 Sort_TypeDef Disp_Set_InputNum(Disp_Coordinates_Typedef *Coordinates);

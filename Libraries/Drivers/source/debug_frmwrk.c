@@ -46,7 +46,8 @@ uint8_t (*_db_get_char)(LPC_UART_TypeDef *UARTx);
 uint8_t (*_db_get_val)(LPC_UART_TypeDef *UARTx, uint8_t option, uint8_t numCh, uint32_t * val);
 Com_TypeDef ComBuf;//串口收发缓冲
 Com_TypeDef ComBuf3;
-
+char recbuf[200];
+uint16_t USART_RX_STA=0;       //接收状态标记
 /*********************************************************************//**
  * @brief		Puts a character to UART port
  * @param[in]	UARTx	Pointer to UART peripheral
@@ -240,11 +241,11 @@ void UARTPuts(LPC_UART_TypeDef *UARTx, const void *str)
 {
 	uint8_t *s = (uint8_t *) str;
 
-	while (*s!=0xBF)
+	while (*s!=0x0a)
 	{
 		UARTPutChar(UARTx, *s++);
 	}
-	UARTPutChar(UARTx, 0xbf);
+	UARTPutChar(UARTx, 0x0a);
 	
 }
 
@@ -533,8 +534,8 @@ void debug_frmwrk_init(void)
 	 */
 	UART_ConfigStructInit(&UARTConfigStruct);
 	// Re-configure baudrate to 115200bps
-//	UARTConfigStruct.Baud_rate = 115200;
-	UARTConfigStruct.Baud_rate = 9600;
+	UARTConfigStruct.Baud_rate = 115200;
+//	UARTConfigStruct.Baud_rate = 9600;
 	// Initialize DEBUG_UART_PORT peripheral with given to corresponding parameter
 	UART_Init(DEBUG_UART_PORT, &UARTConfigStruct);//|UART_INTCFG_THRE
 	UART_IntConfig(LPC_UART0,UART_INTCFG_RBR,ENABLE);
@@ -590,58 +591,78 @@ void Uart0RecTimeOut(void)
  * @return 		None
  **********************************************************************/
 void UART0_IRQHandler(void)//UART0_IRQn
-//void UART0_IRQn(void)
 {
-//	 USART_ClearFlag(DEBUG_UART_PORT,USART_FLAG_TC);
-	 uint8_t Status,dat;
-//	 uint8_t *rxbuf;
+	 uint8_t Status,Res;
 	 Status=UART_GetLineStatus(DEBUG_UART_PORT);//
-//	 UART_SendByte(DEBUG_UART_PORT,Status);
+
+	Res=UART_ReceiveByte(DEBUG_UART_PORT);
 	
-	
-//	UART_Receive(DEBUG_UART_PORT, (uint8_t *)ComBuf.rec.buf,
-//								6, BLOCKING);
-//	 _printf("Status=0x%x\r\n",Status);
-//	_printf("UART_ReceiveByte=%s\r\n",rxbuf);
-	Status=UART_ReceiveByte(DEBUG_UART_PORT);
-//	UART_SendByte(DEBUG_UART_PORT,0x99);
-//	UART_SendByte(DEBUG_UART_PORT,Status);
-//	_printf("UART_ReceiveByte=%c\r\n",Status);
-	if (!ComBuf.rec.end)//接收没结束
+	if((USART_RX_STA&0x8000)==0)//接收未完成
+	{
+		if(USART_RX_STA&0x4000)//接收到了0x0d
 		{
-			SetRecTimeOut(REC_TIME_OUT);//设置接收超时周期
-			dat=Status;
-			if (dat==(uint8_t)(UART_REC_BEGIN))//帧头
+			if(Res!=0x0a)
+				USART_RX_STA=0;//接收错误,重新开始
+			else 
+		{
+	//		SerialRemoteHandleL(USART_RX_STA,USART_RX_BUF);
+			USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;			//将接收的数据 存入数组中
+			USART_RX_STA++;	
+			USART_RX_STA|=0x8000;	//接收完成了 			  //接收到回车的后字节  置位状态寄存器 
+		}
+		}
+		else //还没收到0X0D
+		{	
+			if(Res==0x0d)
 			{
-				if(ComBuf.rec.ptr!=0) //首字节
-				{
-					ComBuf.rec.ptr=0;//重新接收 
-				}
-				else
-				{
-					ComBuf.rec.buf[ComBuf.rec.ptr++]=dat;
-				}
-			}
-			else if (dat==(uint8_t)(UART_REC_END))//帧尾
-			{
-				ComBuf.rec.buf[ComBuf.rec.ptr++]=dat;
-				ComBuf.rec.end=TRUE;//接收结束
-				ComBuf.rec.len=ComBuf.rec.ptr;//存接收数据长度
-				ComBuf.rec.ptr=0;//指针清零重新开始新的一帧接收
-				ComBuf.rec.TimeOut=0;//接收超时清零
+				USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;			//将接收的数据 存入数组中
+				USART_RX_STA++;	
+				USART_RX_STA|=0x4000;					 //接收到回车的前一字节  置位状态寄存器
 			}
 			else
-			{
-				if (ComBuf.rec.ptr>=REC_LEN_MAX)//最大接收帧长度
 				{
-					ComBuf.rec.ptr=0;//重新接收
-				}
-				else
-				{
-					ComBuf.rec.buf[ComBuf.rec.ptr++]=dat;
-				}
+				USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;			//将接收的数据 存入数组中
+					USART_RX_STA++;									//长度+1 为下一次做准备
+				if(USART_RX_STA>(USART_REC_LEN-1))
+					USART_RX_STA=0;//接收数据错误,重新开始接收	  
+				}		 
 			}
-		}
+	}
+//	if (!ComBuf.rec.end)//接收没结束
+//		{
+//			SetRecTimeOut(REC_TIME_OUT);//设置接收超时周期
+//			dat=Status;
+//			if (dat==0x3e)//帧头
+//			{
+//				if(ComBuf.rec.ptr!=0) //首字节
+//				{
+//					ComBuf.rec.ptr=0;//重新接收 
+//				}
+//				else
+//				{
+//					recbuf[ComBuf.rec.ptr++]=dat;
+//				}
+//			}
+//			else if (dat==0x0a)//帧尾
+//			{
+//				ComBuf.rec.buf[ComBuf.rec.ptr++]=dat;
+//				ComBuf.rec.end=TRUE;//接收结束
+//				ComBuf.rec.len=ComBuf.rec.ptr;//存接收数据长度
+//				ComBuf.rec.ptr=0;//指针清零重新开始新的一帧接收
+//				ComBuf.rec.TimeOut=0;//接收超时清零
+//			}
+//			else
+//			{
+//				if (ComBuf.rec.ptr>=REC_LEN_MAX)//最大接收帧长度
+//				{
+//					ComBuf.rec.ptr=0;//重新接收
+//				}
+//				else
+//				{
+//					ComBuf.rec.buf[ComBuf.rec.ptr++]=dat;
+//				}
+//			}
+//		}
 
 }
 

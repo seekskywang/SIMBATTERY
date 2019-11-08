@@ -17,6 +17,7 @@
 //全局变量
 
 SaveData_Typedef SaveData;
+SaveSet SaveSIM;
 Saveeeprom_Typedef	Saveeeprom;
 Test_Dispvalue_TypeDef Test_Dispvalue; 
 Send_Mainord_Typedef Send_Mainord;
@@ -27,6 +28,21 @@ uint8_t Debug_over;
 uint8_t Comp_flag;
 uint8_t debug_over;
 uint8_t Rtc_intflag;
+uint8_t mainswitch;
+uint8_t Irange = 0;
+uint8_t overflag = 0;
+int32_t V_CS,I_CS;
+uint8_t Mode;
+uint8_t LM_S;
+uint8_t busyflag;
+uint8_t ptflag;
+uint16_t I_ADC,V_ADC;
+
+
+uint8_t LOW_I,H_L,SWITCH_A; 
+
+float LVL_DA;
+
 //uint32_t MenuIndex;//待机菜单项
 //uint32_t MenuSelect;//菜单选择项
 //

@@ -39,7 +39,7 @@
 #define	USED_UART_DEBUG_PORT3   3
 #define USED_UART_PORT3			(LPC_UART_TypeDef *)LPC_UART3
 
-
+#define USART_REC_LEN  			200  	//定义最大接收字节数 200
 
 #if (USED_UART_DEBUG_PORT == 0)
 #define DEBUG_UART_PORT	(LPC_UART_TypeDef *)LPC_UART0
@@ -100,7 +100,7 @@ typedef struct
 //串口接收结构
 typedef struct
 {
-	int8_t end;//接收结束标志
+	int16_t end;//接收结束标志
 	int8_t ptr;	//当前接收指针
 	int8_t len;//接收数据长度
 	int8_t buf[REC_LEN_MAX];//数据接收缓冲

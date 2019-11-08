@@ -44,7 +44,7 @@ void Disp_Range_Count_Item(void);//档计数显示界面
 void Disp_List_Count_Item(void);//列表显示子函数
 void Disp_Test_Set_Item(void);  //测量设置界面显示菜单的项
 void Disp_UserCheck_Item(void);	//用户校正
-void Disp_FacrCheck_Item(void);
+void Disp_FacrCheck_Item(Button_Page_Typedef* Button_Page);
 void Disp_LimitList_Item(void);//极限列表设置
 void Disp_ListScan_Item(void);
 void Disp_Sys_Item(void);//系统设置
@@ -53,6 +53,7 @@ void Disp_Serve_correctionR (void);//校正电阻显示
 void Disp_Fac_Debug_C(Button_Page_Typedef* Button_Page);//电容校正界面
 void Disp_Fac_Debug_R(Button_Page_Typedef* Button_Page);//电阻校正界面
 void Disp_Correction_SetR(Button_Page_Typedef* Button_Page);//校正电阻设置
+void Disp_FacCal(Button_Page_Typedef* Button_Page);
 void Disp_Fastbutton(void);
 void Disp_Button_value1(uint32_t value);
 void Disp_Button_TestSet(uint32_t value);
@@ -62,9 +63,13 @@ void Disp_RangeDispValue(Button_Page_Typedef *Button_Page);//档计数显示ON 或 OFF
 void Disp_Debug_value(Button_Page_Typedef* Button_Page); //用户校正中的按键值设置
 void Disp_Sys_value(Button_Page_Typedef* Button_Page);//系统设置中的设置项
 void Disp_button_Num_time(void);
+void Disp_button_Num_V(void);
+void Disp_button_Num_A(void);
+void Disp_button_Num_ms(void);
 void Disp_button_Num_Freq(void);
 Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time);
 Sort_TypeDef Freq_Set_Cov(Sort_TypeDef *Freq);
+Sort_TypeDef Time_Set_Cot(Sort_TypeDef *Time);
 void Disp_button_Num_Avg(void);
 void Disp_button_Num_Input(uint8_t page);//按键数字输入n,u,p,m,next,
 Sort_TypeDef Input_Set_Cov(Sort_TypeDef *Input_Ref);
@@ -97,7 +102,7 @@ void Disp_Y_r(void);
 void Disp_R_X(void);
 void Disp_Rs_Q(void);
 void Disp_Rp_Q(void);
-void Disp_Testvalue(void);//显示测试数据
+void Disp_Testvalue(uint8_t siwtch);//显示测试数据
 void Disp_Big_MainUnit(uint8_t unit,uint8_t unit1);
 void Disp_Big_SecondUnit(uint8_t unit,uint8_t unit1);
 void Send_Freq(Send_Ord_Typedef *ord);
@@ -114,7 +119,8 @@ void Disp_Scan_Compvalue(uint8_t set);
 void Disp_Scan_SetCompvalue(Button_Page_Typedef* Button_Page);
 void Disp_Button_ItemScanSet(uint32_t value);
 void Disp_Button_ItemScan_no(void);
-void Send_Request(void);
+void Send_Request(uint8_t x,uint8_t req);
+uint16_t SerialRemoteHandleL(uint8_t len,char* buf);
 void Disp_Set_Unit_12(uint32_t unit,uint32_t x,uint32_t y);
 void Disp_Set_Unit_16(uint32_t unit,uint32_t x,uint32_t y);
 Sort_TypeDef Input_Set_CovPre(Sort_TypeDef *Input_Ref);
@@ -145,5 +151,6 @@ void Short_Clear(void);			//短路清零
 
 void Send_Uart3(uint8_t *buff);
 void Disp_Usbflag(uint8_t flag);
+void Disp_switch(void);
 void Disp_Range_Num(uint8_t num);
 #endif

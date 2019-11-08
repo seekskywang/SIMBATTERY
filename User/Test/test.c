@@ -21,10 +21,12 @@ const char *PASSWORD="12345789";
 uint8_t  Avg_Test_Main[25][6];
 uint8_t  Avg_Test_Second[25][6];
 uint8_t  Avg_Count=0;
+uint8_t USART_RX_BUF[200];
 u8 primcomp,scedcomp;
 const uint8_t Disp_Unit1[]={'p','n','u','m',' ','k','M'};
 const uint8_t Uart_Ordel[]={0x60,0x70,0x71,0x80,0x90,0xa0,0xb0,0xc0,0xe0};
 const uint8_t READDATA[7]={0xAB,0x01,0x06,0x03,0x08,0xbf,'\0'};
+extern uint16_t USART_RX_STA;
 //const uint8_t Disp_Main_Ord[][3]={
 //	{1,1,0},
 //	{1,1,1},
@@ -106,15 +108,15 @@ void Power_Process(void)
 	HW_keyInt();
 	GPIO_Led_Configuration();
 	Turnon_backlight();
-	Beep_on();
+//	Beep_on();
 	HW_Sendvalueto164(0);
 	Bais_LedOff();
 	Lock_LedOff();
 	Pass_Led();
 	Power_Off_led();
-	#ifdef DISP_JK
+//	#ifdef DISP_JK
 	lcd_image((uint8_t *)gImage_open);
-	#endif
+//	#endif
 	InitGlobalValue();//初始化全局变量
 	init_timer(0, 20);//定时器初始化
 	
@@ -122,14 +124,22 @@ void Power_Process(void)
 	
 	ReadSavedata();
 	Set_Compbcd_float();
-
 	i=0;//显示延时
 //Delay(2000);
 	while(GetSystemStatus()==SYS_STATUS_POWER)
 	{    
         i++;
+		
         Delay(10);
-        if(i>10)
+		if(i == 10)
+		{
+			Send_Request(1,0);
+		}
+//		if(i==50)
+//		{
+//			Send_Request(10,1);
+//		}
+        if(i>100)
             SetSystemStatus(SYS_STATUS_TEST);//待测状态
          key=HW_KeyScsn();
 		if(key==0xff)
@@ -308,9 +318,46 @@ void Send_T0_USB(void)
 		*(UserBuffer+29)='\n';
         ComBuf3.send.buf[7+12]=0XBF;
 }	
+
+////切换电流高低档
+//void Iswitch(u8 sw)
+//{
+//	Irange = sw;
+//	Send_Request(4,Irange);
+//}
+
+
+////充放电保护
+//void OverProtect(void)
+//{
+//	if(Irange == 1)
+//	{
+//		if(Test_Dispvalue.Imvalue.sign == 1)
+//		{
+//			if(Test_Dispvalue.Imvalue.Num >= SaveSIM.ChargePC.Num)
+//			{
+//				Send_Request(16,1);
+//				mainswitch = 0;
+//				Irange = 0;
+//			}
+//		}else{
+//			if(Test_Dispvalue.Imvalue.Num >= SaveSIM.LoadPC.Num)
+//			{
+//				Send_Request(16,0);
+//				mainswitch = 0;
+//				Irange = 0;
+//			}
+//		}
+//	}
+//}
 //测试程序
 void Test_Process(void)
 {
+	int t=0;
+	uint16_t len;
+	uint8_t len1 =0;
+	Disp_Coordinates_Typedef  Coordinates;
+	
 	uint32_t  numBlks, blkSize;
 	uint8_t  inquiryResult[INQUIRY_LENGTH],rc;
 	Button_Page_Typedef Button_Page;
@@ -336,47 +383,7 @@ void Test_Process(void)
 	Main_Second.Second_falg=0;
         
 	Delay_Key();
-//    Uart.name=Disp_Main_Ord[SaveData.Main_Func.Param.test][0];
-//    Uart.Ordel=0x60;
-//    Send_Freq(&Uart);
-//        Delay(300);
-//    Uart.name=Disp_Main_Ord[SaveData.Main_Func.Param.test][1];
-//    Uart.Ordel=0x70;
-//    Send_Freq(&Uart);
-//        Delay(300);
-//    Uart.name=Disp_Main_Ord[SaveData.Main_Func.Param.test][2];
-//    Uart.Ordel=0x71;
-//    Send_Freq(&Uart);
-//        Delay(300);
-// //       Delay(1000);
-// //       Uart_Process();
-//    Uart.name=SaveData.Main_Func.Freq;
-//    Uart.Ordel=Uart_Ordel[3];
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    Uart.name=SaveData.Main_Func.Level;
-//    Uart.Ordel=Uart_Ordel[4];
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    Uart.name=SaveData.Main_Func.Speed;
-//    Uart.Ordel=0xa0;
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    Uart.name=SaveData.Main_Func.Range.Range;
-//    Uart.Ordel=0xb0;
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    Uart.name=SaveData.Main_Func.Avg;
-//    Uart.Ordel=0xc0;
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    Uart.name=SaveData.Main_Func.Rsou;
-//    Uart.Ordel=0xe0;
-//    Send_Freq(&Uart);
-//    Delay(300);
-//    
-        
-	Send_UartStart();//开始时的串口发送数据
+	Send_Request(10,1);
     GPIO_ClearInt(0, 1<<19);
     NVIC_EnableIRQ(GPIO_IRQn);
 	while(GetSystemStatus()==SYS_STATUS_TEST)
@@ -412,200 +419,38 @@ void Test_Process(void)
 		
 		}//
 		//_printf("CoreClock: %s\n",READDATA); 
-		
-		Uart_Process();
+		if(USART_RX_STA&0x8000)	   //判断是否接收完数据
+		{					   
+		//	len=USART_RX_STA&0x3f;//得到此次接收到的数据长度   前两位为状态位 所以要与去
+		//	printf("\r\n您发送的消息为:\r\n\r\n");
+//			DE485;
+			len1=USART_RX_STA&0x3f;
+			len = SerialRemoteHandleL(len1,USART_RX_BUF);
+			len1 =0;
+			memset(USART_RX_BUF,0,200);
+//			RE485;
+			
+		//	printf("\r\n\r\n");//插入换行
+			USART_RX_STA=0;			  //清零 虚拟寄存器		  为一下次采集做准备
+		}
+//		Uart_Process();
 //		Send_Uart3((uint8_t *)READDATA);
 		Colour.black=LCD_COLOR_TEST_MID;
 //	sprintf((char *)DispBuf,"%2d",SaveData.Main_Func.Param.test);
 //	WriteString_16(210, 4, DispBuf,  0);
-		switch(SaveData.Main_Func.Param.test)
-		{
-			case 0:
-				Disp_Cp_D();
-				
-//			WriteString_Big((uint8_t)Set_Unit[Test_Dispvalue.Mainvalue.Unit]);
-				//Disp_Big_MainUnit(Test_Dispvalue.Unit[0],0);
-				break;
-			case 1:
-				Disp_Cp_Q();
-				//Test_Dispvalue.Mainvalue.Unit=1;
-				//Disp_Big_MainUnit(Test_Dispvalue.Unit[0],0);
-				break;
-			case 2:
-				Disp_Cp_G();
-				//Test_Dispvalue.Mainvalue.Unit=1;
-				//Disp_Big_MainUnit(Test_Dispvalue.Unit[0],0);
-			
-				//Test_Dispvalue.Secondvalue.Dot=3;
-				//Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],3);
-				break;
-			case 3:
-				Disp_Cp_Rp();
-				//Test_Dispvalue.Mainvalue.Unit=1;
-				//Disp_Big_MainUnit(Test_Dispvalue.Unit[0],0);
-			
-				
-				break;
-			case 4:
-				//
-				Disp_Cs_D();
-				//Disp_Big_MainUnit(Test_Dispvalue.Unit[0],0);
-			
-				break;
-			case 5:
-				Disp_Cs_Q();
-				break;
-			case 6:
-				Disp_Cs_Rs();
-				break;
-			case 7:
-				Disp_Lp_Q();
-				break;
-			case 8:
-				Disp_Lp_Rp();
-				break;
-			case 9:
-				Disp_Lp_Rd();
-				break;
-			case 10:
-				Disp_Lp_D();
-				break;
-			case 11:
-//				Disp_Lp_G();
-			Disp_Ls_D();
-				break;
-			case 12:
-				Disp_Ls_Q();
-				break;
-			case 13:
-				Disp_Ls_Rs();
-				break;
-			case 14:
-				Disp_Ls_Rd();
-				break;
-			case 15:
-				Disp_Z_d();
-				break;
-			case 16:
-				Disp_Z_r();
-				break;
-			case 17:
-				Disp_Y_d();
-				break;
-			case 18:
-				Disp_Y_r();
-				break;
-			case 19:
-				Disp_R_X();
-				break;
-			case 20:
-				Disp_Rp_Q();
-				break;
-			case 21:
-				
-			Disp_Rs_Q();
-				break;
-			case 22:
-				Disp_G_B();
-				
-				break;
-			case 23:
-				break;
-			case 24:
-				break;
-			case 25:
-				break;
-			case 26:
-				break;
-			case 27:
-				break;
-			case 28:
-				break;
-			case 29:
-				break;
-			case 30:
-				break;
-			case 31:
-				break;
-			default:
-				break;
 		
-		
-		}
-		if(timer0_counter>0)//请求数据
+		if(mainswitch == 1 && timer0_counter>5 && Disp_Flag == 0 && busyflag == 0)//请求数据
 		{
-			switch(Uart_Send_Flag)
-			{
-				case 0:
-				//	Send_Request();
-					break;
-				case 1:
-//					if(uart_count++>5)
-//						Uart_Send_Flag=0;
-					Send_Main_Ord();
-//						SHORT_DELAY;
-//						while(i)	
-//						{
-//								i--;
-//							if(ComBuf.rec.buf[5]==0x00)
-//								i=0;
-//							else 
-//									Send_Main_Ord();
-//						SHORT_DELAY;
-//						}				
-				
-					Uart_Send_Flag=0;
-					break;
-				case 2:
-				Send_Freq(&Uart);
-//				SHORT_DELAY;
-//						i=3;
-//						while(i)	
-//						{
-//								i--;
-//							if(ComBuf.rec.buf[5]==0x00)
-//								i=0;
-//							else 
-//									Send_Freq(&Uart);
-//							SHORT_DELAY;
-//						
-//						}
-					
-				Uart_Send_Flag=0;
-					break;
-				default:
-					//Send_Request();
-					break;
 			
-			}
-			
-			
+			Send_Request(6,0);
 			timer0_counter=0;
 		
-		
 		}
-//		for(i=0;i<6;i++)
+		
+//		if(mainswitch == 1)
 //		{
-//			*(UserBuffer+i)=Test_Dispvalue.Main_valuebuff[i];
-//			*(UserBuffer+9+i)=Test_Dispvalue.Secondvaluebuff[i];
-//		
+//			OverProtect();
 //		}
-//		*(UserBuffer+8)='	';
-//		*(UserBuffer+6)=(uint8_t)Disp_Unit1[Test_Dispvalue.Unit[0]];
-//		*(UserBuffer+7)=Disp_Range_Main_Disp[DISP_UnitMain[SaveData.Main_Func.Param.test]][0];
-//		*(UserBuffer+8)=Disp_Range_Main_Disp[DISP_UnitMain[SaveData.Main_Func.Param.test]][1];
-//		
-//		*(UserBuffer+8+8)=(uint8_t)Disp_Unit1[Test_Dispvalue.Unit[1]];
-//		
-//		*(UserBuffer+8+9)=Disp_Range_Main_Disp[DISP_UnitSecond[SaveData.Main_Func.Param.test]][0];
-//		*(UserBuffer+8+10)=Disp_Range_Main_Disp[DISP_UnitSecond[SaveData.Main_Func.Param.test]][1];
-////		*(UserBuffer+8+8)=DISP_UnitMain[SaveData.Main_Func.Param.test];
-//		*(UserBuffer+19)='	';
-//		*(UserBuffer+20)='	';
-//		
-//		*(UserBuffer+21)='\r';
-//		*(UserBuffer+22)='\n';
-		//Test_Dispvalue.Mainvalue.Unit=1;timer0_counter
 		if(TrigFlag==0)
 		{
 			if(SaveData.Main_Func.Trig!=0)
@@ -618,7 +463,7 @@ void Test_Process(void)
 			Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],DISP_UnitSecond[SaveData.Main_Func.Param.test]);//副参数单位
 			
 			
-		
+			WriteString_16(462,186,"W",0);
             //分选比较打开
             if(SaveData.Limit_Tab.Comp)
             {
@@ -638,48 +483,20 @@ void Test_Process(void)
             
             
             }
-			Send_T0_USB();//往U盘里面写数据  
-             if(SaveData.Main_Func.buad)
-                 Send_Uart3((uint8_t *) ComBuf3.send.buf);
-                 
-            if(Saveeeprom.Sys_set.U_flag)
-                Write_Usbdata ( UserBuffer,29);
+//			Send_T0_USB();//往U盘里面写数据  
+//             if(SaveData.Main_Func.buad)
+//                 Send_Uart3((uint8_t *) ComBuf3.send.buf);
+//                 
+//            if(Saveeeprom.Sys_set.U_flag)
+//                Write_Usbdata ( UserBuffer,29);
 			
-			Disp_Testvalue();			//显示测量值
+			Disp_Testvalue(mainswitch);			//显示测量值
             if(TrigFlag==1)
                 TrigFlag=2;
         
         }
-        
-		//		_printf("CoreClock: %s\n","12345678"); 
-//		Disp_NumKeyboard_Set();
-//		Disp_Cp();
-		
-//		if(Save_Res.Sys_Setvalue.U_store)
-		{
-			if(Button_Page.index==0)
-			{
-				if(usb_oenflag==1)
-					{
-						//Write_Usbdata ( UserBuffer,27);
-						Disp_Usbflag(1);
-						
-					}
-					else
-						Disp_Usbflag(2);
-			}
-//			if(usb_oenflag==1)
-				{
-                    
-                    
-                    //Delay(300);
-					
-					//Disp_Usbflag(1);
-					
-				}
-		
-		}
-        Uart3_Process();
+		Disp_switch();
+//        Uart3_Process();
 //		else
 //			Disp_Usbflag(0);
 		
@@ -704,82 +521,14 @@ void Test_Process(void)
 							//if(Button_Page.page==0)
 								SetSystemStatus(SYS_STATUS_SETUPTEST);
 							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=0;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-								(uint8_t *)Cp_Button_Tip,&Button_Page);
-								Uart_Send_Flag=1;
-								//Send_Main_Ord();
-								//Button_Page.page=0;
-								//	SaveData.Main_Func.Param.page=0;
-									//SaveData.Main_Func.Param.test=0;
-									break;
-								case 1:
-									Button_Page.force=4;
-									
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Z_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-									//Send_Main_Ord();
-									//Button_Page.page=1;
-									
-									break;
-								case 2:
-									SaveData.Main_Func.Param.page=8;
-									//SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq>14)
-								SaveData.Main_Func.Freq-=10;
-							else
-								SaveData.Main_Func.Freq=4;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-					
-							break;
-						case 3:
-							if(SaveData.Main_Func.Level>0)
-								SaveData.Main_Func.Level--;
-							Uart.Ordel=Uart_Ordel[4];
-							Uart.name=SaveData.Main_Func.Level;
-							//Send_Freq(&Uart);
-							Uart_Send_Flag=2;
-							//SaveData.Main_Func.Level=0;
-							break;
-						
 						case 4:
-							SaveData.Main_Func.Range.Range=0;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
-							break;
-						case 5:
-							SaveData.Main_Func.Speed=0;
-							Uart.Ordel=Uart_Ordel[5];
-							Uart.name=SaveData.Main_Func.Speed;
-							Uart_Send_Flag=2;
-							break;
-//						case 6:
-//							
-//							if(SaveData.Main_Func.Bias>0)
-//								SaveData.Main_Func.Bias--;
-//							break;
-						
+							SaveSIM.qvflag = 0 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
+							break;					
 						default:
 							break;
-					
-					
+							
 					}
 					Savetoeeprom();
 				break;
@@ -788,77 +537,12 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							if(page==1)
-//							   SetSystemStatus(SYS_STATUS_SYSSET);
-								SetSystemStatus(SYS_STATUS_RANGE);
-							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=1;
-									
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Cs_Button_Tip,&Button_Page);
-									//	SaveData.Main_Func.Param.page=0;
-									
-									Uart_Send_Flag=1;
-								break;
-								case 1:
-									
-									Button_Page.force=5;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Y_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq>4)
-								SaveData.Main_Func.Freq--;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;								
-							break;
-						case 3:
-							if(SaveData.Main_Func.Level<2)
-								SaveData.Main_Func.Level++;
-							Uart.Ordel=Uart_Ordel[4];
-							Uart.name=SaveData.Main_Func.Level;
-							Uart_Send_Flag=2;
-								
-							break;
-						
+							SetSystemStatus(SYS_STATUS_SYSSET);
 						case 4:
-							SaveData.Main_Func.Range.Range=6;	//保持
-							//SaveData.Main_Func.Range.Auto=0;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
+							SaveSIM.qvflag = 1 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
 							break;
-						case 5:
-							SaveData.Main_Func.Speed=1;
-							Uart.Ordel=Uart_Ordel[5];
-							Uart.name=SaveData.Main_Func.Speed;
-							Uart_Send_Flag=2;
-							break;
-//						case 6:
-							
-						
-//							if(SaveData.Main_Func.Bias<5000)
-//								SaveData.Main_Func.Bias++;
-//							break;
-						
 						default:
 							break;
 					
@@ -871,67 +555,13 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							if(page==1)
-								SetSystemStatus(SYS_STATUS_RANGECOUNT);
-							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=2;									
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Lp_Button_Tip1,&Button_Page);
-								    Uart_Send_Flag=1;
-								//	Send_Main_Ord();
-								//Button_Page.page=0;
-									break;
-								case 1:
-									Button_Page.force=6;
-									
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)R_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
 							
 							break;
-						case 2:
-							if(SaveData.Main_Func.Freq<NUM_FREQ)
-								SaveData.Main_Func.Freq++;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-				
-							break;
-						case 3:
-							break;
-						
 						case 4://MAX_R_RANGE
-							//SaveData.Main_Func.Range.Auto=0;
-							if(SaveData.Main_Func.Range.Range>0)
-								SaveData.Main_Func.Range.Range--;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
+							SaveSIM.qvflag = 2 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
 							break;
-						case 5:
-							SaveData.Main_Func.Speed=2;
-							Uart.Ordel=Uart_Ordel[5];
-							Uart.name=SaveData.Main_Func.Speed;
-							Uart_Send_Flag=2;
-							break;
-//						case 6:
-//							
-//							break;
-						
 						default:
 							break;
 					
@@ -944,63 +574,16 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-//							if(page==1)
-//								SetSystemStatus(SYS_STATUS_ITEM);
-							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=3;
-									
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Ls_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 1:
-									SaveData.Main_Func.Param.test=22;
-									Uart_Send_Flag=1;
-//									SaveData.Main_Func.Param.page=1;
-//									SaveData.Main_Func.Param.test=7;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
 							
 							break;
-						case 2:
-							if(SaveData.Main_Func.Freq<NUM_FREQ-10)
-								SaveData.Main_Func.Freq+=10;
-							else
-								SaveData.Main_Func.Freq=NUM_FREQ;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-
-							break;
-						case 3:
-							break;
-
-					
 						case 4:
-							//SaveData.Main_Func.Range.Auto=0;
-							if(SaveData.Main_Func.Range.Range<MAX_R_RANGE)
-								SaveData.Main_Func.Range.Range++;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
+							if(Button_Page.page <1)
+							{
+								Button_Page.page ++;
+							}else{
+								Button_Page.page = 0;
+							}
 							break;
-						case 5:
-							break;
-//						case 6:
-//							break;
 						default:
 							break;
 					
@@ -1009,66 +592,13 @@ void Test_Process(void)
 					Savetoeeprom();
 				break;
 				case Key_F5:
-					
-					if(Button_Page.index==0)
+					if(mainswitch == 0)
 					{
-						if(usb_oenflag==0)	
-//				if(Save_Res.Sys_Setvalue.U_store)
-				{
-//					Host_Init();               /* Initialize the lpc17xx host controller                                    */
-					Host_Init();
-					//rc = Host_EnumDev();       /* Enumerate the device connected                                            */
-					
-					rc = Host_EnumDev();
-//					i=10;
-//					while(rc!=0)
-//					{
-//						rc=Host_EnumDev();
-//						i--;
-//						if(i==0)
-//							break;
-//					}
-					if (rc == OK) {
-					/* Initialize the mass storage and scsi interfaces */
-						rc = MS_Init( &blkSize, &numBlks, inquiryResult );
-					if (rc == OK) {
-						rc = FAT_Init();   /* Initialize the FAT16 file system */    
-						
-						if (rc == OK) {
-							
-							//Write_Usbdata ( "主参数		副参数		分选\r\n" ,22);	
-							Write_Usbdata ( "Main P	  Seco P	MPart	SPart\r\n" ,29);	
-
-						}							
-			//            if (rc == OK) {
-			//                Main_Copy();   /* Call the application                                                      */
-			//            } 
-						} 
-					} 
-					
-				}
+						mainswitch = 1;
+					}else{
+						mainswitch = 0;
 					}
-					if(Button_Page.index==1)
-					{
-						if(Button_Page.page==0)
-							Button_Page.page=1;
-						else
-							Button_Page.page=0;
-					
-					
-					}
-//					if(Button_Page.third!=0xff)
-//					{
-//						Button_Page.third=0xff;
-//					
-//					}else
-//					{
-//                    if(Button_Page.page==0)
-//						Button_Page.page=1;
-//					else
-//						Button_Page.page=0;
-//					}
-                    //Disp_Button_value1(Button_Page.page);
+					Send_Request(3,mainswitch);
 				break;
 				case Key_Disp:
 					
@@ -1106,7 +636,7 @@ void Test_Process(void)
 				break;
 				case Key_DOWN:
 					
-					if(Button_Page.index>4)
+					if(Button_Page.index>5)
 						Button_Page.index=0;
 					else
 						Button_Page.index++;
@@ -1116,48 +646,86 @@ void Test_Process(void)
 				case Key_UP:
 					
 					if(Button_Page.index<1)
-						Button_Page.index=5;
+						Button_Page.index=6;
 					else
 						Button_Page.index--;
 					Button_Page.page=0;
 				break;
 				
 				case Key_NUM1:
-				//break;
+//					Send_Request(3,1);
+//				break;
 				case Key_NUM2:
-				//break;
+//					SaveData.Set_Bat.setvoltage += 10;
+//				break;
 				case Key_NUM3:
-				//break;
-				case Key_NUM4:
-				//break;
+//					SaveData.Set_Bat.setvoltage -= 10;
+//				break;
+				case Key_NUM4:					
+//				break;
 				case Key_NUM5:
-				//break;
+//					SaveData.Set_Bat.setvoltage += 100;
+//				break;
 				case Key_NUM6:
-				//break;
+//					SaveData.Set_Bat.setvoltage -= 100;
+//				break;
 				case Key_NUM7:
-				//break;
+//				break;
 				case Key_NUM8:
-				//break;
+//					Send_Request(12,0);
+//				break;
 				case Key_NUM9:
-				//break;
+//					SaveData.Set_Bat.setvoltage -= 1000;	
+//				break;
 				case Key_NUM0:
-				//break;
+//					Send_Request(3,0);
+//				break;
 				case Key_DOT:
-					
-					if(Button_Page.index==2)
-					{ 	Disp_Coordinates_Typedef Coordinates;
-						Coordinates.xpos=LIST1+88;
-						Coordinates.ypos=FIRSTLINE+SPACE1*1;
-						Coordinates.lenth=86;
-						SaveData.Main_Func.Freq=Freq_Set_Num(&Coordinates);
-						Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
+					switch(Button_Page.index)
+					{
+						case 1:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE;
+							Coordinates.lenth=76;
+							SaveSIM.Voltage=Disp_Set_Num(&Coordinates);
+							Send_Request(10,1);
+							break;
+						case 2:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1*1;
+							Coordinates.lenth=76;
+							SaveSIM.ChargePC=Disp_Set_C(&Coordinates);
+							Send_Request(10,1);
+							break;
+						case 3:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1*2;
+							Coordinates.lenth=76;
+							SaveSIM.LoadPC=Disp_Set_C(&Coordinates);
+							Send_Request(10,1);
+							break;
+						case 5:
+							Coordinates.xpos=LIST2+88+32;
+							Coordinates.ypos=FIRSTLINE+SPACE1;
+							Coordinates.lenth=76;
+							SaveSIM.ChargePT = Disp_Set_T(&Coordinates);
+							Send_Request(10,1);
+							break;
+						case 6:
+							Coordinates.xpos=LIST2+88+32;
+							Coordinates.ypos=FIRSTLINE+SPACE1*2;
+							Coordinates.lenth=76;
+							SaveSIM.LoadPT = Disp_Set_T(&Coordinates);
+							Send_Request(10,1);
+							break;
+						default:
+							break;					
 					
 					}
+					Savetoeeprom();
 				break;
 				case Key_BACK:
-					
+					Send_Request(11,1);
 				break;
 				case Key_LOCK:
 					if(lock_flag)
@@ -1186,8 +754,7 @@ void Test_Process(void)
 					
 				break;
 				case Key_TRIG:
-					if(SaveData.Main_Func.Trig!=0)
-							TrigFlag=1;	
+					
 				break;
 				default:
 					
@@ -1863,16 +1430,12 @@ void Setup_Process(void)
 				case Key_LEFT:
 					
 					if(Button_Page.index==0)
-						Button_Page.index=10;
+						Button_Page.index=6;
 					else
-					if(Button_Page.index>5)
-						Button_Page.index-=5;
+					if(Button_Page.index>3)
+						Button_Page.index-=3;
 					else
-//						if(Button_Page.index==1)
-//							Button_Page.index=0;
-//						
-//						else
-							Button_Page.index+=4;
+						Button_Page.index+=2;
 					Button_Page.page=0;
 						
 				break;
@@ -1881,16 +1444,16 @@ void Setup_Process(void)
 					if(Button_Page.index==0)
 						Button_Page.index=1;
 					else
-					if(Button_Page.index<=5)
-						Button_Page.index+=5;
+					if(Button_Page.index<=3)
+						Button_Page.index+=3;
 					else
-						Button_Page.index-=4;
+						Button_Page.index-=2;
 					Button_Page.page=0;
 						
 				break;
 				case Key_DOWN:
 					
-					if(Button_Page.index>9)
+					if(Button_Page.index>5)
 						Button_Page.index=0;
 					else
 						Button_Page.index++;
@@ -1900,7 +1463,7 @@ void Setup_Process(void)
 				case Key_UP:
 					
 					if(Button_Page.index<1)
-						Button_Page.index=10;
+						Button_Page.index=6;
 					else
 						Button_Page.index--;
 					Button_Page.page=0;
@@ -1925,64 +1488,50 @@ void Setup_Process(void)
 				//break;
 				case Key_NUM0:
 				//break;
-				case Key_DOT:
-					
-					if(Button_Page.index==2)
+				case Key_DOT:					
+					switch(Button_Page.index)
 					{
-						Coordinates.xpos=LIST1+88;
-						Coordinates.ypos=FIRSTLINE+SPACE1*1;
-						Coordinates.lenth=86;
-						SaveData.Main_Func.Freq=Freq_Set_Num(&Coordinates);
+						case 1:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[0]=Disp_Set_Num(&Coordinates);
+							break;
+						case 2:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1*1;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[1]=Disp_Set_Num(&Coordinates);
+							break;
+						case 3:
+							Coordinates.xpos=LIST1+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1*2;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[2]=Disp_Set_Num(&Coordinates);
+							break;
+						case 4:
+							Coordinates.xpos=LIST2+88+16;
+							Coordinates.ypos=FIRSTLINE;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[3]=Disp_Set_Num(&Coordinates);
+							break;
+						case 5:
+							Coordinates.xpos=LIST2+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[4]=Disp_Set_Num(&Coordinates);
+							break;
+						case 6:
+							Coordinates.xpos=LIST2+88+16;
+							Coordinates.ypos=FIRSTLINE+SPACE1*2;
+							Coordinates.lenth=76;
+							SaveSIM.QuickV[5]=Disp_Set_Num(&Coordinates);
+							break;
+						default:
+							break;					
 					
 					}
-//					if(Button_Page.index==6)
-//					{
-//						//LCD_DrawRect( LIST1+88, FIRSTLINE+SPACE1*6-2,SELECT_1END , FIRSTLINE+SPACE1*7-4 , Colour.black ) ;
-//						Coordinates.xpos=LIST1+88;
-//						Coordinates.ypos=FIRSTLINE+SPACE1*5;
-//						Coordinates.lenth=86;
-//						
-//						SaveData.Main_Func.Trig_time=Disp_Set_Num(&Coordinates);
-//					
-//					
-//					}
-//					if(Button_Page.index==8)
-//					{
-//						//LCD_DrawRect( LIST1+88, FIRSTLINE+SPACE1*6-2,SELECT_1END , FIRSTLINE+SPACE1*7-4 , Colour.black ) ;
-//						Coordinates.xpos=LIST1+88;
-//						Coordinates.ypos=FIRSTLINE+SPACE1*7;
-//						Coordinates.lenth=86;
-//						SaveData.Main_Func.Temp_time=Disp_Set_Num(&Coordinates);
-//					
-//					
-//					}
-//					if(Button_Page.index==10)
-//					{
-//						//LCD_DrawRect( LIST1+88, FIRSTLINE+SPACE1*6-2,SELECT_1END , FIRSTLINE+SPACE1*7-4 , Colour.black ) ;
-//						Coordinates.xpos=LIST2+88;
-//						Coordinates.ypos=FIRSTLINE+SPACE1*3;
-//						
-//						SaveData.Main_Func.Avg=Avg_Set_Num(&Coordinates);
-//						Uart.Ordel=Uart_Ordel[7];
-//						Uart.name=SaveData.Main_Func.Avg;
-//						Send_Freq(&Uart);
-//					
-//					
-//					}
-//					
-//					if(Button_Page.index==12)//Sort_TypeDef Disp_Set_InputNum(Disp_Coordinates_Typedef *Coordinates)
-//				
-//					{
-//						//LCD_DrawRect( LIST1+88, FIRSTLINE+SPACE1*6-2,SELECT_1END , FIRSTLINE+SPACE1*7-4 , Colour.black ) ;
-//						Coordinates.xpos=LIST2+88;
-//						Coordinates.ypos=FIRSTLINE+SPACE1*5;
-//						
-//						SaveData.Main_Func.Ref_A=Disp_Set_InputNum(&Coordinates);
-//					
-//					
-//					}
-					
-					break;
+					Savetoeeprom();
 				case Key_BACK:
 					
 				break;
@@ -2127,7 +1676,8 @@ void Range_Process(void)
 			Disp_RangeDispValue(&Button_Page);
 			Disp_flag=0;	
 		}
-		Uart_Process();
+		
+//		Uart_Process();
 		
 		if(timer0_counter>0)//请求数据
 		{
@@ -2352,7 +1902,7 @@ void Range_CountProcess(void)
 			Disp_flag=0;
 			
 		}
-		uart_count=Uart_Process();
+//		uart_count=Uart_Process();
 		if(timer0_counter>0)//请求数据
 		{
 			switch(Uart_Send_Flag)
@@ -4134,107 +3684,28 @@ void Use_DebugProcess(void)
 void Fac_DebugProcess(void)
 {
 	
- 	
 	uint32_t keynum=0;
 	uint8_t key;
     uint8_t set_num;
     uint8_t num_flag=0;
     uint8_t debugbuff[20];
     uint8_t setupflag=0,sendnum;
-    Disp_Coordinates_Typedef Disp_pos;
+    Disp_Coordinates_Typedef Coordinates;
 //    uint8_t page=1;
 	uint8_t Disp_flag=1;
 	Button_Page_Typedef Button_Page;
 	Button_Page.index=0;
-	Button_Page.page=0;
-    debug_over=0;
-    debugbuff[0]=0xAB ;// 08 06 E0 00 00 BF
-    debugbuff[1]=01;
-    debugbuff[2]=8;
-    debugbuff[3]=6;
-    debugbuff[4]=0xc0;
-    debugbuff[5]=0x01;
-    debugbuff[6]=0x08;
-    debugbuff[7]=0xbf;
-    Delay(1000);
-    UARTPuts( LPC_UART0, debugbuff);//发送校正命令
-    Delay(200);
+	Button_Page.page=1;
+
     lcd_Clear(LCD_COLOR_TEST_BACK);
-	Disp_FacrCheck_Item();
+	Disp_FacrCheck_Item(&Button_Page);
 	Delay_Key();
-    debugbuff[0]=0xAB ;// 08 06 E0 00 00 BF
-    debugbuff[1]=01;
-    debugbuff[2]=8;
-    debugbuff[3]=6;
-    debugbuff[4]=0xe0;
-    debugbuff[5]=0;
-    debugbuff[6]=0;
-    debugbuff[7]=0xbf;
  	while(GetSystemStatus()==SYS_STATUS_FACRDEBUG)
 	{
-        Uart_Process();
-        switch(setupflag)
-        {
-            case 1://电容校正
-                set_num=7;
-                
-            break;
-            case 2://电阻校正
-                set_num=4;
-                
-            break;
-            case 3://退出保存
-                
-            break;
-            case 4://清除校正
-                
-            break ;
-        
-        }
-        if(debug_over)
-        {
-            debug_over=0;
-            Start_Debugled(0);
-        
-        }
-        
+
 		if(Disp_flag==1)
 		{
-            switch(setupflag)
-            {
-                case 0:
-                    if(num_flag)
-                    {
-                        Disp_pos.xpos=80;
-                        Disp_pos.ypos=120;
-                        Disp_pos.lenth=120;
-                        input_num(&Disp_pos );
-                        num_flag=0;
-                        
-                    }
-                    
-                break;
-                case 1:
-                    Disp_Fac_Debug_C(&Button_Page);
-                    
-                break;
-                case 2:
-                    Disp_Fac_Debug_R(& Button_Page);//电阻校正界面;
-                    
-                break;
-                case 3:
-                    
-                break;
-                case 4:
-                    
-                break;
-                default:
-                    break;
-                
-            
-            
-            }
-            
+            Disp_FacCal(&Button_Page);
 			Disp_flag=0;	
 		}	
 		key=HW_KeyScsn();
@@ -4252,119 +3723,37 @@ void Fac_DebugProcess(void)
 			switch(key)
 			{
 				case Key_F1://AB 01 08 06 E0 00 00 BF
-                    if(Button_Page.index==0)
-                    {
-                        setupflag=1;
-//                        debugbuff[4]=0xe0;
-//                        debugbuff[5]=0;
-//                        UARTPuts( LPC_UART0, debugbuff);//电容清零命令
-                        
-                    }
-                    else
-                    {
-                        debugbuff[5]=Button_Page.index;
-                        if(setupflag==1)
-                        {
-                            debugbuff[4]=0xe0;
-                            UARTPuts( LPC_UART0, debugbuff);//每个容值的校正命令
-                            Start_Debugled(1);
-                            
-                        }
-                        else if(setupflag==2)
-                        {
-                            debugbuff[4]=0xe1;
-                            UARTPuts( LPC_UART0, debugbuff);//每个电阻的校正命令
-                            Start_Debugled(1);
-                            
-                        }
-                        
-                        
-                        
-                    }
-                    //Colour.black=
-					LCD_DrawRect( 0, 22, 479,271-40  , LCD_COLOR_TEST_BACK ) ;
-						
+					Button_Page.page = 1;
+					Disp_FacrCheck_Item(&Button_Page);				
 				break;
 				case Key_F2:
-                    if(Button_Page.index==0)
-                    {
-                        setupflag=2;
-                        
-                    
-                    }
-//                    else
-//                    {
-//                        debugbuff[5]=0x0f;
-//                        if(setupflag==1)
-//                        {
-//                            debugbuff[4]=0xe0;
-//                            UARTPuts( LPC_UART0, debugbuff);
-//                            
-//                        }
-//                        else if(setupflag==2)
-//                        {
-//                            debugbuff[4]=0xe1;
-//                            UARTPuts( LPC_UART0, debugbuff);
-//                            
-//                        }
-//                    
-//                    
-//                    }
-//                        sendnum=Button_Page.index;
-                   LCD_DrawRect( 0, 22, 479,271-40  , LCD_COLOR_TEST_BACK ) ;
-					
-                    
+					Button_Page.page = 2;
+					Disp_FacrCheck_Item(&Button_Page);
 				break;
 				case Key_F3:
-                    if(Button_Page.index==0)
-                    {
-                        debugbuff[5]=0x0f;
-                        if(setupflag==1)
-                        {
-                            debugbuff[4]=0xe0;
-                            UARTPuts( LPC_UART0, debugbuff);
-                            
-                        }
-                        else if(setupflag==2)
-                        {
-                            debugbuff[4]=0xe1;
-                            UARTPuts( LPC_UART0, debugbuff);
-                            
-                        }
-                        
-                    
-                    }  
-                    LCD_DrawRect( 0, 22, 479,271-40  , LCD_COLOR_TEST_BACK ) ;
-                    
-
+					SaveSIM.Voltage.Num = 5000;
+					Send_Request(10,1);
+					Button_Page.page = 3;
+					Disp_FacrCheck_Item(&Button_Page);
 				break;
 				case Key_F4://校正清零命令
-                    if(Button_Page.index==0)
-                    {
-                        debugbuff[5]=0;
-                        if(setupflag==1)
-                        {
-                            debugbuff[4]=0xe0;
-                            UARTPuts( LPC_UART0, debugbuff);
-                            
-                        }
-                        else if(setupflag==2)
-                        {
-                            debugbuff[4]=0xe1;
-                            UARTPuts( LPC_UART0, debugbuff);
-                            
-                        }
-                    
-                    }
-					LCD_DrawRect( 0, 22, 479,271-40  , LCD_COLOR_TEST_BACK ) ;
-                 
+					if(Button_Page.page == 3)
+					{
+						Send_Request(15,0);
+					}
 				break;
 				case Key_F5:
+					if(Button_Page.page == 1)
+					{
+						Send_Request(12,Button_Page.index);
+					}else if(Button_Page.page == 2){
+						Send_Request(14,Button_Page.index);
+					}else if(Button_Page.page == 3){
+						Send_Request(13,Button_Page.index);
+					}
 					
-
 				break;
 				case Key_Disp:
-                    num_flag=1;
 					
 				break;
 				case Key_SETUP:
@@ -4380,23 +3769,105 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_UP:
-					    if(setupflag==1||setupflag==2)
-                        {
+					
+					if(Button_Page.page == 1)
+					{//电压校正4档
 						if(Button_Page.index>0)
 							Button_Page.index--;
 						else
-							Button_Page.index=set_num;
-                        }
-							
+							Button_Page.index=4;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 1000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 5000;
+						}else if(Button_Page.index == 3)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 4)
+						{
+							SaveSIM.Voltage.Num = 20000;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 2){//电压控制2档
+						if(Button_Page.index>0)
+							Button_Page.index--;
+						else
+							Button_Page.index=2;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 20000;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 3){//电流测量
+						if(Button_Page.index>0)
+							Button_Page.index--;
+						else
+							Button_Page.index=6;
+						
+						if(Button_Page.index == 1 ||Button_Page.index == 4)
+						{
+							Send_Request(4,0);//电流低档位
+						}else{
+							Send_Request(4,1);//电流高档位
+						}
+					}
 				break;
 				case Key_DOWN:
-					if(setupflag==2||setupflag==1)
-                    {
-                        if(Button_Page.index>set_num)
-                            Button_Page.index=0;
-                        else
-                            Button_Page.index++;
-                    }
+					
+					if(Button_Page.page == 1)
+					{//电压校正4档
+						if(Button_Page.index>4)
+							Button_Page.index=0;
+						else
+							Button_Page.index++;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 1000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 5000;
+						}else if(Button_Page.index == 3)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 4)
+						{
+							SaveSIM.Voltage.Num = 20000;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 2){//电压控制2档
+						if(Button_Page.index>2)
+							Button_Page.index=0;
+						else
+							Button_Page.index++;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 20000;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 3){//电流控制
+						if(Button_Page.index>6)
+							Button_Page.index=0;
+						else
+							Button_Page.index++;
+						if(Button_Page.index == 1 ||Button_Page.index == 4)
+						{
+							Send_Request(4,0);//电流低档位
+						}else{
+							Send_Request(4,1);//电流高档位
+						}
+					}
 				break;
 				case Key_NUM1:
 				//break;
@@ -4419,16 +3890,19 @@ void Fac_DebugProcess(void)
 				case Key_NUM0:
 				//break;
 				case Key_DOT:
+					Coordinates.xpos=80;
+					Coordinates.ypos=26+(Button_Page.index-1)*22;
+					Coordinates.lenth=80;
+					if(Button_Page.page == 1)
+					{
+						SaveSIM.CALV[Button_Page.index-1]=Disp_Set_Num(&Coordinates);
+					}else if(Button_Page.page == 2){
+						SaveSIM.CTRLV[Button_Page.index-1]=Disp_Set_Num(&Coordinates);
+					}else if(Button_Page.page == 3){
+						SaveSIM.CALI[Button_Page.index-1]=Disp_Set_C(&Coordinates);
+					}
+					Savetoeeprom();
 					
-//					if(Button_Page.index==5)
-//					{ 	Disp_Coordinates_Typedef Coordinates;
-//						Coordinates.xpos=LIST1+92;
-//						Coordinates.ypos=FIRSTLINE+SPACE1*4;
-//						Coordinates.lenth=86;
-//						
-//						SaveData.Main_Func.Freq=Freq_Set_Num(&Coordinates);
-//					
-//					}
 				break;
 				case Key_BACK:
 					
@@ -4443,6 +3917,7 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_TRIG:
+					Send_Request(3,1);
 					
 				break;
 				default:
@@ -4466,201 +3941,49 @@ void Fac_DebugProcess(void)
 //修改日期：2015.10.26 10:02
 //备注说明：无
 //==========================================================
-u8 Uart_Process(void)
+uint16_t Uart_Process(uint8_t len,char* buf)
 {
-	uint8_t i;
-#if HW_UART_SUPPORT
-	u8 kind=0xff;
-	u8 data=0;
-//#if DEBUG_SUPPORT
-	u8 str[(FRAME_LEN_MAX-FRAME_LEN_MIN)+1];//收发数据缓冲
-//#else
-//	u8 str[(FRAME_LEN_MAX-FRAME_LEN_MIN)+1];//收发数据缓冲
-//#endif
-
-//	if(SaveData.Sys_Setup.Bus_Mode==0)//串口有效
+	uint16_t currCharNum;
+    uint32_t temp1;
+    uint8_t Gmode_Vale;
+	uint8_t i,j;
+	
+	uint8_t addr;
+	char str[30]={0};
+	int cmd_flag=255;
+	uint8_t templen =0;
+	uint8_t tmpFg;
+	uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
+	uint16_t I_ADC_Vale,V_ADC_Vale;
+	int32_t V_CS_Vale,I_CS_Vale;
+	float Lvl_Vale,fadcx,fsingal, fVale;
+ 
+//	uint8 len = 11;
+	uint8_t pntlen = 0;
+//  char StrON[2] = {"ON"};
+	V_CS_Vale = V_CS;
+	I_CS_Vale = I_CS;
+	I_ADC_Vale = I_ADC;
+	V_ADC_Vale = V_ADC;
+    LM_S_Vale = LM_S;
+    LOW_I_Vale   = LOW_I; 
+    Gmode_Vale=Mode;
+    H_L_Vale =  H_L;
+	Lvl_Vale = LVL_DA;
+    addr = 0;
+    SWITCH_Vale=SWITCH_A;
+	Lvl_Vale = 
+	
+	currCharNum=0;
+	
+	if((buf[currCharNum] != ChrStartR) || (buf[len-2] != ChrEndR)||(buf[len-1] != ChrEndS))
+    {
+		return SetErr_ACK(buf,addr ,CMD_ERR); 
+    }
+	if (ComBuf.rec.end)//接收数据结束
 	{
-		if (ComBuf.rec.end)//接收数据结束
-		{data=1;
-			//memset(str,'\0',(FRAME_LEN_MAX-FRAME_LEN_MIN+1));//清空缓冲
-            kind=ComBuf.rec.buf[PFRAMEKIND];//命令字
-            ComBuf.rec.buf[PFRAMEKIND]=0;
-            switch(kind)
-            {
-                
-                case 0x03:
-//                    Debug_over=1;
-//                    break;
-                case 0x01:
-                    if(ComBuf.rec.buf[2]==0x26)//27)
-                    {
-                        for(i=0;i<5;i++)
-                        {
-                            if(ComBuf.rec.buf[i+5]==' ')
-                                Test_Dispvalue.Main_valuebuff[i]=ComBuf.rec.buf[i+5];
-                            else
-                                Test_Dispvalue.Main_valuebuff[i]=ComBuf.rec.buf[i+5]+'0';
-                                
-                            Comp_Change.all[0].buff[i]=ComBuf.rec.buf[i+5];
-                            if(ComBuf.rec.buf[i+13]==' ')
-                                Test_Dispvalue.Secondvaluebuff[i]=ComBuf.rec.buf[i+13];
-                            else
-                                Test_Dispvalue.Secondvaluebuff[i]=ComBuf.rec.buf[i+13]+'0';
-                            Comp_Change.all[1].buff[i]=ComBuf.rec.buf[i+13];
-                            if(ComBuf.rec.buf[i+21]==' ')
-                                Test_Dispvalue.Vmvaluebuff[i]=ComBuf.rec.buf[i+21];
-                            else
-                                Test_Dispvalue.Vmvaluebuff[i]=ComBuf.rec.buf[i+21]+'0';
-                            Comp_Change.all[2].buff[i]=ComBuf.rec.buf[i+21];
-                            if(ComBuf.rec.buf[i+29]==' ')
-                            Test_Dispvalue.Imvaluebuff[i]=ComBuf.rec.buf[i+29];
-                            else
-                                Test_Dispvalue.Imvaluebuff[i]=ComBuf.rec.buf[i+29]+'0';
-                            Comp_Change.all[3].buff[i]=ComBuf.rec.buf[i+29];
-                                        
-                        }
-                        Test_Dispvalue.Dot[0]=ComBuf.rec.buf[10];				
-                        Test_Dispvalue.Dot[1]=ComBuf.rec.buf[18];
-                        Test_Dispvalue.Dot[2]=ComBuf.rec.buf[26];
-                        Test_Dispvalue.Dot[3]=ComBuf.rec.buf[34];
-                        Set_daot(Test_Dispvalue.Main_valuebuff,Test_Dispvalue.Dot[0]);
-                        Set_daot(Test_Dispvalue.Secondvaluebuff,Test_Dispvalue.Dot[1]);
-                        Set_daot(Test_Dispvalue.Vmvaluebuff,Test_Dispvalue.Dot[2]);
-                        Set_daot(Test_Dispvalue.Imvaluebuff,Test_Dispvalue.Dot[3]);
-                        Test_Dispvalue.Unit[0]=ComBuf.rec.buf[11];
-                        Test_Dispvalue.Unit[1]=ComBuf.rec.buf[19];
-                        Test_Dispvalue.Unit[2]=ComBuf.rec.buf[27];
-                        Test_Dispvalue.Unit[3]=ComBuf.rec.buf[35];
-                        for(i=0;i<4;i++)
-                        {
-                            Comp_Change.all[i].Dot=Test_Dispvalue.Dot[i];
-                            Comp_Change.all[i].Unit=Test_Dispvalue.Unit[i];
-                        
-                        }
-                    }
-                    else if(ComBuf.rec.buf[5]==3)
-                        debug_over=1;
-                        //校正完成标志
-                    
-                
-                    break;
-            
-            
-            
-            }
-                
-//            if(ComBuf.rec.buf[11]<7&&ComBuf.rec.buf[19]<7&&ComBuf.rec.buf[27]<7&&ComBuf.rec.buf[35]<7&&ComBuf.rec.buf[2]==38)
-//                
-//			{
-//				//memcpy(str,&ComBuf.rec.buf[PDATASTART],ComBuf.send.len-FRAME_LEN_MIN);//数据包
-//				
-//				for(i=0;i<5;i++)
-//				{
-//					if(ComBuf.rec.buf[i+5]==' ')
-//						Test_Dispvalue.Main_valuebuff[i]=ComBuf.rec.buf[i+5];
-//					else
-//						Test_Dispvalue.Main_valuebuff[i]=ComBuf.rec.buf[i+5]+'0';
-//						
-//					Comp_Change.all[0].buff[i]=ComBuf.rec.buf[i+5];
-//					if(ComBuf.rec.buf[i+13]==' ')
-//						Test_Dispvalue.Secondvaluebuff[i]=ComBuf.rec.buf[i+13];
-//					else
-//						Test_Dispvalue.Secondvaluebuff[i]=ComBuf.rec.buf[i+13]+'0';
-//					Comp_Change.all[1].buff[i]=ComBuf.rec.buf[i+13];
-//					if(ComBuf.rec.buf[i+21]==' ')
-//						Test_Dispvalue.Vmvaluebuff[i]=ComBuf.rec.buf[i+21];
-//					else
-//						Test_Dispvalue.Vmvaluebuff[i]=ComBuf.rec.buf[i+21]+'0';
-//					Comp_Change.all[2].buff[i]=ComBuf.rec.buf[i+21];
-//					if(ComBuf.rec.buf[i+29]==' ')
-//					Test_Dispvalue.Imvaluebuff[i]=ComBuf.rec.buf[i+29];
-//					else
-//						Test_Dispvalue.Imvaluebuff[i]=ComBuf.rec.buf[i+29]+'0';
-//					Comp_Change.all[3].buff[i]=ComBuf.rec.buf[i+29];
-//								
-//				}
-//				Test_Dispvalue.Dot[0]=ComBuf.rec.buf[10];				
-//				Test_Dispvalue.Dot[1]=ComBuf.rec.buf[18];
-//				Test_Dispvalue.Dot[2]=ComBuf.rec.buf[26];
-//				Test_Dispvalue.Dot[3]=ComBuf.rec.buf[34];
-//                Set_daot(Test_Dispvalue.Main_valuebuff,Test_Dispvalue.Dot[0]);
-//                Set_daot(Test_Dispvalue.Secondvaluebuff,Test_Dispvalue.Dot[1]);
-//				Set_daot(Test_Dispvalue.Vmvaluebuff,Test_Dispvalue.Dot[2]);
-//				Set_daot(Test_Dispvalue.Imvaluebuff,Test_Dispvalue.Dot[3]);
-//				Test_Dispvalue.Unit[0]=ComBuf.rec.buf[11];
-//				Test_Dispvalue.Unit[1]=ComBuf.rec.buf[19];
-//				Test_Dispvalue.Unit[2]=ComBuf.rec.buf[27];
-//				Test_Dispvalue.Unit[3]=ComBuf.rec.buf[35];
-//				for(i=0;i<4;i++)
-//				{
-//					Comp_Change.all[i].Dot=Test_Dispvalue.Dot[i];
-//					Comp_Change.all[i].Unit=Test_Dispvalue.Unit[i];
-//				
-//				}
-
-//			}
-			//准备接收下一帧数据sprintf
-			ComBuf.rec.end=0;//接收缓冲可读标志复位
-			ComBuf.rec.ptr=0;//接收指针清零
-		}
+		
 	}
-//	WriteString_Big(0, 150, (uint8_t *)&ComBuf.rec.buf[1]);
-	ComBuf.rec.end=0;
-
-//	switch(kind)
-//	{
-//		case FRAME_READ_RESULT://读取结果
-//			//串口发送测试数据:电压(5)+电阻(6)+时间(4)+分选(1)=16字节
-//			switch (GetSystemMessage())//系统信息
-//			{
-//				case MSG_ABORT:
-//					kind=0x9B;//测试中止
-//					break;
-//				case MSG_PASS:
-//					kind=0x91;//测试通过
-//					break;
-//				case MSG_HIGH:
-//					kind=0x92;//上限报警
-//					break;
-//				case MSG_LOW:
-//					kind=0x92;//下限报警
-//					break;
-//				default:
-//					kind=0x90;//正常测试
-//					break;
-//			}		
-//			ComBuf.send.buf[1+5+6+4]=kind;
-//			ComBuf.send.begin=0;
-//			ComBuf.send.len=PackStandFrame(ComBuf.send.buf , &ComBuf.send.buf[1] , 16  );
-////			if(SendDataToCom()==0)//发送成功判别
-////			{
-////			//	Delay_1ms(100);//延时
-////			//	SendDataToCom();//发送
-////			}
-//			break;
-//		
-//		case FRAME_START://启动
-//			SetSystemStatus(SYS_STATUS_TEST);//系统状态-启动测试
-//			break;
-
-//		case FRAME_RESET://复位
-//			//SetSystemStatus(SYS_STATUS_IDLE);//系统状态-待机
-//			break;
-
-//		case FRAME_WRITE_SN://写序列号
-//			break;
-//		
-//		case FRAME_CLR_BOOT_NUM://清开机次数
-//			break;
-//		
-//		case FRAME_DATA://数据帧
-//			break;
-
-//		default:
-//			break;
-//	}
-	return data;
-#endif
 }
 
 
@@ -5127,7 +4450,405 @@ Sort_TypeDef Input_compvalue(Disp_Coordinates_Typedef *Coordinates)
 	return Sort_set;
 }
 	
+//数字键输入显示
+Sort_TypeDef Disp_NumKeyboard_time(Disp_Coordinates_Typedef *Coordinates )
+{
+	uint8_t While_flag=1;
+	uint8_t Disp_buff[10]={"         ",};
+	uint8_t key,i;
+	uint8_t dispflag=1;
+	uint8_t dot_num=0,dot_num1=0;
+	uint8_t page=0;
+	uint32_t keynum=0;
+	uint8_t key_count=0;
+//	uint32_t Num[6]={1,10,100,1e3,1e4,1e5};
+	Sort_TypeDef   Sort_set;
+	Sort_set.Dot=0;
+	Sort_set.Num=0;
+	Sort_set.Unit=0;
+	Sort_set.Num=0;
+//	for(i=0;i<6;i++)
+//	Disp_buff[i]=' ';
+	Disp_buff[7]=0;
 	
+	while(While_flag)
+	{
+		key=HW_KeyScsn();
+		if(key==0xff)
+		{
+			keynum=0;
+		}
+		else
+			keynum++;
+		if(keynum==5)
+		{
+			dispflag=1;
+			Key_Beep();
+			switch(key)
+			{
+				case Key_F1:
+					
+//					if(page==0)
+//						Sort_set.Unit=0;
+//					else
+//						Sort_set.Unit=5;
+//					While_flag=0;
+//					if(key_count<NUM_LENTH)
+//					{
+//						if(dot_num==0)
+//						{
+//							if(key_count>0)
+//							{
+//								Disp_buff[key_count]='.';
+//								dot_num1=key_count;
+//								key_count++;
+//							
+//							
+//							}
+//							dot_num++;
+//						}
+//					
+//					}
+//					
+//					Sort_set.Updata_flag=1;
+					if(page==0)
+						Sort_set.Unit=1;
+					else
+						Sort_set.Unit=6;
+					While_flag=0;
+					if(key_count<7)
+					{
+						if(dot_num==0)
+						{
+							if(key_count>0)
+							{
+								Disp_buff[key_count]='.';
+								dot_num1=key_count;
+								key_count++;
+							
+							
+							}
+							dot_num++;
+						}
+					
+					}
+					Sort_set.Updata_flag=1;
+					
+				break;
+				case Key_F2:
+					
+					
+				break;
+				case Key_F3:
+					
+					if(page==0)
+						Sort_set.Unit=2;
+					else
+						Sort_set.Unit=8;
+					While_flag=0;
+					if(key_count<NUM_LENTH)
+					{
+						if(dot_num==0)
+						{
+							if(key_count>0)
+							{
+								Disp_buff[key_count]='.';
+								dot_num1=key_count;
+								key_count++;
+							}
+							dot_num++;
+						}
+					
+					}
+					Sort_set.Updata_flag=1;
+				break;
+				case Key_F4:
+					
+					if(page==0)
+						Sort_set.Unit=3;
+					else
+						Sort_set.Unit=7;
+					While_flag=0;
+					if(key_count<NUM_LENTH)
+					{
+						if(dot_num==0)
+						{
+							if(key_count>0)
+							{
+								Disp_buff[key_count]='.';
+								dot_num1=key_count;
+								key_count++;
+							
+							
+							}
+							dot_num++;
+						}
+					
+					}
+					Sort_set.Updata_flag=1;
+				break;
+				case Key_F5:
+					
+					if(page==0)
+						page=1;
+					else
+					page=0;
+				break;
+				case Key_Disp:
+					
+					SetSystemStatus(SYS_STATUS_TEST);
+					While_flag=0;
+					Sort_set.Updata_flag=0;
+				break;
+				case Key_SETUP:
+					
+					While_flag=0;
+					Sort_set.Updata_flag=0;
+				SetSystemStatus(SYS_STATUS_SETUPTEST);
+				break;
+				case Key_FAST:
+					
+				break;
+				case Key_LEFT:
+					
+				break;
+				case Key_RIGHT:
+					
+				break;
+				case Key_UP:
+					
+				break;
+				case Key_DOWN:
+					
+				break;
+				case Key_NUM1:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='1';
+						
+						
+							
+						
+						key_count++;
+							
+					}
+				break;
+				case Key_NUM2:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='2';
+						key_count++;
+					}
+				break;
+				case Key_NUM3:
+					 
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='3';
+						key_count++;
+					}
+				break;
+				case Key_NUM4:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='4';
+						key_count++;
+					}
+					
+				break;
+				case Key_NUM5:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='5';
+						key_count++;
+					}
+				break;
+				case Key_NUM6:
+					 
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='6';
+						key_count++;
+					}
+				break;
+				case Key_NUM7:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='7';
+						key_count++;
+					}
+				break;
+				case Key_NUM8:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='8';
+						key_count++;
+					}
+				break;
+				case Key_NUM9:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='9';
+						key_count++;
+					}
+				break;
+				case Key_NUM0:
+					
+					if(key_count<NUM_LENTH)
+					{
+						Disp_buff[key_count]='0';
+						key_count++;
+					}
+				break;
+				case Key_DOT:
+					
+					if(key_count<NUM_LENTH&&key_count>0)
+					{
+						if(dot_num==0)
+						{
+							if(key_count>0)
+							{
+								Disp_buff[key_count]='.';
+								dot_num1=key_count;
+								key_count++;
+							
+							
+							}
+							dot_num++;
+						}
+					}
+//					else 
+//					{
+//						if(Disp_buff[key_count]==0)
+//							Disp_buff[key_count]='-';
+//						else if(Disp_buff[key_count]=='-')
+//							Disp_buff[key_count]='+';
+//						else
+//							Disp_buff[key_count]='-';
+//						key_count++;
+//							
+//					
+//					
+//					
+//					
+//					}
+				break;
+				case Key_BACK:
+					
+					if(key_count>0)
+					{	key_count--;
+						Disp_buff[key_count]=' ';
+						if(dot_num1==key_count)
+						{
+							dot_num=0;
+							dot_num1=0;							
+						}
+					
+					}
+					else
+					{
+						if(Disp_buff[key_count]==0)
+								Disp_buff[key_count]='-';
+							else if(Disp_buff[key_count]=='-')
+								Disp_buff[key_count]='+';
+							else
+								Disp_buff[key_count]='-';
+							key_count++;
+					}
+				break;
+				case Key_LOCK:
+					
+				break;
+				case Key_BIAS:
+					
+				break;
+				case Key_REST:
+					
+				break;
+				case Key_TRIG:
+					
+				break;
+				default:
+					
+				break;
+					
+			}
+		
+		
+		}
+		if(dispflag)
+		{
+			dispflag=0;
+			LCD_DrawRect( Coordinates->xpos, Coordinates->ypos,Coordinates->xpos+Coordinates->lenth+5 , Coordinates->ypos+16 , Red );
+			Colour.Fword=White;
+			Colour.black=Red;
+			WriteString_16(Coordinates->xpos, Coordinates->ypos, Disp_buff,  0);
+			//dispflag=0;
+		}
+	
+	}
+	for(i=key_count;i<7;i++)
+		Disp_buff[i]='0';
+	for(i=0;i<key_count+3;i++)
+	{
+		if(Disp_buff[0]>='0'&&(Disp_buff[0]<='9'))
+		{
+			if(Disp_buff[i]>='0'&&(Disp_buff[i]<='9'))
+			{
+			
+				if(dot_num1>i)
+				{
+					Sort_set.Num*=10;
+					Sort_set.Num+=Disp_buff[i]-'0';
+				
+				}
+				else
+				{
+					Sort_set.Num*=10;
+					Sort_set.Num+=Disp_buff[i]-'0';				
+				
+				}
+			}
+			
+			
+			//Sort_set.Num+=(Disp_buff[key_count-1]-'0');
+		
+		
+		}
+	
+	
+	
+	}
+	Sort_set.Dot=dot_num1;
+//	if(Disp_buff[0]>='0'&&(Disp_buff[0]<'9'))
+//		{
+//			if(Disp_buff[key_count-1]!='.')		
+//			{
+//				Sort_set.Num*=Num[key_count-dot_num-1];
+//				Sort_set.Num+=(Disp_buff[key_count-1]-'0');//*Num[key_count-dot_num-1];
+//				
+//			}				
+//			//*(Disp_buff[key_count-1]-'0'))+=Num[key_count-dot_num-1];
+//			else
+//			{
+//			
+//			}
+//		
+//		
+//		}
+//			
+//		else 
+//			;//(Disp_buff[key_count-1]-'0')*Sort_set.Num+=Num[key_count-dot_num-2];
+	return Sort_set;
+
+}
 
 //数字键输入显示
 Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Coordinates )
@@ -5167,34 +4888,29 @@ Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Coordinates )
 			{
 				case Key_F1:
 					
-					if(page==0)
-						Sort_set.Unit=0;
-					else
-						Sort_set.Unit=5;
-					While_flag=0;
-					if(key_count<NUM_LENTH)
-					{
-						if(dot_num==0)
-						{
-							if(key_count>0)
-							{
-								Disp_buff[key_count]='.';
-								dot_num1=key_count;
-								key_count++;
-							
-							
-							}
-							dot_num++;
-						}
-					
-					}
-						
-					
-					Sort_set.Updata_flag=1;
-					
-				break;
-				case Key_F2:
-					
+//					if(page==0)
+//						Sort_set.Unit=0;
+//					else
+//						Sort_set.Unit=5;
+//					While_flag=0;
+//					if(key_count<NUM_LENTH)
+//					{
+//						if(dot_num==0)
+//						{
+//							if(key_count>0)
+//							{
+//								Disp_buff[key_count]='.';
+//								dot_num1=key_count;
+//								key_count++;
+//							
+//							
+//							}
+//							dot_num++;
+//						}
+//					
+//					}
+//					
+//					Sort_set.Updata_flag=1;
 					if(page==0)
 						Sort_set.Unit=1;
 					else
@@ -5217,6 +4933,11 @@ Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Coordinates )
 					
 					}
 					Sort_set.Updata_flag=1;
+					
+				break;
+				case Key_F2:
+					
+					
 				break;
 				case Key_F3:
 					
@@ -5234,8 +4955,6 @@ Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Coordinates )
 								Disp_buff[key_count]='.';
 								dot_num1=key_count;
 								key_count++;
-							
-							
 							}
 							dot_num++;
 						}
@@ -5534,7 +5253,7 @@ Sort_TypeDef Disp_NumKeyboard_Set(Disp_Coordinates_Typedef *Coordinates )
 Sort_TypeDef Disp_Set_Num(Disp_Coordinates_Typedef *Coordinates)
 {
 	Sort_TypeDef Sort_num,Sort_num1;
-	Disp_button_Num_time();
+	Disp_button_Num_V();
 	Sort_num=Disp_NumKeyboard_Set(Coordinates);
 	Sort_num1=Time_Set_Cov(&Sort_num);
 	if(Sort_num1.Updata_flag==0)
@@ -5548,6 +5267,52 @@ Sort_TypeDef Disp_Set_Num(Disp_Coordinates_Typedef *Coordinates)
 	return Sort_num1;
 
 }
+
+Sort_TypeDef Disp_Set_C(Disp_Coordinates_Typedef *Coordinates)
+{
+	Sort_TypeDef Sort_num,Sort_num1;
+	Disp_button_Num_A();
+	Sort_num=Disp_NumKeyboard_Set(Coordinates);
+	Sort_num1=Time_Set_Cov(&Sort_num);
+	if(Sort_num1.Num>10000)
+	{
+		Sort_num1.Num = 10000;
+	}
+	if(Sort_num1.Updata_flag==0)
+	{
+		Sort_num1.Dot=0;
+		Sort_num1.Num=0;
+		Sort_num1.Unit=0;
+	
+	}
+		
+	return Sort_num1;
+
+}
+
+Sort_TypeDef Disp_Set_T(Disp_Coordinates_Typedef *Coordinates)
+{
+	Sort_TypeDef Sort_num,Sort_num1;
+	Disp_button_Num_ms();
+	Sort_num=Disp_NumKeyboard_time(Coordinates);
+	Sort_num1=Time_Set_Cot(&Sort_num);
+	Sort_num1.Num /= 1000;
+//	if(Sort_num1.Num>200)
+//	{
+//		Sort_num1.Num = 200;
+//	}
+	if(Sort_num1.Updata_flag==0)
+	{
+		Sort_num1.Dot=0;
+		Sort_num1.Num=0;
+		Sort_num1.Unit=0;
+	
+	}
+		
+	return Sort_num1;
+
+}
+
 Sort_TypeDef Disp_Set_CompNum(Disp_Coordinates_Typedef *Coordinates)
 {
 	Sort_TypeDef Sort_num,Sort_num1;
