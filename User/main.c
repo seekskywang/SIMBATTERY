@@ -122,7 +122,7 @@ int main(void)
 	NVIC_EnableIRQ(GPIO_IRQn);
 	HW_keyInt();
     GPIO_Plc_Configuration();
-    debug_frmwrk_init();
+//    debug_frmwrk_init();
 	softswitch=0;
 	debug_uart3_init(4);//串口3初始化
 	EEPROM_Init();
@@ -190,20 +190,20 @@ int main(void)
 //					UART_TxCmd(LPC_UART3, DISABLE);
 //				Uart3_init(Save_Res.Sys_Setvalue.buard);
 //				if(Save_Res.Sys_Setvalue.U_store)
-				{
-					Host_Init();               /* Initialize the lpc17xx host controller                                    */
-					rc = Host_EnumDev();       /* Enumerate the device connected                                            */
-					if (rc == OK) {
-					/* Initialize the mass storage and scsi interfaces */
-						rc = MS_Init( &blkSize, &numBlks, inquiryResult );
-					if (rc == OK) {
-						rc = FAT_Init();   /* Initialize the FAT16 file system */    
-						Write_Usbdata ( "Main P	  Seco P	MPart	SPart\r\n" ,29);	
-						usb_oenflag=1;						
-			
-						} 
-					} 
-				}
+//				{
+//					Host_Init();               /* Initialize the lpc17xx host controller                                    */
+//					rc = Host_EnumDev();       /* Enumerate the device connected                                            */
+//					if (rc == OK) {
+//					/* Initialize the mass storage and scsi interfaces */
+//						rc = MS_Init( &blkSize, &numBlks, inquiryResult );
+//					if (rc == OK) {
+//						rc = FAT_Init();   /* Initialize the FAT16 file system */    
+//						Write_Usbdata ( "Main P	  Seco P	MPart	SPart\r\n" ,29);	
+//						usb_oenflag=1;						
+//			
+//						} 
+//					} 
+//				}
                 lcd_Clear(LCD_COLOR_TEST_BACK);
 				Beep_Off();
 				Test_Process();//测试处理

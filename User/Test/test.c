@@ -96,75 +96,25 @@ void MODS_Poll(void)
 	uint16_t addr;
 	static uint16_t crc1;
     static uint32_t testi;
-	/* 超过3.5个字符时间后执行MODH_RxTimeOut()函数。全局变量 g_rtu_timeout = 1; 通知主程序开始解砿*/
-//	if (g_mods_timeout == 0)	
-//	{
-//		return;								/* 没有超时，继续接收。不要清雿g_tModS.RxCount */
-//	}
 
     testi=g_tModS.RxCount;
-    testi=g_tModS.RxCount;
-    testi=g_tModS.RxCount;
-	if(testi>7)				/* ??????С?4???????? */
+	if(testi>7)				
 	{
 		testi=testi;
 	}
-	testi=g_tModS.RxCount;
-    if(testi==8)				/* ??????С?4???????? */
-	{
-		testi=testi+1;
-	}
-	//??????ˇ???
-	if(OldTick!=Tick_10ms)
-  	{  
-	  OldTick=Tick_10ms;
-	   if(g_mods_timeout>0)
-      { 
-	    g_mods_timeout--;
-      }
-	  if(g_mods_timeout==0 && g_tModS.RxCount>0)   //??????
-      { 
-		// goto err_ret;
-	
-      }
-      else if(g_mods_timeout==0 && g_tModS.RxCount==0) //?????
-         return;
-      else //????ì???
-         return;
-	}
-	else   //???10msì?????
-		return;
-	//g_mods_timeout = 0;	 					/* ??? */
+	testi=g_tModS.RxCount; 					/* ??? */
 
 	if (g_tModS.RxCount < 4)				/* ??????С?4???????? */
 	{
-		goto err_ret;
+		g_tModS.RxCount = 0;
 	}
 
-	/* ??CRCУ?? */
-// 	crc1 = CRC16(g_tModS.RxBuf, g_tModS.RxCount);
-// 	if (crc1 != 0)
-// 	{
-// 		goto err_ret;
-// 	}
+	if(g_tModS.RxCount > 5 && Tick_10ms > 2)
+	{
+		RecHandle();
+		g_tModS.RxCount = 0;
+	}
 
-// 	/* ??? (1??é */
-// 	addr = g_tModS.RxBuf[0];				/* ?1?? ?? */
-// 	if (addr != SADDR485)		 			/* ???????????ˇ??? */
-// 	{
-// 		goto err_ret;
-// 	}
-
-	/* 分析应用层协访*/
-//    if(g_tModS.RxBuf[2] == 0xA5)
-//    {
-//        UART_Action();
-//    }else{
-//        usartocflag = 1;
-//        u3sendflag = 1;
-        RecHandle();
-//        u3sendflag = 0;
-//    }
 							
 	
 err_ret:
@@ -173,7 +123,7 @@ err_ret:
 	memcpy(g_tPrint.RxBuf, g_tModS.RxBuf, g_tModS.RxCount);
 #endif
 	
- 	g_tModS.RxCount = 0;					/* 必须清零计数器，方便下次帧同歿*/
+ 						/* 必须清零计数器，方便下次帧同歿*/
 }	
 
 //==========================================================
@@ -206,7 +156,7 @@ void Power_Process(void)
 	lcd_image((uint8_t *)gImage_open);
 //	#endif
 	InitGlobalValue();//初始化全局变量
-	init_timer(0, 10);//定时器初始化
+	init_timer(0, 5);//定时器初始化
 	
 	enable_timer(0);
 	
@@ -496,7 +446,7 @@ void Test_Process(void)
 //	sprintf((char *)DispBuf,"%2d",SaveData.Main_Func.Param.test);
 //	WriteString_16(210, 4, DispBuf,  0);
 		
-		if(mainswitch == 1 && timer0_counter>20 && Disp_Flag == 0 && busyflag == 0)//请求数据
+		if(mainswitch == 1 && timer0_counter>100 && Disp_Flag == 0 && busyflag == 0)//请求数据
 		{
 			
 			Send_Request(6,0);
@@ -508,50 +458,54 @@ void Test_Process(void)
 //		{
 //			OverProtect();
 //		}
-		if(TrigFlag==0)
-		{
-			if(SaveData.Main_Func.Trig!=0)
-				TrigFlag=1;
-		}	
-		if(TrigFlag==1||SaveData.Main_Func.Trig==0||TrigFlag==0)
-		{
-			Disp_Big_MainUnit(Test_Dispvalue.Unit[0],DISP_UnitMain[SaveData.Main_Func.Param.test]);//显示单位
+//		if(TrigFlag==0)
+//		{
+//			if(SaveData.Main_Func.Trig!=0)
+//				TrigFlag=1;
+//		}	
+//		if(TrigFlag==1||SaveData.Main_Func.Trig==0||TrigFlag==0)
+//		{
+//			
+//			
+//			
+//			
+//            //分选比较打开
+////            if(SaveData.Limit_Tab.Comp)
+////            {
+////                Test_Comp(&Comp_Change);
+////                Test_Comp_Fmq();
+////    //			if(Comp_flag)
+////    //				*(UserBuffer+19)='F';
+////    //			else
+////    //				*(UserBuffer+19)='P';
+////                
+////                             
+////                
+////            }
+////            else
+////            {
+////                All_LedOff1();
+////            
+////            
+////            }
+////			Send_T0_USB();//往U盘里面写数据  
+////             if(SaveData.Main_Func.buad)
+////                 Send_Uart3((uint8_t *) ComBuf3.send.buf);
+////                 
+////            if(Saveeeprom.Sys_set.U_flag)
+////                Write_Usbdata ( UserBuffer,29);
+//			
+//			
+//            if(TrigFlag==1)
+//                TrigFlag=2;
+//        
+//        }
+		WriteString_16(462,186,"W",0);
+		Disp_Big_MainUnit(Test_Dispvalue.Unit[0],DISP_UnitMain[SaveData.Main_Func.Param.test]);//显示单位
 //			Test_Dispvalue.Secondvalue.Dot=3;
-			Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],DISP_UnitSecond[SaveData.Main_Func.Param.test]);//副参数单位
-			
-			
-			WriteString_16(462,186,"W",0);
-            //分选比较打开
-            if(SaveData.Limit_Tab.Comp)
-            {
-                Test_Comp(&Comp_Change);
-                Test_Comp_Fmq();
-    //			if(Comp_flag)
-    //				*(UserBuffer+19)='F';
-    //			else
-    //				*(UserBuffer+19)='P';
-                
-                             
-                
-            }
-            else
-            {
-                All_LedOff1();
-            
-            
-            }
-//			Send_T0_USB();//往U盘里面写数据  
-//             if(SaveData.Main_Func.buad)
-//                 Send_Uart3((uint8_t *) ComBuf3.send.buf);
-//                 
-//            if(Saveeeprom.Sys_set.U_flag)
-//                Write_Usbdata ( UserBuffer,29);
-			
-			Disp_Testvalue(mainswitch);			//显示测量值
-            if(TrigFlag==1)
-                TrigFlag=2;
-        
-        }
+		Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],DISP_UnitSecond[SaveData.Main_Func.Param.test]);//副参数单位
+		Disp_Testvalue(mainswitch);			//显示测量值
+		MODS_Poll();
 		Disp_switch();
 //        Uart3_Process();
 //		else
@@ -3363,6 +3317,7 @@ void Fac_DebugProcess(void)
             Disp_FacCal(&Button_Page);
 			Disp_flag=0;	
 		}	
+		
 		key=HW_KeyScsn();
 		if(key==0xff)
 		{

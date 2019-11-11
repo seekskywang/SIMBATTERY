@@ -49,6 +49,7 @@ uint8_t (*_db_get_char)(LPC_UART_TypeDef *UARTx);
 uint8_t (*_db_get_val)(LPC_UART_TypeDef *UARTx, uint8_t option, uint8_t numCh, uint32_t * val);
 Com_TypeDef ComBuf;//串口收发缓冲
 Com_TypeDef ComBuf3;
+extern uint32_t Tick_10ms;
 char recbuf[200];
 uint16_t USART_RX_STA=0;       //接收状态标记
 static void MODS_03H(void);
@@ -258,11 +259,12 @@ void UARTPuts(LPC_UART_TypeDef *UARTx, const void *str)
 void UART3SEND(LPC_UART_TypeDef *UARTx, const void *str)
 {
 	uint8_t *s = (uint8_t *) str;
-    uint8_t i;
+    uint8_t i = 0;
     
-	for (i=0;i<g_tModS.TxCount;i++)
+	while (i<g_tModS.TxCount)
 	{
 		UARTPutChar(UARTx, *s++);
+		i++;
 	}
 // 	UARTPutChar(UARTx, 0xbf);
 	
@@ -921,43 +923,10 @@ void UART3_IRQHandler(void)
 		if (g_tModS.RxCount < S_RX_BUF_SIZE)
 		{
 			g_tModS.RxBuf[g_tModS.RxCount++] = Status;
+			Tick_10ms = 0;
 		}
     }
-//    if (!ComBuf3.rec.end)//接收没结束
-//    {
-////        SetRecTimeOut2(REC_TIME_OUT);//设置接收超时周期
-//        dat=Status;
-//        if (dat==(uint8_t)(UART_REC_BEGIN))//帧头
-//        {
-//            if(ComBuf3.rec.ptr!=0) //首字节
-//            {
-//                ComBuf3.rec.ptr=0;//重新接收 
-//            }
-//            else
-//            {
-//                ComBuf3.rec.buf[ComBuf3.rec.ptr++]=dat;
-//            }
-//        }
-//        else if (dat==(uint8_t)(UART_REC_END1))//帧尾
-//        {
-//            ComBuf3.rec.buf[ComBuf3.rec.ptr++]=dat;
-//            ComBuf3.rec.end=TRUE;//接收结束
-//            ComBuf3.rec.len=ComBuf3.rec.ptr;//存接收数据长度
-//            ComBuf3.rec.ptr=0;//指针清零重新开始新的一帧接收
-//            ComBuf3.rec.TimeOut=0;//接收超时清零
-//        }
-//        else
-//        {
-//            if (ComBuf3.rec.ptr>=REC_LEN_MAX)//最大接收帧长度
-//            {
-//                ComBuf3.rec.ptr=0;//重新接收
-//            }
-//            else
-//            {
-//                ComBuf3.rec.buf[ComBuf3.rec.ptr++]=dat;
-//            }
-//        }
-//    }
+
 }
 
 void RecHandle(void)

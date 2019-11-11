@@ -27,11 +27,22 @@ Project File Date:  01/12/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Open1788'
-compiling timer.c...
+compiling main.c...
+..\User\main.c(107): warning:  #177-D: variable "numBlks"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\main.c(107): warning:  #177-D: variable "blkSize"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\main.c(108): warning:  #177-D: variable "inquiryResult"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH];
+..\User\main.c(111): warning:  #177-D: variable "rc"  was declared but never referenced
+        uint8_t key,rc;
+..\User\main.c(118): warning:  #177-D: variable "buff"  was declared but never referenced
+        char buff[10];
+..\User\main.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=81136 RO-data=427984 RW-data=744 ZI-data=19360  
+Program Size: Code=80852 RO-data=427980 RW-data=744 ZI-data=19360  
 FromELF: creating hex file...
-".\Output\project.axf" - 0 Error(s), 0 Warning(s).
+".\Output\project.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -45,7 +56,7 @@ Package Vendor: Keil
   D:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.5.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>
