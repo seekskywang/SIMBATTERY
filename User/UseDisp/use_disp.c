@@ -1492,15 +1492,15 @@ void Disp_Button_TestSet(uint32_t value)
 		if(SaveData.Sys_Setup.Language == 1)
 		{
 			WriteString_16(83, 271-29, "MEADISP",  0);
-			WriteString_16(83+80, 271-29, "CORRECT",  0);
-			WriteString_16(83+80+80, 271-29, "LMTSET",  0);
-			WriteString_16(83+80+80+80, 271-29, "SYSSET",  0);
+			WriteString_16(83+80, 271-29, "SYSSET",  0);
+//			WriteString_16(83+80+80, 271-29, "LMTSET",  0);
+//			WriteString_16(83+80+80+80, 271-29, "SYSSET",  0);
 			
 		}else if(SaveData.Sys_Setup.Language == 0){
 			WriteString_16(83, 271-29, "测量显示",  0);
-			WriteString_16(83+80, 271-29, "用户校正",  0);
-			WriteString_16(83+80+80, 271-29, "极限设置",  0);
-			WriteString_16(83+80+80+80, 271-29, "系统设置",  0);
+			WriteString_16(83+80, 271-29, "系统设置",  0);
+//			WriteString_16(83+80+80, 271-29, "极限设置",  0);
+//			WriteString_16(83+80+80+80, 271-29, "系统设置",  0);
 		}
 		
 		
@@ -1581,10 +1581,12 @@ void Disp_Button_SysSet(void)
 	//	WriteString_16(83, 271-29, "测量设置",  0);
 	if(SaveData.Sys_Setup.Language == 1)
 	{
-		WriteString_16(83, 271-29, "MeasSet",  0);
+		WriteString_16(83, 271-29, "MEADISP",  0);
+		WriteString_16(83+80, 271-29, "MeasSet",  0);
 		
 	}else if(SaveData.Sys_Setup.Language == 0){
-		WriteString_16(83, 271-29, "测量设置",  0); 
+		WriteString_16(83, 271-29, "测量显示",  0);
+		WriteString_16(83+80, 271-29, "测量设置",  0); 
 	}
 	
 //		WriteString_16(83, 271-29, "系统",  0);
@@ -3624,9 +3626,9 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
 	if(SaveData.Sys_Setup.Language==1)
 	{
-		WriteString_16(LIST1+95, FIRSTLINE+2, "Brid",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "SimBat",  0);//
 	}else if(SaveData.Sys_Setup.Language==0){
-		WriteString_16(LIST1+95, FIRSTLINE+2, "电桥",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "模拟电池",  0);//
 	}
 	
 	

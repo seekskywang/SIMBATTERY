@@ -23,6 +23,8 @@ uint8_t  Avg_Test_Second[25][6];
 uint8_t  Avg_Count=0;
 uint8_t USART_RX_BUF[200];
 u8 primcomp,scedcomp;
+uint32_t Tick_10ms=0;
+uint32_t OldTick;
 const uint8_t Disp_Unit1[]={'p','n','u','m',' ','k','M'};
 const uint8_t Uart_Ordel[]={0x60,0x70,0x71,0x80,0x90,0xa0,0xb0,0xc0,0xe0};
 const uint8_t READDATA[7]={0xAB,0x01,0x06,0x03,0x08,0xbf,'\0'};
@@ -88,6 +90,92 @@ const uint8_t Disp_Main_Ord[][3]={
 	{0,2,7},//Rs-Q
 	{0,5,9},//G-B
 	};	
+
+void MODS_Poll(void)
+{
+	uint16_t addr;
+	static uint16_t crc1;
+    static uint32_t testi;
+	/* 超过3.5个字符时间后执行MODH_RxTimeOut()函数。全局变量 g_rtu_timeout = 1; 通知主程序开始解砿*/
+//	if (g_mods_timeout == 0)	
+//	{
+//		return;								/* 没有超时，继续接收。不要清雿g_tModS.RxCount */
+//	}
+
+    testi=g_tModS.RxCount;
+    testi=g_tModS.RxCount;
+    testi=g_tModS.RxCount;
+	if(testi>7)				/* ??????С?4???????? */
+	{
+		testi=testi;
+	}
+	testi=g_tModS.RxCount;
+    if(testi==8)				/* ??????С?4???????? */
+	{
+		testi=testi+1;
+	}
+	//??????ˇ???
+	if(OldTick!=Tick_10ms)
+  	{  
+	  OldTick=Tick_10ms;
+	   if(g_mods_timeout>0)
+      { 
+	    g_mods_timeout--;
+      }
+	  if(g_mods_timeout==0 && g_tModS.RxCount>0)   //??????
+      { 
+		// goto err_ret;
+	
+      }
+      else if(g_mods_timeout==0 && g_tModS.RxCount==0) //?????
+         return;
+      else //????ì???
+         return;
+	}
+	else   //???10msì?????
+		return;
+	//g_mods_timeout = 0;	 					/* ??? */
+
+	if (g_tModS.RxCount < 4)				/* ??????С?4???????? */
+	{
+		goto err_ret;
+	}
+
+	/* ??CRCУ?? */
+// 	crc1 = CRC16(g_tModS.RxBuf, g_tModS.RxCount);
+// 	if (crc1 != 0)
+// 	{
+// 		goto err_ret;
+// 	}
+
+// 	/* ??? (1??é */
+// 	addr = g_tModS.RxBuf[0];				/* ?1?? ?? */
+// 	if (addr != SADDR485)		 			/* ???????????ˇ??? */
+// 	{
+// 		goto err_ret;
+// 	}
+
+	/* 分析应用层协访*/
+//    if(g_tModS.RxBuf[2] == 0xA5)
+//    {
+//        UART_Action();
+//    }else{
+//        usartocflag = 1;
+//        u3sendflag = 1;
+        RecHandle();
+//        u3sendflag = 0;
+//    }
+							
+	
+err_ret:
+#if 0										/* 此部分为了串口打印结枿实际运用中可不要 */
+	g_tPrint.Rxlen = g_tModS.RxCount;
+	memcpy(g_tPrint.RxBuf, g_tModS.RxBuf, g_tModS.RxCount);
+#endif
+	
+ 	g_tModS.RxCount = 0;					/* 必须清零计数器，方便下次帧同歿*/
+}	
+
 //==========================================================
 //函数名称：Power_Process
 //函数功能：上电处理
@@ -118,7 +206,7 @@ void Power_Process(void)
 	lcd_image((uint8_t *)gImage_open);
 //	#endif
 	InitGlobalValue();//初始化全局变量
-	init_timer(0, 20);//定时器初始化
+	init_timer(0, 10);//定时器初始化
 	
 	enable_timer(0);
 	
@@ -319,37 +407,7 @@ void Send_T0_USB(void)
         ComBuf3.send.buf[7+12]=0XBF;
 }	
 
-////切换电流高低档
-//void Iswitch(u8 sw)
-//{
-//	Irange = sw;
-//	Send_Request(4,Irange);
-//}
 
-
-////充放电保护
-//void OverProtect(void)
-//{
-//	if(Irange == 1)
-//	{
-//		if(Test_Dispvalue.Imvalue.sign == 1)
-//		{
-//			if(Test_Dispvalue.Imvalue.Num >= SaveSIM.ChargePC.Num)
-//			{
-//				Send_Request(16,1);
-//				mainswitch = 0;
-//				Irange = 0;
-//			}
-//		}else{
-//			if(Test_Dispvalue.Imvalue.Num >= SaveSIM.LoadPC.Num)
-//			{
-//				Send_Request(16,0);
-//				mainswitch = 0;
-//				Irange = 0;
-//			}
-//		}
-//	}
-//}
 //测试程序
 void Test_Process(void)
 {
@@ -381,7 +439,6 @@ void Test_Process(void)
 	Disp_Test_Item();
 	Main_Second.Main_flag=0;
 	Main_Second.Second_falg=0;
-        
 	Delay_Key();
 	Send_Request(10,1);
     GPIO_ClearInt(0, 1<<19);
@@ -439,7 +496,7 @@ void Test_Process(void)
 //	sprintf((char *)DispBuf,"%2d",SaveData.Main_Func.Param.test);
 //	WriteString_16(210, 4, DispBuf,  0);
 		
-		if(mainswitch == 1 && timer0_counter>5 && Disp_Flag == 0 && busyflag == 0)//请求数据
+		if(mainswitch == 1 && timer0_counter>20 && Disp_Flag == 0 && busyflag == 0)//请求数据
 		{
 			
 			Send_Request(6,0);
@@ -499,7 +556,7 @@ void Test_Process(void)
 //        Uart3_Process();
 //		else
 //			Disp_Usbflag(0);
-		
+		 
 	  key=HW_KeyScsn();
 		if(key==0xff)
 		{
@@ -886,30 +943,30 @@ void Setup_Process(void)
 			Disp_Flag=0;
 		
 		}
-		if(timer0_counter>0)//请求数据
-		{
-			switch(Uart_Send_Flag)
-			{
-				case 0:
-//					Send_Request();
-					break;
-				case 1:
-					Send_Main_Ord();
-					break;
-				case 2:
-					Send_Freq(&Uart);
-					break;
-				default:
-//					Send_Request();
-					break;
-			
-			}
-			Uart_Send_Flag=0;
-			
-			timer0_counter=0;
-		
-		
-		}
+//		if(timer0_counter>0)//请求数据
+//		{
+//			switch(Uart_Send_Flag)
+//			{
+//				case 0:
+////					Send_Request();
+//					break;
+//				case 1:
+//					Send_Main_Ord();
+//					break;
+//				case 2:
+//					Send_Freq(&Uart);
+//					break;
+//				default:
+////					Send_Request();
+//					break;
+//			
+//			}
+//			Uart_Send_Flag=0;
+//			
+//			timer0_counter=0;
+//		
+//		
+//		}
 		key=HW_KeyScsn();
 		if(key==0xff)
 		{
@@ -927,133 +984,11 @@ void Setup_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							if(Button_Page.page==0)
-								SetSystemStatus(SYS_STATUS_TEST);//
-							else
-								SetSystemStatus(SYS_STATUS_FILE);
-								
-							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=0;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-								(uint8_t *)Cp_Button_Tip,&Button_Page);
-									
-									//Send_Main_Ord();
-								Uart_Send_Flag=1;
-									break;
-								case 1:
-									Button_Page.force=4;
 
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Z_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-									//Button_Page.page=1;
-									
-									break;
-								case 2:
-									SaveData.Main_Func.Param.page=8;
-									//SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq>14)
-								SaveData.Main_Func.Freq-=10;
-							else
-								SaveData.Main_Func.Freq=4;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							
-							Uart_Send_Flag=2;
+								SetSystemStatus(SYS_STATUS_TEST);//
+
 								
-							
 							break;
-						case 3:
-							if(SaveData.Main_Func.Level>0)
-								SaveData.Main_Func.Level--;
-							Uart.Ordel=Uart_Ordel[4];
-							Uart.name=SaveData.Main_Func.Level;
-							Uart_Send_Flag=2;
-							//SaveData.Main_Func.Level=0;
-							break;
-						case 4:
-							SaveData.Main_Func.Trig=0;
-							break;
-//						case 5:
-//							SaveData.Main_Func.Alc=0;
-//							break;
-						case 5:
-							
-							SaveData.Main_Func.Rsou=0;
-							Uart.Ordel=Uart_Ordel[8];
-							Uart.name=SaveData.Main_Func.Rsou;
-							Uart_Send_Flag=2;
-							break;
-//						case 6:
-//							if(SaveData.Main_Func.Trig_time.Num>0)
-//								SaveData.Main_Func.Trig_time.Num--;
-//							break;
-//						case 8:
-//							if(SaveData.Main_Func.Temp_time.Num>0)
-//								SaveData.Main_Func.Temp_time.Num--;
-//							break;
-						case 6:
-							SaveData.Main_Func.beep=0;
-							break;
-						case 7:
-							SaveData.Main_Func.Range.Range=0;						
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
-							break;
-						case 8:
-//							if(SaveData.Main_Func.Bias>0)
-//								SaveData.Main_Func.Bias--;
-							SaveData.Main_Func.Speed=0;
-							Uart.Ordel=Uart_Ordel[5];
-							Uart.name=SaveData.Main_Func.Speed;
-							Uart_Send_Flag=2;
-							break;
-//						case 12:
-//							
-//							break;
-//						case 10:
-//							if(SaveData.Main_Func.Avg>1)
-//								SaveData.Main_Func.Avg--;
-////							Uart.Ordel=Uart_Ordel[7];
-////							Uart.name=SaveData.Main_Func.Avg;
-////							Uart_Send_Flag=2;
-//							break;
-						case 9:
-							SaveData.Main_Func.V_i=0;
-							break;
-//						case 15:
-//							SaveData.Main_Func.Dcr=0;
-//							break;
-//						case 16:
-//							SaveData.Main_Func.DC_Range.Auto=1;
-//							Uart.Ordel=Uart_Ordel[6];
-//							Uart.name=SaveData.Main_Func.Range.Auto;
-//							Uart_Send_Flag=2;
-//							break;
-//						case 17:
-//							if(SaveData.Main_Func.DC_Level>0)
-//								SaveData.Main_Func.DC_Level--;
-//							break;
-						case 10://这里进行数据测量
-							if(SaveData.Main_Func.buad>0)
-								SaveData.Main_Func.buad--;
-							break;
-//						case 19:
-//							break;
 						default:
 							break;
 					
@@ -1067,126 +1002,9 @@ void Setup_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							if(Button_Page.page==0)
-								SetSystemStatus(SYS_STATUS_USERDEBUG);
-							else
-								SetSystemStatus(SYS_STATUS_SYSSET);
+							SetSystemStatus(SYS_STATUS_SYSSET);
 								
 							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=1;
-
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Cs_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-									//	SaveData.Main_Func.Param.page=0;
-								
-								//Button_Page.page=0;
-									break;
-								case 1:
-
-									Button_Page.force=5;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Y_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq>4)
-								SaveData.Main_Func.Freq--;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-							
-							
-							break;
-						case 3:
-							if(SaveData.Main_Func.Level<2)
-							SaveData.Main_Func.Level++;
-							Uart.Ordel=Uart_Ordel[4];
-							Uart.name=SaveData.Main_Func.Level;
-							Uart_Send_Flag=2;
-							break;
-						case 4:
-							SaveData.Main_Func.Trig=1;
-							break;
-//						case 5:
-//							SaveData.Main_Func.Alc=1;
-//							break;
-						case 5:
-							SaveData.Main_Func.Rsou=1;
-							Uart.Ordel=Uart_Ordel[8];
-							Uart.name=SaveData.Main_Func.Rsou;
-							Uart_Send_Flag=2;
-							break;
-//						case 6:
-//							if(SaveData.Main_Func.Trig_time.Num<60000)
-//								SaveData.Main_Func.Trig_time.Num++;
-//							break;
-//						case 8:
-//							if(SaveData.Main_Func.Temp_time.Num<60000)
-//								SaveData.Main_Func.Temp_time.Num++;
-//							break;
-						case 6:
-							SaveData.Main_Func.beep=1;
-							break;
-						case 7:
-							SaveData.Main_Func.Range.Range=6;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
-							break;
-						case 8:
-							SaveData.Main_Func.Speed=1;
-							Uart.Ordel=Uart_Ordel[5];
-							Uart.name=SaveData.Main_Func.Speed;
-							Uart_Send_Flag=2;
-							break;
-//						case 12:
-////							if(SaveData.Main_Func.Bias<5000)
-////								SaveData.Main_Func.Bias++;
-//							
-//							break;
-//						case 9:
-//							if(SaveData.Main_Func.Avg<25)
-//								SaveData.Main_Func.Avg++;
-////							Uart.Ordel=Uart_Ordel[7];
-////							Uart.name=SaveData.Main_Func.Avg;
-////							Uart_Send_Flag=2;
-//							break;
-						case 9:
-							SaveData.Main_Func.V_i=1;
-							break;
-//						case 15:
-//							SaveData.Main_Func.Dcr=1;
-//							break;
-//						case 16:
-//							SaveData.Main_Func.DC_Range.Auto=0;
-//							break;
-//						case 17:
-//							if(SaveData.Main_Func.DC_Level<5000)
-//								SaveData.Main_Func.DC_Level++;
-//							break;
-						case 10:
-							if(SaveData.Main_Func.buad<6)
-								SaveData.Main_Func.buad++;
-							break;
-//						case 19:
-//							break;
 						default:
 							break;
 					
@@ -1200,93 +1018,8 @@ void Setup_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							if(Button_Page.page==0)
-								SetSystemStatus(SYS_STATUS_LIMITSET);
-							else
-								SetSystemStatus(SYS_STATUS_TOOL);
+
 							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=2;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Lp_Button_Tip1,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 1:
-									Button_Page.force=6;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)R_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq<NUM_FREQ)
-								SaveData.Main_Func.Freq++;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-							break;
-						case 3:
-							break;
-						case 4:
-							SaveData.Main_Func.Trig=2;
-							break;
-//						case 5:
-//							break;
-						case 5:
-							break;
-//						case 6:
-//							break;
-//						case 8:
-//							break;
-						case 6:
-							SaveData.Main_Func.beep=2;
-							break;
-						case 7://MAX_R_RANGE
-							//SaveData.Main_Func.Range.Auto=0;
-							if(SaveData.Main_Func.Range.Range>0)
-								SaveData.Main_Func.Range.Range--;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
-							break;
-						case 8:
-							SaveData.Main_Func.Speed=2;
-							break;
-//						case 10:							
-//							break;
-						case 9:							
-							break;
-						case 10:
-							break;
-//						case 14:
-//							break;
-//						case 15:
-//							break;
-//						case 16:
-//							if(SaveData.Main_Func.DC_Range.Range>0)
-//								SaveData.Main_Func.DC_Range.Range--;
-//							break;
-//						case 17:
-//							break;
-//						case 18:
-//							break;
-//						case 19:
-//							break;
 						default:
 							break;
 					
@@ -1300,89 +1033,10 @@ void Setup_Process(void)
 					{
 						case 0:
 							if(Button_Page.page==0)				//SYS_STATUS_SYSSET
-							    SetSystemStatus(SYS_STATUS_SYSSET);
+							    
 //								if(Button_Page.page==0)
 //								SetSystemStatus(SYS_STATUS_ITEMSET);
 							break;
-						case 1:
-							switch(Button_Page.page)
-							{
-								case 0:
-									Button_Page.force=3;
-									Disp_Button_Fun_Set(LIST1+88, FIRSTLINE,
-									(uint8_t *)Ls_Button_Tip,&Button_Page);
-									Uart_Send_Flag=1;
-								//Button_Page.page=0;
-									break;
-								case 1:
-									SaveData.Main_Func.Param.test=22;
-									Uart_Send_Flag=1;
-//									SaveData.Main_Func.Param.page=1;
-//									SaveData.Main_Func.Param.test=7;
-									break;
-								case 2:
-//									SaveData.Main_Func.Param.page=2;
-//									SaveData.Main_Func.Param.test=8;
-									break;
-								default:
-									break;
-							
-							
-							}
-							
-							break;
-						case 2:
-							if(SaveData.Main_Func.Freq<NUM_FREQ-10)
-								SaveData.Main_Func.Freq+=10;
-							else
-								SaveData.Main_Func.Freq=NUM_FREQ;
-							Uart.Ordel=Uart_Ordel[3];
-							Uart.name=SaveData.Main_Func.Freq;
-							Uart_Send_Flag=2;
-							break;
-						case 3:
-							break;
-						case 4:
-							SaveData.Main_Func.Trig=3;
-							break;
-						case 5:
-							break;
-//						case 6:
-//							break;
-						case 6:
-							break;
-//						case 8:
-//							break;
-//						case 9:
-//							break;
-						case 7:
-							//SaveData.Main_Func.Range.Auto=0;
-							if(SaveData.Main_Func.Range.Range<MAX_R_RANGE)
-								SaveData.Main_Func.Range.Range++;
-							Uart.Ordel=Uart_Ordel[6];
-							Uart.name=SaveData.Main_Func.Range.Range;
-							Uart_Send_Flag=2;
-							break;
-						case 8:
-							break;
-//						case 10:
-//							break;
-						case 9:
-							break;
-						case 10:
-							break;
-//						case 15:
-//							break;
-//						case 16:
-//							if(SaveData.Main_Func.DC_Range.Range<MAX_R_RANGE)
-//								SaveData.Main_Func.DC_Range.Range++;
-//							break;
-//						case 17:
-//							break;
-//						case 18:
-//							break;
-//						case 19:
-//							break;
 						default:
 							break;
 					
@@ -1679,30 +1333,30 @@ void Range_Process(void)
 		
 //		Uart_Process();
 		
-		if(timer0_counter>0)//请求数据
-		{
-			switch(Uart_Send_Flag)
-			{
-				case 0:
-//					Send_Request();
-					break;
-				case 1:
-					Send_Main_Ord();
-					break;
-				case 2:
-					Send_Freq(&Uart);
-					break;
-				default:
-//					Send_Request();
-					break;
-			
-			}
-			Uart_Send_Flag=0;
-			
-			timer0_counter=0;
-		
-		
-		}
+//		if(timer0_counter>0)//请求数据
+//		{
+//			switch(Uart_Send_Flag)
+//			{
+//				case 0:
+////					Send_Request();
+//					break;
+//				case 1:
+//					Send_Main_Ord();
+//					break;
+//				case 2:
+//					Send_Freq(&Uart);
+//					break;
+//				default:
+////					Send_Request();
+//					break;
+//			
+//			}
+//			Uart_Send_Flag=0;
+//			
+//			timer0_counter=0;
+//		
+//		
+//		}
 		if(SaveData.Limit_Tab.Comp)
 		{
 			num=Test_Comp(&Comp_Change);
@@ -1903,29 +1557,29 @@ void Range_CountProcess(void)
 			
 		}
 //		uart_count=Uart_Process();
-		if(timer0_counter>0)//请求数据
-		{
-			switch(Uart_Send_Flag)
-			{
-				case 0:
-//					Send_Request();
-					break;
-				case 1:
-					Send_Main_Ord();
-					break;
-				case 2:
-					//Send_Freq(&Uart);
-					break;
-				default:
-//					Send_Request();
-					break;
-			
-			}
-			Uart_Send_Flag=0;
-			
-			timer0_counter=0;
-				
-		}
+//		if(timer0_counter>0)//请求数据
+//		{
+//			switch(Uart_Send_Flag)
+//			{
+//				case 0:
+////					Send_Request();
+//					break;
+//				case 1:
+//					Send_Main_Ord();
+//					break;
+//				case 2:
+//					//Send_Freq(&Uart);
+//					break;
+//				default:
+////					Send_Request();
+//					break;
+//			
+//			}
+//			Uart_Send_Flag=0;
+//			
+//			timer0_counter=0;
+//				
+//		}
 		if(SaveData.Limit_Tab.Comp&&uart_count==1)
 		{
 			Test_Comp(&Comp_Change);
@@ -2819,7 +2473,7 @@ void Use_SysSetProcess(void)
 					{ 
 						case 0:
 //							if(Button_Page.page==0)
-								SetSystemStatus(SYS_STATUS_SETUPTEST);
+								SetSystemStatus(SYS_STATUS_TEST);
 //							else
 //							{
 //								SetSystemStatus(SYS_STATUS_SYSSET);
@@ -2984,6 +2638,7 @@ void Use_SysSetProcess(void)
 					switch(Button_Page.index)
 					{
 						case 0:
+							SetSystemStatus(SYS_STATUS_SETUPTEST);
 						//	SetSystemStatus(SYS_STATUS_SETUPTEST);
 							break;
 						case 1:
@@ -3477,31 +3132,31 @@ void Use_DebugProcess(void)
 			Disp_flag=0;	
 		}
 	  	
-			if(timer0_counter>0)//请求数据
-		{
-			switch(Uart_Send_Flag)
-			{
-				case 0:
-					break;
-				case 1:	
-					 Open_Clear();	
-					break;
-				case 2:	
-                    Open_Clear();
-					//Short_Clear();
-					break;
-				case 3:	
-					Close_Clear();
-					break;
-				default:
-					break;
-			
-			}
-			
-			Uart_Send_Flag=0;
-			timer0_counter=0;		
-		
-		}
+//			if(timer0_counter>0)//请求数据
+//		{
+//			switch(Uart_Send_Flag)
+//			{
+//				case 0:
+//					break;
+//				case 1:	
+//					 Open_Clear();	
+//					break;
+//				case 2:	
+//                    Open_Clear();
+//					//Short_Clear();
+//					break;
+//				case 3:	
+//					Close_Clear();
+//					break;
+//				default:
+//					break;
+//			
+//			}
+//			
+//			Uart_Send_Flag=0;
+//			timer0_counter=0;		
+//		
+//		}
 		
 		
 		key=HW_KeyScsn();
@@ -3754,7 +3409,7 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_Disp:
-					
+					SetSystemStatus(SYS_STATUS_TEST);
 				break;
 				case Key_SETUP:
 					

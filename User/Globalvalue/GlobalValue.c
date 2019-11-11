@@ -37,7 +37,8 @@ uint8_t LM_S;
 uint8_t busyflag;
 uint8_t ptflag;
 uint16_t I_ADC,V_ADC;
-
+struct MODS_T g_tModS;
+uint8_t g_mods_timeout;
 
 uint8_t LOW_I,H_L,SWITCH_A; 
 

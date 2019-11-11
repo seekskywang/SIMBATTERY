@@ -124,7 +124,7 @@ int main(void)
     GPIO_Plc_Configuration();
     debug_frmwrk_init();
 	softswitch=0;
-	debug_uart3_init(9600);//串口3初始化
+	debug_uart3_init(4);//串口3初始化
 	EEPROM_Init();
 	
     RTC_INT();

@@ -27,7 +27,8 @@ volatile uint32_t timer0_counter = 0;
 volatile uint32_t timer1_counter = 0;
 volatile uint32_t timer2_counter = 0;
 volatile uint32_t timer3_counter = 0;
-
+extern void MODS_Poll(void);
+extern uint32_t Tick_10ms;
 /*****************************************************************************
 ** Function name:		delayMs
 **
@@ -104,6 +105,8 @@ void delayMs(uint8_t timer_num, uint32_t delayInMs)
 void TIMER0_IRQHandler (void) 
 {  
     LPC_TIM0->IR = 0x1<<0;		/* clear interrupt flag */
+	Tick_10ms ++;
+	MODS_Poll();
   timer0_counter++;
   return;
 }
