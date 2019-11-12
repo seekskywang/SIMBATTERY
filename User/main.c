@@ -122,7 +122,7 @@ int main(void)
 	NVIC_EnableIRQ(GPIO_IRQn);
 	HW_keyInt();
     GPIO_Plc_Configuration();
-//    debug_frmwrk_init();
+    debug_frmwrk_init();
 	softswitch=0;
 	debug_uart3_init(4);//´®¿Ú3³õÊ¼»¯
 	EEPROM_Init();

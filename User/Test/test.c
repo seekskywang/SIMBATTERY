@@ -507,6 +507,7 @@ void Test_Process(void)
 		Disp_Testvalue(mainswitch);			//œ‘ æ≤‚¡ø÷µ
 		MODS_Poll();
 		Disp_switch();
+		All_LedOff1();
 //        Uart3_Process();
 //		else
 //			Disp_Usbflag(0);
