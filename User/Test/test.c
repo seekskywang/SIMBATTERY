@@ -61,6 +61,28 @@ extern uint16_t USART_RX_STA;
 //	//{1,1,0},
 //	};
 
+//命令重发
+void CMD_Resend(void)
+{
+	switch(sendflag)
+	{
+		case 1:
+		{
+			Send_Request(3,mainswitch);
+		}break;
+		case 2:
+		{
+			Send_Request(10,1);
+		}break;
+		default:break;
+	}
+}
+
+//读取温度
+void Read_Temp(void)
+{
+	Send_Request(17,0);
+}
 const uint8_t Disp_Main_Ord[][3]={
 	{1,1,6},
 	{1,1,7},
@@ -156,7 +178,7 @@ void Power_Process(void)
 	lcd_image((uint8_t *)gImage_open);
 //	#endif
 	InitGlobalValue();//初始化全局变量
-	init_timer(0, 5);//定时器初始化
+	init_timer(0, 2);//定时器初始化
 	
 	enable_timer(0);
 	
@@ -439,6 +461,18 @@ void Test_Process(void)
 			
 		//	printf("\r\n\r\n");//插入换行
 			USART_RX_STA=0;			  //清零 虚拟寄存器		  为一下次采集做准备
+		}else{
+			if(mainswitch == 1 && timer0_counter>50 && Disp_Flag == 0 && busyflag == 0)//请求数据
+			{
+				
+				Send_Request(6,0);
+				timer0_counter=0;
+			}
+		}
+		if(mainswitch == 0 && timer2_counter > 500)
+		{
+			Read_Temp();
+			timer2_counter = 0;
 		}
 //		Uart_Process();
 //		Send_Uart3((uint8_t *)READDATA);
@@ -446,66 +480,18 @@ void Test_Process(void)
 //	sprintf((char *)DispBuf,"%2d",SaveData.Main_Func.Param.test);
 //	WriteString_16(210, 4, DispBuf,  0);
 		
-		if(mainswitch == 1 && timer0_counter>100 && Disp_Flag == 0 && busyflag == 0)//请求数据
+		if(timer1_counter > 10)
 		{
-			
-			Send_Request(6,0);
-			timer0_counter=0;
-		
+			CMD_Resend();
+			timer1_counter = 0;
 		}
-		
-//		if(mainswitch == 1)
-//		{
-//			OverProtect();
-//		}
-//		if(TrigFlag==0)
-//		{
-//			if(SaveData.Main_Func.Trig!=0)
-//				TrigFlag=1;
-//		}	
-//		if(TrigFlag==1||SaveData.Main_Func.Trig==0||TrigFlag==0)
-//		{
-//			
-//			
-//			
-//			
-//            //分选比较打开
-////            if(SaveData.Limit_Tab.Comp)
-////            {
-////                Test_Comp(&Comp_Change);
-////                Test_Comp_Fmq();
-////    //			if(Comp_flag)
-////    //				*(UserBuffer+19)='F';
-////    //			else
-////    //				*(UserBuffer+19)='P';
-////                
-////                             
-////                
-////            }
-////            else
-////            {
-////                All_LedOff1();
-////            
-////            
-////            }
-////			Send_T0_USB();//往U盘里面写数据  
-////             if(SaveData.Main_Func.buad)
-////                 Send_Uart3((uint8_t *) ComBuf3.send.buf);
-////                 
-////            if(Saveeeprom.Sys_set.U_flag)
-////                Write_Usbdata ( UserBuffer,29);
-//			
-//			
-//            if(TrigFlag==1)
-//                TrigFlag=2;
-//        
-//        }
+
 		WriteString_16(462,186,"W",0);
 		Disp_Big_MainUnit(Test_Dispvalue.Unit[0],DISP_UnitMain[SaveData.Main_Func.Param.test]);//显示单位
 //			Test_Dispvalue.Secondvalue.Dot=3;
 		Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],DISP_UnitSecond[SaveData.Main_Func.Param.test]);//副参数单位
 		Disp_Testvalue(mainswitch);			//显示测量值
-		MODS_Poll();
+		
 		Disp_switch();
 		All_LedOff1();
 //        Uart3_Process();
@@ -3350,7 +3336,12 @@ void Fac_DebugProcess(void)
 				case Key_F4://校正清零命令
 					if(Button_Page.page == 3)
 					{
-						Send_Request(15,0);
+						if(Button_Page.index == 1 || Button_Page.index == 4)
+						{
+							Send_Request(15,0);
+						}else{
+							Send_Request(15,1);
+						}
 					}
 				break;
 				case Key_F5:
@@ -3382,7 +3373,33 @@ void Fac_DebugProcess(void)
 				case Key_UP:
 					
 					if(Button_Page.page == 1)
-					{//电压校正4档
+					{//电压校正3档
+						if(Button_Page.index>0)
+							Button_Page.index--;
+						else
+							Button_Page.index=6;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 1000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 3)
+						{
+							SaveSIM.Voltage.Num = 13000;
+						}else if(Button_Page.index == 4)
+						{
+							SaveSIM.Voltage.Num = 17000;
+						}else if(Button_Page.index == 5)
+						{
+							SaveSIM.Voltage.Num = 19000;
+						}else if(Button_Page.index == 6)
+						{
+							SaveSIM.Voltage.Num = 19500;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 2){//电压控制4档
 						if(Button_Page.index>0)
 							Button_Page.index--;
 						else
@@ -3393,27 +3410,13 @@ void Fac_DebugProcess(void)
 							SaveSIM.Voltage.Num = 1000;
 						}else if(Button_Page.index == 2)
 						{
-							SaveSIM.Voltage.Num = 5000;
+							SaveSIM.Voltage.Num = 10000;
 						}else if(Button_Page.index == 3)
 						{
-							SaveSIM.Voltage.Num = 10000;
+							SaveSIM.Voltage.Num = 15000;
 						}else if(Button_Page.index == 4)
 						{
-							SaveSIM.Voltage.Num = 20000;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 2){//电压控制2档
-						if(Button_Page.index>0)
-							Button_Page.index--;
-						else
-							Button_Page.index=2;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 20000;
+							SaveSIM.Voltage.Num = 19000;
 						}
 						Send_Request(10,1);
 					}else if(Button_Page.page == 3){//电流测量
@@ -3433,7 +3436,33 @@ void Fac_DebugProcess(void)
 				case Key_DOWN:
 					
 					if(Button_Page.page == 1)
-					{//电压校正4档
+					{//电压校正3档
+						if(Button_Page.index>6)
+							Button_Page.index=0;
+						else
+							Button_Page.index++;
+						
+						if(Button_Page.index == 1)
+						{
+							SaveSIM.Voltage.Num = 1000;
+						}else if(Button_Page.index == 2)
+						{
+							SaveSIM.Voltage.Num = 10000;
+						}else if(Button_Page.index == 3)
+						{
+							SaveSIM.Voltage.Num = 13000;
+						}else if(Button_Page.index == 4)
+						{
+							SaveSIM.Voltage.Num = 17000;
+						}else if(Button_Page.index == 5)
+						{
+							SaveSIM.Voltage.Num = 19000;
+						}else if(Button_Page.index == 6)
+						{
+							SaveSIM.Voltage.Num = 19500;
+						}
+						Send_Request(10,1);
+					}else if(Button_Page.page == 2){//电压控制4档
 						if(Button_Page.index>4)
 							Button_Page.index=0;
 						else
@@ -3444,27 +3473,13 @@ void Fac_DebugProcess(void)
 							SaveSIM.Voltage.Num = 1000;
 						}else if(Button_Page.index == 2)
 						{
-							SaveSIM.Voltage.Num = 5000;
+							SaveSIM.Voltage.Num = 10000;
 						}else if(Button_Page.index == 3)
 						{
-							SaveSIM.Voltage.Num = 10000;
+							SaveSIM.Voltage.Num = 15000;
 						}else if(Button_Page.index == 4)
 						{
-							SaveSIM.Voltage.Num = 20000;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 2){//电压控制2档
-						if(Button_Page.index>2)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 20000;
+							SaveSIM.Voltage.Num = 19000;
 						}
 						Send_Request(10,1);
 					}else if(Button_Page.page == 3){//电流控制
@@ -3528,8 +3543,13 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_TRIG:
-					Send_Request(3,1);
-					
+					if(mainswitch == 0)
+					{
+						mainswitch = 1;						
+					}else{
+						mainswitch = 0;
+					}
+					Send_Request(3,mainswitch);
 				break;
 				default:
 					

@@ -40,6 +40,17 @@ void Bais_LedOn(void)
 
 }
 
+void FAN_ON(void)//打开风扇
+{
+	GPIO_SetDir(0, (1<<21), 1);
+	GPIO_SetValue(0, (1<<21)); 
+}
+void FAN_OFF(void)//关闭风扇
+{
+	GPIO_SetDir(0, (1<<21), 1);
+	GPIO_ClearValue(0, (1<<21)); 
+}
+
 void Bais_LedOff(void)
 {
 	GPIO_ClearValue(1, (1<<14));
@@ -163,6 +174,12 @@ void Plc_Fail(void)//不合格继电器
 //	systickcnt = SysTickCnt;
 //	while ((SysTickCnt - systickcnt) < tick);
 //}
+void GPIO_485_Config(void)
+{
+	
+	
+}
+
 void GPIO_Led_Configuration(void)
 {
 	GPIO_SetDir(0, (1<<10), GPIO_DIRECTION_OUTPUT);//开机灯

@@ -37,6 +37,7 @@ char CmdStr[CmdNumb][CmdLen] =
 	{"<0/CTRLV_"},        //14 控制电压校准     1个字符
 	{"<0/CLEARI_"},        //15 控制电压校准     1个字符
 	{"<0/OVER_"}, 			//16 保护信号   1个字符
+	{"<0/TEMP_?"}, 			//17 查询温度   1个字符
 };
 
 char RecStr[CmdNumb][CmdLen] =
@@ -53,9 +54,10 @@ char RecStr[CmdNumb][CmdLen] =
 	{"HORL_\0"},          //切高低档位  1个字符 
 	{"LVL_\0"},           //DAC8562输出 A路 0~5V
 	{"SWITCH_\0"},        //总开关     1个字符 
-	{"CALV_\0"},        //13电压校准     1个字符 
+	{"CALV_\0"},        //12电压校准     1个字符 
 	{"CALI_\0"},        //13电流校准     1个字符 
-	{"OVER_\0"},        //13电流校准     1个字符 
+	{"OVER_\0"},        //14过流     1个字符 
+	{"TEMP_\0"},        //15温度
 };
 
 const uint8_t Test_Setitem_E[][9+1]=
@@ -90,12 +92,12 @@ const uint8_t Test_Setitem[][14+1]=
 
 const uint8_t Fac_Calitem[][14+1]=
 {
-	{"0~5V  "},
-	{"5~10V "},
-	{"10~15V"},
-	{"15~20V"},	
-	{"      "},
-	{"      "}
+	{"1V    "},
+	{"10V   "},
+	{"13V   "},
+	{"18V   "},	
+	{"19V   "},
+	{"19.5V "}
 };
 
 const uint8_t Fac_ICalitem[][14+1]=
@@ -110,10 +112,10 @@ const uint8_t Fac_ICalitem[][14+1]=
 
 const uint8_t CtrV_Calitem[][14+1]=
 {
+	{"1V    "},
 	{"10V   "},
-	{"20V   "},
-	{"      "},
-	{"      "},
+	{"15V   "},
+	{"19V   "},
 	{"      "},
 	{"      "}
 };
@@ -4235,7 +4237,7 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 			Colour.black=LCD_COLOR_TEST_BACK;
 			LCD_DrawRect(80, 26+i*22,172 ,26+i*22+16 , Colour.black ) ;
 		}
-		for(i=0;i<4;i++)
+		for(i=0;i<6;i++)
 		{
 			Black_Select=(Button_Page->index==(i+1))?1:0;
 			if(Black_Select)
@@ -4257,7 +4259,7 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 			Colour.black=LCD_COLOR_TEST_BACK;
 			LCD_DrawRect(80, 26+i*22,172 ,26+i*22+16 , Colour.black ) ;
 		}
-		for(i=0;i<2;i++)
+		for(i=0;i<4;i++)
 		{
 			Black_Select=(Button_Page->index==(i+1))?1:0;
 			if(Black_Select)
@@ -4307,6 +4309,8 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 		case 2:
 		case 3:
 		case 4:
+		case 5:
+		case 6:
 			Colour.Fword=White;
 			Colour.black=LCD_COLOR_TEST_BUTON;
 			WriteString_16(BUTTOM_X_VALUE+4*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"校正",  0);
@@ -6189,6 +6193,28 @@ void Disp_Button_Fun_Set(uint16_t xpos,uint16_t ypos,uint8_t * Disp_Item,Button_
 
 
 }
+
+//风扇控制
+void FAN_CTRL(void)
+{
+	if(mainswitch == 1)
+	{
+		if((Test_Dispvalue.Imvalue.Num > 2000 && Irange == 1) || temperature >= 45)
+		{
+			FAN_ON();
+		}else if(Test_Dispvalue.Imvalue.Num < 1800 && Irange == 1 && temperature <= 35){
+			FAN_OFF();
+		}
+	}else{
+		if(temperature >= 45)
+		{
+			FAN_ON();
+		}else if(temperature <= 35){
+			FAN_OFF();
+		}
+	}
+	
+}
 void Disp_Testvalue(uint8_t siwtch)
 {
 	if(siwtch == 0)
@@ -6213,6 +6239,7 @@ void Disp_Testvalue(uint8_t siwtch)
 		
 		Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//显示电流
 		WriteString_Big(130-40,95+55 ,DispBuf);
+		
 		if(Irange == 1)
 		{
 			Test_Dispvalue.Pvalue.Num = (uint32_t)(((float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0))*1000);
@@ -6228,7 +6255,7 @@ void Disp_Testvalue(uint8_t siwtch)
 			LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+30*(55*40/8));
 		}
 	}
-
+	FAN_CTRL();//风扇控制
 
 }
 void Disp_Big_MainUnit(uint8_t unit,uint8_t unit1)		//显示主参数单位
@@ -6547,6 +6574,7 @@ void Send_Request(u8 x,u8 req)
 		case 3:
 		{
 			sprintf(&USART_RX_BUF[len],"%1d",req);
+			sendflag = 1;
 		}break;
 		case 4:
 		{
@@ -6572,6 +6600,7 @@ void Send_Request(u8 x,u8 req)
 			,SaveSIM.ChargePT.Num,SaveSIM.LoadPT.Num);
 			strcat(USART_RX_BUF,buf);
 			len+=strlen(buf)-1;
+			sendflag = 2;
 		}break;
 		case 11:
 		{
@@ -6609,6 +6638,11 @@ void Send_Request(u8 x,u8 req)
 			}
 			strcat(USART_RX_BUF,buf);
 			len+=2;
+//			sendflag = 3;
+		}break;
+		case 17:
+		{
+			len -= 1;
 		}break;
 	}
 	USART_RX_BUF[len+1] = 0x0d;
@@ -6681,7 +6715,8 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 	currCharNum=0;
 	if((buf[currCharNum] != ChrStartR) || (buf[len-2] != ChrEndR)||(buf[len-1] != ChrEndS))
     {
-		return SetErr_ACK(buf,addr ,CMD_ERR); 
+//		return SetErr_ACK(buf,addr ,CMD_ERR); 
+		return 0; 
     } 
 	str[currCharNum++] = ChrStartR;
 	sprintf(&str[currCharNum],"%d",addr);
@@ -6691,8 +6726,8 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 	//testflag = cmd_flag;
 	if(0!=cmd_flag)
 	{
-		return SetErr_ACK(buf, addr ,CMD_ERR);
-		
+//		return SetErr_ACK(buf, addr ,CMD_ERR);
+		return 0;
 	}
 	for (j=0;j<CmdNumb;j++)
     {
@@ -6757,6 +6792,19 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 							mainswitch = temp1;
 						}
 					}
+					temp1 = 0;
+					if(buf[currCharNum++] == ',')
+					{
+						for(i=0;i<2;i++)
+						{
+							temp1 = temp1*10+(buf[currCharNum++]-0x30);
+						}
+						temperature = temp1;
+					}
+//					if(mainswitch == 1)
+//					{
+//						sendflag = 1;
+//					}
 				}
 				else
 				{
@@ -6843,48 +6891,22 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 //		    }
 //		  
 //				break;
-//			case 6:
-//				pntlen = 1;
-//				if(buf[currCharNum]=='?')
-//				{
-//					sprintf(&buf[currCharNum],"%1d",LM_S_Vale);
-//				    currCharNum+=pntlen;
-//				    buf[currCharNum++ ] = ChrEndR;
-//					
-//				}
-//				else
-//				{
-//					tmpFg = 1;
-//		            for(i=0;i<pntlen;i++)
-//		            {
-//					   if(IsDigitChar(buf[currCharNum+i])==1)
-//					   {
-//					      tmpFg = (tmpFg&0x01);
-//					   }
-//					   else
-//					   {
-//					      tmpFg = 0;
-//					   }
-//		            }
-//					if(tmpFg!=1||buf[currCharNum+pntlen]!=ChrEndR)
-//					{
-//						return SetErr_ACK(buf, addr ,CMD_ERR);
-//						
-//					}					
-//					for(i=0,temp1=0;i<pntlen;i++)
-//		            {
-//		                  temp1 = temp1*10+(buf[currCharNum++]-0x30);
-//					}		                   
-//				    if(temp1>LM_S_H)
-//			         {
-//			             return SetErr_ACK(buf, addr ,PARA_ERR);
-//						 
-//			         }
-//		        	 LM_S_Vale=temp1;
-//							Change_LM_Val(LM_S_Vale);
-//					 buf[currCharNum++] = ChrEndR;
-//		        }
-//				break;
+			case 6:
+				pntlen = 1;				
+				for(i=0,temp1=0;i<pntlen;i++)
+				{
+					  temp1 = temp1*10+(buf[currCharNum++]-0x30);
+				}		                   
+				if(temp1>1)
+			    {
+				    return SetErr_ACK(buf, addr ,PARA_ERR);
+					
+			    }
+				mainswitch=temp1;
+				sendflag = 0;
+//				Change_LM_Val(LM_S_Vale);
+				buf[currCharNum++] = ChrEndR;
+			break;
 //			case 7:
 //				pntlen = 7;
 //				if(buf[currCharNum]=='?')
@@ -6991,64 +7013,21 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 //					 buf[currCharNum++] = ChrEndS;
 //		        }
 //				break;
-//			case 10:
-//				pntlen = 8;
-//				if(buf[currCharNum]=='?')
-//				{
-//					buf[currCharNum++]=(Lvl_Vale>=0?'+':'-');
-//								sprintf(&buf[currCharNum],"%03.3f",Lvl_Vale);
-//				    currCharNum+=pntlen;
-//				    buf[currCharNum++ ] = ChrEndS;
-//				}
-//				else
-//				{
-//					tmpFg = 1;
-//		            for(i=0;i<pntlen;i++)
-//		            {
-//									if(i==0||i==4)
-//										continue;
-//					   if(IsDigitChar(buf[currCharNum+i])==1)
-//					   {
-//					      tmpFg = (tmpFg&0x01);
-//					   }
-//					   else
-//					   {
-//					      tmpFg = 0;
-//					   }
-//		            }
-//					if(tmpFg!=1||buf[currCharNum+pntlen]!=ChrEndR)
-//					{
-//						return SetErr_ACK(buf, addr ,CMD_ERR);
-//						
-//					}
-//					temp1=0;
-//					for(i=0;i<pntlen;i++)
-//		            {
-//		               if(i==0)
-//					   {
-//						   fsingal = (buf[currCharNum++]=='+'?1:(-1));
-//						   continue; 
-//					   } 
-//					   else if(i==4)
-//					   {
-//						   currCharNum++;
-//						   continue; 
-//					   }
-//					   else									 
-//					   temp1 = temp1*10+(buf[currCharNum++]-0x30);
-//					}		                   
-////				    if(temp1 >1)
-////			         {
-////			             return SetErr_ACK(buf, addr ,PARA_ERR);
-////						 
-////			         }
-//               
-//							  Lvl_Vale=temp1*0.0001*fsingal;
-//						    LVL_DA =Lvl_Vale;
-////							Voltage_Convert(LVL_DA);
-//					 buf[currCharNum++] = ChrEndR;
-//		        }
-//				break;
+			case 10:
+				sendflag = 0;
+				break;
+			case 15:
+				pntlen = 2;				
+				for(i=0,temp1=0;i<pntlen;i++)
+				{
+					  temp1 = temp1*10+(buf[currCharNum++]-0x30);
+				}		                   
+
+				temperature=temp1;
+//				sendflag = 0;
+//				Change_LM_Val(LM_S_Vale);
+				buf[currCharNum++] = ChrEndR;
+			break;
 //			case 11:
 //				pntlen = 1;
 //				if(buf[currCharNum]=='?')
@@ -7143,7 +7122,8 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 //					}
 //				}break;
 			default:    //ERR
-           		 return SetErr_ACK(buf, addr ,CMD_ERR);
+//           		 return SetErr_ACK(buf, addr ,CMD_ERR);
+				 return 0;
 				  
 		  }
 		  break;
@@ -7152,7 +7132,8 @@ uint16_t SerialRemoteHandleL(uint8_t len,char* buf)
 	}
 	if(j>=CmdNumb)
 	{
-		return SetErr_ACK(buf, addr ,CMD_ERR);			  
+//		return SetErr_ACK(buf, addr ,CMD_ERR);
+		return 0;		
 	}
 	return currCharNum+1;
 }

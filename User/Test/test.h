@@ -3,7 +3,7 @@
 #include "stdint.h"
 #include  "Globalvalue/globalvalue.h"
 
-#define  CmdNumb         16
+#define  CmdNumb         17
 #define  CmdLen          12 
 
 #define ChrStartR      0x3E

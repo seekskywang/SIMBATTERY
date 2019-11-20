@@ -22,7 +22,7 @@
 #include "lpc_types.h"
 #include "timer.h"
 #include "system_LPC177x_8x.h"
-
+#include "Globalvalue/GlobalValue.h"
 volatile uint32_t timer0_counter = 0;
 volatile uint32_t timer1_counter = 0;
 volatile uint32_t timer2_counter = 0;
@@ -106,7 +106,14 @@ void TIMER0_IRQHandler (void)
 {  
     LPC_TIM0->IR = 0x1<<0;		/* clear interrupt flag */
 	Tick_10ms ++;
-    timer0_counter++;
+	MODS_Poll();
+	if(mainswitch == 1)
+	{
+		timer0_counter++;
+	}else{
+		timer2_counter++;
+	}
+	timer1_counter++;
   return;
 }
 

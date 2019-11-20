@@ -554,7 +554,7 @@ void debug_frmwrk_init(void)
 	 */
 	UART_ConfigStructInit(&UARTConfigStruct);
 	// Re-configure baudrate to 115200bps
-	UARTConfigStruct.Baud_rate = 115200;
+	UARTConfigStruct.Baud_rate = 9600;
 //	UARTConfigStruct.Baud_rate = 9600;
 	// Initialize DEBUG_UART_PORT peripheral with given to corresponding parameter
 	UART_Init(DEBUG_UART_PORT, &UARTConfigStruct);//|UART_INTCFG_THRE
@@ -641,8 +641,13 @@ void UART0_IRQHandler(void)//UART0_IRQn
 			}
 			else
 				{
-				USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;			//将接收的数据 存入数组中
-					USART_RX_STA++;									//长度+1 为下一次做准备
+				if(Res == 0x00)
+				{
+					USART_RX_STA=0;//接收数据错误,重新开始接收					
+				}else{
+					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;			//将接收的数据 存入数组中
+					USART_RX_STA++;	  
+				}					//长度+1 为下一次做准备
 				if(USART_RX_STA>(USART_REC_LEN-1))
 					USART_RX_STA=0;//接收数据错误,重新开始接收	  
 				}		 

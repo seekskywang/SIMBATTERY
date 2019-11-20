@@ -23,6 +23,7 @@
 ".\output\debug_frmwrk.o"
 ".\output\lpc177x_8x_pinsel.o"
 ".\output\lpc177x_8x_eeprom.o"
+".\output\lpc177x_8x_gpdma.o"
 ".\output\usbhost_fat.o"
 ".\output\usbhost_lpc17xx.o"
 ".\output\usbhost_ms.o"

@@ -61,6 +61,8 @@ float LVL_DA;
 // uint8_t Range;//当前量程
 //
 uint8_t softswitch;
+uint8_t temperature;
+uint8_t sendflag = 0;
 uint8_t Uart_Send_Flag;
 unsigned long Count_buff[12];
 unsigned long MenuIndex;//待机菜单项

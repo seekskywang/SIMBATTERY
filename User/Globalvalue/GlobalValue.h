@@ -488,7 +488,7 @@ typedef struct
 	Sort_TypeDef LoadPT;//放电保护时间
 	uint8_t qvflag;//快捷电压选项
 	Sort_TypeDef CALV[4];//测量电压校准
-	Sort_TypeDef CTRLV[2];//控制电压校准
+	Sort_TypeDef CTRLV[4];//控制电压校准
 	Sort_TypeDef CALI[6];//测量电流校准
 }SaveSet;
 extern SaveSet SaveSIM;
@@ -621,7 +621,8 @@ extern unsigned long Count_buff[12];
 extern uint8_t Uart_Send_Flag;
 extern uint8_t Usb_Open_flag;
 extern uint8_t debug_over;
-
+extern uint8_t temperature;
+extern uint8_t sendflag;
 //参数
 extern int32_t V_CS,I_CS;
 extern uint8_t Mode, LM_S;

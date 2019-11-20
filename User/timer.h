@@ -23,6 +23,8 @@
 	
 #define TIME_INTERVAL	(9000000/100 - 1)
 extern volatile uint32_t timer0_counter;
+extern volatile uint32_t timer1_counter;
+extern volatile uint32_t timer2_counter;
 extern void delayMs(uint8_t timer_num, uint32_t delayInMs);
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );

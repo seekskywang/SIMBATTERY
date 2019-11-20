@@ -58,7 +58,8 @@ void Lock_Control_On(void);
 
 void Bais_LedOff(void);
 void Bais_LedOn(void);
-
+void FAN_ON(void);
+void FAN_OFF(void);
 
 
 void Power_Off_led(void);
