@@ -51,6 +51,18 @@ void FAN_OFF(void)//关闭风扇
 	GPIO_ClearValue(0, (1<<21)); 
 }
 
+void DE485(void)//485发送
+{
+	GPIO_SetDir(4, (1<<27), 1);
+	GPIO_SetValue(4, (1<<27)); 
+}
+void RE485(void)//485接收
+{
+	GPIO_SetDir(4, (1<<27), 1);
+	GPIO_ClearValue(4, (1<<27)); 
+}
+
+
 void Bais_LedOff(void)
 {
 	GPIO_ClearValue(1, (1<<14));
@@ -200,7 +212,7 @@ void GPIO_Plc_Configuration(void)
 	GPIO_SetDir(2, (1<<10), GPIO_DIRECTION_OUTPUT);//
 	GPIO_SetDir(2, (1<<11), GPIO_DIRECTION_OUTPUT);//不合格继电器
 	GPIO_SetDir(0, (1<<11), GPIO_DIRECTION_INPUT);//启动
-
+	GPIO_SetDir(4, (1<<27), GPIO_DIRECTION_OUTPUT);//开机继电器
 }
 void GPIO_Key_Configuration(void)
 {

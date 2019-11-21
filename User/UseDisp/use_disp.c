@@ -6558,6 +6558,7 @@ void Send_Request(u8 x,u8 req)
 	
 	u8 i,len;
 	char buf[50];
+	DE485();
 	busyflag = 1;
 	strcpy(USART_RX_BUF,CmdStr[x-1]);
 	len = strlen(CmdStr[x-1]);
@@ -6647,7 +6648,12 @@ void Send_Request(u8 x,u8 req)
 	}
 	USART_RX_BUF[len+1] = 0x0d;
 	USART_RX_BUF[len+2] = 0x0a;
+	
+//	delayMs(0,2);
 	UARTPuts(LPC_UART0,USART_RX_BUF);
+	Delay(10);
+//	delayMs(0,2);
+	RE485();
 	busyflag = 0;
 }
 

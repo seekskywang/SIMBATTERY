@@ -60,7 +60,8 @@ void Bais_LedOff(void);
 void Bais_LedOn(void);
 void FAN_ON(void);
 void FAN_OFF(void);
-
+void DE485(void);//485∑¢ÀÕ
+void RE485(void);//485Ω” ’
 
 void Power_Off_led(void);
 void Power_On_led(void);

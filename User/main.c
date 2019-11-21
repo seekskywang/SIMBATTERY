@@ -128,7 +128,7 @@ int main(void)
 	EEPROM_Init();
 	
     RTC_INT();
-    
+    RE485();
     
 //    RTC_CntIncrIntConfig (LPC_RTC, RTC_TIMETYPE_SECOND, ENABLE);
 //    NVIC_EnableIRQ(RTC_IRQn);

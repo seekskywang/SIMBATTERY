@@ -193,7 +193,7 @@ void Power_Process(void)
         Delay(10);
 		if(i == 10)
 		{
-			Send_Request(1,0);
+//			Send_Request(1,0);
 		}
 //		if(i==50)
 //		{
@@ -412,7 +412,7 @@ void Test_Process(void)
 	Main_Second.Main_flag=0;
 	Main_Second.Second_falg=0;
 	Delay_Key();
-	Send_Request(10,1);
+	Send_Request(10,1);//¿ª»úÉèÖÃ
     GPIO_ClearInt(0, 1<<19);
     NVIC_EnableIRQ(GPIO_IRQn);
 	while(GetSystemStatus()==SYS_STATUS_TEST)
