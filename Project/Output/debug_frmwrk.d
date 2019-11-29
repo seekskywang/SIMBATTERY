@@ -10,3 +10,4 @@
 .\output\debug_frmwrk.o: ..\Libraries\Drivers\include\lpc_types.h
 .\output\debug_frmwrk.o: ..\Libraries\Drivers\include\lpc177x_8x_pinsel.h
 .\output\debug_frmwrk.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\output\debug_frmwrk.o: ..\Libraries\Drivers\include\lpc177x_8x_gpdma.h

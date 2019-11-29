@@ -106,7 +106,7 @@ void TIMER0_IRQHandler (void)
 {  
     LPC_TIM0->IR = 0x1<<0;		/* clear interrupt flag */
 	Tick_10ms ++;
-	MODS_Poll();
+//	MODS_Poll();
 	if(mainswitch == 1)
 	{
 		timer0_counter++;

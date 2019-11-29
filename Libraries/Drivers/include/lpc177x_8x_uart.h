@@ -165,7 +165,7 @@ extern "C"
 /** UART FIFO control bit mask */
 #define UART_FCR_BITMASK		((uint8_t)(0xCF))
 
-#define UART_TX_FIFO_SIZE		(16)
+#define UART_TX_FIFO_SIZE		(40)
 
 /*********************************************************************//**
  * Macro defines for Macro defines for UART line control register

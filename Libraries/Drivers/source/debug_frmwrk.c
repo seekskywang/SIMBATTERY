@@ -27,6 +27,7 @@
 #include "lpc177x_8x_pinsel.h"
 #include "stdarg.h"
 #include "Globalvalue/GlobalValue.h"
+#include "lpc177x_8x_gpdma.h"
 
 /* Debug framework */
 //const uint8_t READDATA[7]={0xAB,0x01,0x06,0x03,0x08,0xbf,'\0'};
@@ -44,7 +45,7 @@ void (*_db_hex_16_)(LPC_UART_TypeDef *UARTx, uint16_t hexn);
 void (*_db_hex_32_)(LPC_UART_TypeDef *UARTx, uint32_t hexn);
 
 void MODS_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen);
-
+void DMA_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen);
 uint8_t (*_db_get_char)(LPC_UART_TypeDef *UARTx);
 uint8_t (*_db_get_val)(LPC_UART_TypeDef *UARTx, uint8_t option, uint8_t numCh, uint32_t * val);
 Com_TypeDef ComBuf;//´®¿ÚÊÕ·¢»º³å
@@ -698,6 +699,27 @@ static void MODS_SendAckOk(void)
 
 /*
 *********************************************************************************************************
+*	? ? ?: MODS_SendAckOk
+*	????: ???????.
+*	§ð    ?: ?
+*	? ? ?: ?
+*********************************************************************************************************
+*/
+static void DMA_SendAckOk(void)
+{
+//	uint8_t txbuf[6];
+	uint8_t i;
+
+	for (i = 0; i < 6; i++)
+	{
+		g_tModS.TxBuf[i] = g_tModS.RxBuf[i];
+	}
+	
+	DMA_SendWithCRC(g_tModS.TxBuf, 6);
+}
+
+/*
+*********************************************************************************************************
 *	? ? ?: BEBufToUint16
 *	????: ?2????(??Big Endian??¨¬?????)???16¦Ë??
 *	§ð    ?: _pBuf : ??
@@ -817,6 +839,18 @@ void MODS_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen)
 // #endif
 }
 
+void DMA_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen)
+{
+	uint16_t crc;
+//	uint8_t buf[S_TX_BUF_SIZE];
+//	memcpy(buf, _pBuf, _ucLen);
+	crc = CRC16(_pBuf, _ucLen);
+	_pBuf[_ucLen++] = crc >> 8;
+	_pBuf[_ucLen++] = crc;
+	DMASendInit();
+	
+//	UART3SEND( LPC_UART3, _pBuf);
+}
 //void UART3_IRQHandler(void)
 //{
 //    static uint8_t Status,dat;
@@ -837,10 +871,12 @@ void MODS_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen)
 void  debug_uart3_init(uint32_t freq)
 {
 	UART_CFG_Type UARTConfigStruct;
+	UART_FIFO_CFG_Type UARTFIFOConfigStruct;
+	
 	uint32_t data;
 	PINSEL_ConfigPin(0, 0, 2);
 	PINSEL_ConfigPin(0, 1, 2);
-
+	
 //	UART_ConfigStructInit(&UARTConfigStruct);
 //	switch(freq)
 //	{
@@ -893,9 +929,19 @@ void  debug_uart3_init(uint32_t freq)
 //	UARTConfigStruct.Baud_rate = 9600;
 	// Initialize DEBUG_UART_PORT peripheral with given to corresponding parameter
 	UART_Init(LPC_UART3, &UARTConfigStruct);//|UART_INTCFG_THRE
-	UART_IntConfig(LPC_UART3,UART_INTCFG_RBR,ENABLE);
+	
+	UART_FIFOConfigStructInit(&UARTFIFOConfigStruct);
+	
+	
+	 UARTFIFOConfigStruct.FIFO_DMAMode = ENABLE;
+	 UART_FIFOConfig(LPC_UART3, &UARTFIFOConfigStruct);
+	 
+//	UART_IntConfig(LPC_UART3,UART_INTCFG_RBR,ENABLE);
+//        UART_IntConfig(LPC_UART3, UART_INTCFG_RLS, ENABLE);
+        NVIC_DisableIRQ(UART3_IRQn);
+
 	//NVIC_SetPriority(UART0_IRQn, ((0x01<<3)|0x01));//??UART2?????
-	 NVIC_EnableIRQ(UART3_IRQn);
+//	 NVIC_EnableIRQ(UART3_IRQn);
 	// Enable UART Transmit
 	UART_TxCmd(LPC_UART3, ENABLE);
 
@@ -1143,8 +1189,10 @@ err_ret:
 //         if(usartocflag == 0)
 //         {
         
-        MODS_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount-2);	/* ?????? */
-        
+//        MODS_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount-2);	/* ?????? */
+		
+        DMA_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount-2);
+		
 //         }
 	}
 	else
@@ -1182,7 +1230,8 @@ static void MODS_06H(void)
 err_ret:
 	if (g_tModS.RspCode == RSP_OK)				/* ???? */
 	{
-		MODS_SendAckOk();
+		DMA_SendAckOk();
+//		MODS_SendAckOk();
 	}
 	else
 	{

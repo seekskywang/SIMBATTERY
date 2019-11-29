@@ -2720,12 +2720,14 @@ void Disp_Test_value(Button_Page_Typedef* Button_Page)
 					Hex_Format(SaveSIM.QuickV[i+(Button_Page->page)*3].Num,3,5,0);
 					WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,DispBuf,  0);
 				}
+				WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"NEXT",  0);
 			}else if(Button_Page->page == 1){
 				for(i=0;i<3;i++)
 				{
 					Hex_Format(SaveSIM.QuickV[i+(Button_Page->page)*3].Num,3,5,0);
 					WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,DispBuf,  0);
 				}
+				WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"PREV",  0);
 			}
 			
 
@@ -3974,16 +3976,16 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 //			}
 //			else if(Button_Page->page==1)
 //			{
-				Colour.Fword=White;
-				Colour.black=LCD_COLOR_TEST_BUTON;
-//				for(i=0;i<4;i++)
-			//	WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
-		if(SaveData.Sys_Setup.Language ==1)
-		{
-			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "Brid",  0);
-		}else if(SaveData.Sys_Setup.Language ==0){
-			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
-		}
+//				Colour.Fword=White;
+//				Colour.black=LCD_COLOR_TEST_BUTON;
+////				for(i=0;i<4;i++)
+//			//	WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
+//		if(SaveData.Sys_Setup.Language ==1)
+//		{
+//			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "Brid",  0);
+//		}else if(SaveData.Sys_Setup.Language ==0){
+//			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
+//		}
         
 //				WriteString_16(BUTTOM_X_VALUE+BUTTOM_MID_VALUE*4, BUTTOM_Y_VALUE-10, "MORE",  0);
 //				WriteString_16(BUTTOM_X_VALUE+BUTTOM_MID_VALUE*4, BUTTOM_Y_VALUE+10, " 2/3",  0);
@@ -6553,6 +6555,15 @@ void Send_UartStart(void)
 	//_printf("s%",(const)Send_buff);
 
 }
+
+void softdelay(u32 time)
+{
+	u32 count = 0;;
+	while(count < time)
+	{
+		count++;
+	}
+}
 void Send_Request(u8 x,u8 req)
 {
 	
@@ -6651,7 +6662,7 @@ void Send_Request(u8 x,u8 req)
 	
 //	delayMs(0,2);
 	UARTPuts(LPC_UART0,USART_RX_BUF);
-	Delay(10);
+	softdelay(5000);
 //	delayMs(0,2);
 	RE485();
 	busyflag = 0;

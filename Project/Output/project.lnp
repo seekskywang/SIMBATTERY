@@ -12,6 +12,7 @@
 ".\output\lpc177x_8x_rtc.o"
 ".\output\key.o"
 ".\output\rtc.o"
+".\output\dma.o"
 ".\output\startup_lpc177x_8x.o"
 ".\output\system_lpc177x_8x.o"
 ".\output\core_cm3.o"
