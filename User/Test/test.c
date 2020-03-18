@@ -175,7 +175,10 @@ void Power_Process(void)
 	Pass_Led();
 	Power_Off_led();
 //	#ifdef DISP_JK
-	lcd_image((uint8_t *)gImage_open);
+	if(SaveSIM.jkflag)
+	{
+		lcd_image((uint8_t *)gImage_open);
+	}
 //	#endif
 	InitGlobalValue();//初始化全局变量
 	init_timer(0, 2);//定时器初始化
@@ -199,7 +202,7 @@ void Power_Process(void)
 //		{
 //			Send_Request(10,1);
 //		}
-        if(i>100)
+        if(i>20+80*SaveSIM.jkflag)
             SetSystemStatus(SYS_STATUS_TEST);//待测状态
          key=HW_KeyScsn();
 		if(key==0xff)
@@ -517,8 +520,19 @@ void Test_Process(void)
 					{
 						case 0:
 							//if(Button_Page.page==0)
-								SetSystemStatus(SYS_STATUS_SETUPTEST);
+//								SetSystemStatus(SYS_STATUS_SETUPTEST);
+							SaveSIM.qvflag = 0 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
 							break;
+						case 1:
+						{
+							SaveSIM.resflag ++;
+							if(SaveSIM.resflag > 3)
+							{
+								SaveSIM.resflag = 0;
+							}
+						}break;
 						case 4:
 							SaveSIM.qvflag = 0 + 3*Button_Page.page;
 							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
@@ -535,7 +549,21 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							SetSystemStatus(SYS_STATUS_SYSSET);
+						{
+//							SetSystemStatus(SYS_STATUS_SYSSET);
+							SaveSIM.qvflag = 1 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
+						}break;
+						case 1:
+						{
+							SaveSIM.Voltage.Num += 1 * pow(10.0,(float)SaveSIM.resflag);
+							if(SaveSIM.Voltage.Num > 20000)
+							{
+								SaveSIM.Voltage.Num = 20000;
+							}
+							Send_Request(10,1);
+						}break;
 						case 4:
 							SaveSIM.qvflag = 1 + 3*Button_Page.page;
 							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
@@ -553,8 +581,22 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							
-							break;
+						{
+							SaveSIM.qvflag = 2 + 3*Button_Page.page;
+							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
+							Send_Request(10,1);
+						}
+						break;
+						case 1:
+						{
+							if(SaveSIM.Voltage.Num < 1 * pow(10.0,(float)SaveSIM.resflag))
+							{
+								SaveSIM.Voltage.Num = 0;
+							}else{
+								SaveSIM.Voltage.Num -= 1 * pow(10.0,(float)SaveSIM.resflag);
+							}
+							Send_Request(10,1);
+						}break;
 						case 4://MAX_R_RANGE
 							SaveSIM.qvflag = 2 + 3*Button_Page.page;
 							SaveSIM.Voltage = SaveSIM.QuickV[SaveSIM.qvflag];
@@ -572,7 +614,12 @@ void Test_Process(void)
 					switch(Button_Page.index)
 					{
 						case 0:
-							
+							if(Button_Page.page <1)
+							{
+								Button_Page.page ++;
+							}else{
+								Button_Page.page = 0;
+							}
 							break;
 						case 4:
 							if(Button_Page.page <1)
@@ -3296,6 +3343,7 @@ void Fac_DebugProcess(void)
     lcd_Clear(LCD_COLOR_TEST_BACK);
 	Disp_FacrCheck_Item(&Button_Page);
 	Delay_Key();
+	Send_Request(2,1);
  	while(GetSystemStatus()==SYS_STATUS_FACRDEBUG)
 	{
 
@@ -3321,17 +3369,21 @@ void Fac_DebugProcess(void)
 			{
 				case Key_F1://AB 01 08 06 E0 00 00 BF
 					Button_Page.page = 1;
-					Disp_FacrCheck_Item(&Button_Page);				
+					Disp_FacrCheck_Item(&Button_Page);	
+					Send_Request(2,1);
 				break;
 				case Key_F2:
 					Button_Page.page = 2;
 					Disp_FacrCheck_Item(&Button_Page);
+					Send_Request(2,2);
 				break;
 				case Key_F3:
-					SaveSIM.Voltage.Num = 5000;
-					Send_Request(10,1);
+//					SaveSIM.Voltage.Num = 5000;
+//					Send_Request(10,1);
 					Button_Page.page = 3;
+					
 					Disp_FacrCheck_Item(&Button_Page);
+					Send_Request(2,3);
 				break;
 				case Key_F4://校正清零命令
 					if(Button_Page.page == 3)
@@ -3356,6 +3408,7 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_Disp:
+					Send_Request(2,0);
 					SetSystemStatus(SYS_STATUS_TEST);
 				break;
 				case Key_SETUP:
@@ -3482,7 +3535,7 @@ void Fac_DebugProcess(void)
 							SaveSIM.Voltage.Num = 19000;
 						}
 						Send_Request(10,1);
-					}else if(Button_Page.page == 3){//电流控制
+					}else if(Button_Page.page == 3){//电流校准
 						if(Button_Page.index>6)
 							Button_Page.index=0;
 						else
@@ -3540,7 +3593,13 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_REST:
-					
+					if(SaveSIM.jkflag == 1)
+					{
+						SaveSIM.jkflag = 0;
+					}else{
+						SaveSIM.jkflag = 1;
+					}
+					Savetoeeprom();
 				break;
 				case Key_TRIG:
 					if(mainswitch == 0)

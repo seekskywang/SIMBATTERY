@@ -86,7 +86,7 @@ void lpc1788_DMA_Init(void)
         GPDMACfg1.ChannelNum = 1;
         GPDMACfg1.SrcMemAddr =(uint32_t)&g_tModS.TxBuf;       
         GPDMACfg1.DstMemAddr = 0;       
-        GPDMACfg1.TransferSize = 21;
+        GPDMACfg1.TransferSize = 23;
 		GPDMACfg1.TransferWidth = 0;
         GPDMACfg1.TransferType = GPDMA_TRANSFERTYPE_M2P;       
         GPDMACfg1.SrcConn = 0;       

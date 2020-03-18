@@ -35,7 +35,7 @@ char CmdStr[CmdNumb][CmdLen] =
 	{"<0/CALV_"},        //12 测量电压校准     1个字符
 	{"<0/CALI_"},        //13 测量电流校准     1个字符
 	{"<0/CTRLV_"},        //14 控制电压校准     1个字符
-	{"<0/CLEARI_"},        //15 控制电压校准     1个字符
+	{"<0/CLEARI_"},        //15 电流清零校准     1个字符
 	{"<0/OVER_"}, 			//16 保护信号   1个字符
 	{"<0/TEMP_?"}, 			//17 查询温度   1个字符
 };
@@ -757,6 +757,7 @@ const uint8_t	Set_testitem[][11+1]=
 //    {"波特率  "},
 };
 
+
 const uint8_t	Set_testitem_E[][9+1]=
 {
 	{"FASTV1  :"},
@@ -783,6 +784,19 @@ const uint8_t	Set_testitem_E[][9+1]=
 //	{"时间     :"}
 //};
 
+const uint8_t Set_V_Res[][5+1]=
+{
+	{"0.001"},
+	{"0.01 "},
+	{"0.1  "},
+	{"1    "},	
+};
+
+const uint8_t Tune_V[][1+1]=
+{
+	{"+"},
+	{"-"},
+};
 
 const uint8_t Sys_Setitem[][10+1]=
 {
@@ -2699,10 +2713,35 @@ void Disp_Test_value(Button_Page_Typedef* Button_Page)
 	switch(Button_Page->index)
 	{
 		case 0:
-			Disp_Button_Test();
+//			Disp_Button_Test();
+			Colour.Fword=White;
+			Colour.black=LCD_COLOR_TEST_BUTON;
+			if(Button_Page->page == 0)
+			{
+				for(i=0;i<3;i++)
+				{
+					Hex_Format(SaveSIM.QuickV[i+(Button_Page->page)*3].Num,3,5,0);
+					WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,DispBuf,  0);
+				}
+				WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"NEXT",  0);
+			}else if(Button_Page->page == 1){
+				for(i=0;i<3;i++)
+				{
+					Hex_Format(SaveSIM.QuickV[i+(Button_Page->page)*3].Num,3,5,0);
+					WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,DispBuf,  0);
+				}
+				WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"PREV",  0);
+			}
 			//	Disp_Button_value1(Button_Page->page);
 			break;
 		case 1:				//显示功能项的按键值
+			Colour.Fword=White;
+			Colour.black=LCD_COLOR_TEST_BUTON;
+			WriteString_16(BUTTOM_X_VALUE+4, BUTTOM_Y_VALUE,Set_V_Res[SaveSIM.resflag],  0);
+			for(i=1;i<3;i++)
+			{
+				WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,Tune_V[i-1],  0);
+			}
 		break;
 		case 2:
 
@@ -5162,8 +5201,8 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		}
 		else//单位是秒
 		{
-			if(Time->Num>60)//大于60秒 显示60秒
-				Time->Num=60;
+			if(Time->Num>20)//大于60秒 显示60秒
+				Time->Num=20;
 			Time->Num*=1000;//增加1000倍  小数点为第三位
 			Time->Dot=3;	
 			Time->Unit=1;			
@@ -5398,9 +5437,9 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		}
 		else//单位是秒
 		{
-			if(Time->Num>600)
+			if(Time->Num>200)
 			{
-				Time->Num=600;
+				Time->Num=200;
 				Time->Dot=3;
 				Time->Unit=1;
 			}
@@ -5428,11 +5467,11 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		if(Time->Unit==0)//单位为毫秒时
 		{
 			
-			if(Time->Num>60000)//xxxx.x时 显示最高位xxx
+			if(Time->Num>20000)//xxxx.x时 显示最高位xxx
 			{
 				
 				{
-					Time->Num=60000;	
+					Time->Num=20000;	
 					Time->Dot=3;//因为是毫秒  所以没有小数点
 					Time->Unit=1;
 				}
@@ -5460,9 +5499,9 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		}
 		else//单位是秒
 		{
-			if(Time->Num>60)
+			if(Time->Num>20)
 			{
-				Time->Num=60;
+				Time->Num=20;
 				
 			}
 			Time->Num*=1000;
@@ -5476,7 +5515,7 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 	else
 	{
 	
-		Time->Num=60000;
+		Time->Num=20000;
 		Time->Dot=3;
 		Time->Unit=1;
 	
@@ -6581,7 +6620,7 @@ void Send_Request(u8 x,u8 req)
 		}break;
 		case 2:
 		{
-			
+			sprintf(&USART_RX_BUF[len],"%1d",req);
 		}break;
 		case 3:
 		{

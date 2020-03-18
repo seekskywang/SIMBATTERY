@@ -55,7 +55,8 @@ char recbuf[200];
 uint16_t USART_RX_STA=0;       //接收状态标记
 static void MODS_03H(void);
 static void MODS_06H(void);
-
+uint16_t CRC16(uint8_t *_pBuf, uint16_t _usLen);
+uint8_t graphunit;
 /*********************************************************************//**
  * @brief		Puts a character to UART port
  * @param[in]	UARTx	Pointer to UART peripheral
@@ -709,13 +710,18 @@ static void DMA_SendAckOk(void)
 {
 //	uint8_t txbuf[6];
 	uint8_t i;
-
+	uint16_t crc;
+	uint8_t buf[S_TX_BUF_SIZE];
+	
 	for (i = 0; i < 6; i++)
 	{
 		g_tModS.TxBuf[i] = g_tModS.RxBuf[i];
 	}
-	
-	DMA_SendWithCRC(g_tModS.TxBuf, 6);
+	crc = CRC16(g_tModS.TxBuf, 6);
+	g_tModS.TxBuf[6] = crc >> 8;
+	g_tModS.TxBuf[7] = crc;
+	DMASendInit();
+//	DMA_SendWithCRC(g_tModS.TxBuf, 6);
 }
 
 /*
@@ -845,8 +851,8 @@ void DMA_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen)
 //	uint8_t buf[S_TX_BUF_SIZE];
 //	memcpy(buf, _pBuf, _ucLen);
 	crc = CRC16(_pBuf, _ucLen);
-	_pBuf[_ucLen++] = crc >> 8;
-	_pBuf[_ucLen++] = crc;
+	_pBuf[g_tModS.TxCount++] = crc >> 8;
+	_pBuf[g_tModS.TxCount++] = crc;
 	DMASendInit();
 	
 //	UART3SEND( LPC_UART3, _pBuf);
@@ -1016,6 +1022,13 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P01:
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;
+			if(Irange == 0)
+			{
+				if(graphunit == 1)
+				{
+					value/=1000;
+				}
+			}
 			break;
 	
 		case SLAVE_REG_P02://输出电压
@@ -1023,6 +1036,13 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P03: //输出电流
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;
+			if(Irange == 0)
+			{
+				if(graphunit == 1)
+				{
+					value/=1000;
+				}
+			}
 			break;
 
 		case SLAVE_REG_P04://输出功率
@@ -1030,15 +1050,29 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P05://输入电流
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Imvalue.Num:0;
+			if(Irange == 0)
+			{
+				if(graphunit == 1)
+				{
+					value/=1000;
+				}
+			}
 			break;
 		case SLAVE_REG_P06:
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Imvalue.Num:0;
+			if(Irange == 0)
+			{
+				if(graphunit == 1)
+				{
+					value/=1000;
+				}
+			}
 			break;
 		case SLAVE_REG_P07://输入功率
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Pvalue.Num/10:0;
 			break;
 		case SLAVE_REG_P08:
-			value =	0;	
+			value =	temperature;	
 			break;
 
 		case SLAVE_REG_P09:
@@ -1093,8 +1127,9 @@ static uint8_t MODS_WriteRegValue(uint16_t reg_addr, uint16_t reg_value)
 	{
         case WRITE_REG_P00://设定输出电压
 			SaveSIM.Voltage.Num = reg_value;
+//			sendflag = 2;
 			Send_Request(10,1);
-			Savetoeeprom();
+//			Savetoeeprom();
 			if(GetSystemStatus() == SYS_STATUS_TEST)
 			{
 				Disp_Test_value(&Button_Page);
@@ -1102,8 +1137,9 @@ static uint8_t MODS_WriteRegValue(uint16_t reg_addr, uint16_t reg_value)
 			break;
 		case WRITE_REG_P01://设定输出电流
 			SaveSIM.LoadPC.Num = reg_value;
+//			sendflag = 2;
 			Send_Request(10,1);
-			Savetoeeprom();
+//			Savetoeeprom();
 			if(GetSystemStatus() == SYS_STATUS_TEST)
 			{
 				Disp_Test_value(&Button_Page);
@@ -1114,8 +1150,9 @@ static uint8_t MODS_WriteRegValue(uint16_t reg_addr, uint16_t reg_value)
 			break;
 		case WRITE_REG_P03: //设定输入电流
 			SaveSIM.ChargePC.Num = reg_value;
+//			sendflag = 2;
 			Send_Request(10,1);
-			Savetoeeprom();
+//			Savetoeeprom();
 			if(GetSystemStatus() == SYS_STATUS_TEST)
 			{
 				Disp_Test_value(&Button_Page);
@@ -1125,11 +1162,12 @@ static uint8_t MODS_WriteRegValue(uint16_t reg_addr, uint16_t reg_value)
 		case WRITE_REG_P04://输出功率
 			break;
 		case WRITE_REG_P05://设定单位
-			Irange = (reg_value == 1)?0:1;
+			graphunit = Irange = (reg_value == 1)?0:1;
 			Send_Request(4,Irange);
 			break;
 		case WRITE_REG_P06:
 			mainswitch = reg_value;
+//			sendflag = 1;
 			Send_Request(3,mainswitch);
 			break;	
 		default:
@@ -1191,7 +1229,7 @@ err_ret:
         
 //        MODS_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount-2);	/* ?????? */
 		
-        DMA_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount-2);
+        DMA_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount);
 		
 //         }
 	}

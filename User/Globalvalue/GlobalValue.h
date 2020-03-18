@@ -490,7 +490,10 @@ typedef struct
 	Sort_TypeDef CALV[4];//测量电压校准
 	Sort_TypeDef CTRLV[4];//控制电压校准
 	Sort_TypeDef CALI[6];//测量电流校准
+	uint8_t resflag;//微调分辨率
+	uint8_t jkflag;
 }SaveSet;
+
 extern SaveSet SaveSIM;
 extern SaveData_Typedef SaveData;
 typedef struct
