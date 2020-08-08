@@ -102,12 +102,12 @@ const uint8_t Fac_Calitem[][14+1]=
 
 const uint8_t Fac_ICalitem[][14+1]=
 {	
-	{"10mA  "},
-	{"5A    "},
-	{"10A   "},
-	{"-10mA "},
-	{"-5A   "},
-	{"-10A  "},
+	{"-10mA  "},
+	{"-5A    "},
+	{"-10A   "},
+	{"10mA "},
+	{"5A   "},
+	{"10A  "},
 };
 
 const uint8_t CtrV_Calitem[][14+1]=
@@ -4354,6 +4354,7 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 		case 6:
 			Colour.Fword=White;
 			Colour.black=LCD_COLOR_TEST_BUTON;
+			WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"ÇåÁã",  0);
 			WriteString_16(BUTTOM_X_VALUE+4*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"Ð£Õý",  0);
 		break;
 	}
