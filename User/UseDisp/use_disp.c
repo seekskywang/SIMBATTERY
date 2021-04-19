@@ -1128,6 +1128,547 @@ const uint8_t Correction_Resist[][7+1]=			//校正电阻
 	{"100KΩ"},
 };
 
+void DrawLogo(uint16_t x,uint16_t y)
+{
+//	page_flag = 0xff;
+//	LCD_Clear(LCD_COLOR_BLACK);	
+//	LCD_SetColors(LCD_COLOR_GR7,LCD_COLOR_BLACK);
+	/*J*/
+	LCD_DrawLine(x,y,x+41,y,LCD_COLOR_LOGO);
+	LCD_DrawLine(x-1,y-1,x-1+44,y-1,LCD_COLOR_LOGO);
+	LCD_DrawLine(x-1,y-2,x-1+46,y-2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x,y-3,x+46,y-3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+2,y-4,x+2+46,y-4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+35,y-5,x+35+14,y-5,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+35,y-6,x+35+15,y-6,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+35,y-7,x+35+15,y-7,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+36,y-8,x+36+14,y-8,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+36,y-9,x+36+15,y-9,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+37,y-10,x+37+14,y-10,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+37,y-11,x+37+14,y-11,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+37,y-12,x+37+14,y-12,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+38,y-13,x+38+14,y-13,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+37,y-14,x+37+15,y-14,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+38,y-15,x+38+14,y-15,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+38,y-16,x+38+14,y-16,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+38,y-17,x+38+15,y-17,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+39,y-18,x+39+14,y-18,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+39,y-19,x+39+14,y-19,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+39,y-20,x+39+15,y-20,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+40,y-21,x+40+14,y-21,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+40,y-22,x+40+14,y-22,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+40,y-23,x+40+14,y-23,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+40,y-24,x+40+14,y-24,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+41,y-25,x+41+13,y-25,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+41,y-26,x+41+14,y-26,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+41,y-27,x+41+14,y-27,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+42,y-28,x+42+14,y-28,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+42,y-29,x+42+14,y-29,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+42,y-30,x+42+14,y-30,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+42,y-31,x+42+15,y-31,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+42,y-32,x+42+15,y-32,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+43,y-33,x+43+13,y-33,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+43,y-34,x+43+14,y-34,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+44,y-35,x+44+13,y-35,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+44,y-36,x+44+14,y-36,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+44,y-37,x+44+14,y-37,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+44,y-38,x+44+15,y-38,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+44,y-39,x+44+15,y-39,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+45,y-40,x+45+14,y-40,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+45,y-41,x+45+14,y-41,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+45,y-42,x+45+15,y-42,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+45,y-43,x+45+15,y-43,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+46,y-44,x+46+14,y-44,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+46,y-45,x+46+14,y-45,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+46,y-46,x+46+15,y-46,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+47,y-47,x+47+14,y-47,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+47,y-48,x+47+14,y-48,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+47,y-49,x+47+15,y-49,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+47,y-50,x+47+15,y-50,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+47,y-51,x+47+14,y-51,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+48,y-52,x+48+14,y-52,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+48,y-53,x+48+14,y-53,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+49,y-54,x+49+13,y-54,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+49,y-55,x+49+14,y-55,LCD_COLOR_LOGO);
+	
+	/*i*/
+	LCD_DrawRect(x+72,y-54,x+72+12,y-54+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+71,y-52,x+71+13-1,y-52,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+71,y-51,x+71+12,y-51+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+70,y-47,x+70+12,y-47+3,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+68,y-44+4,x+68+14-1,y-44+4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+69,y-43+4,x+69+13,y-43+4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+68,y-42+4,x+68+13-1,y-42+4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+68,y-41+4,x+68+12-1,y-41+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+68-1,y-40+4,x+68-1+13,y-40+4+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+68-1,y-37+4,x+68-1+12-1,y-37+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+67-1,y-36+4,x+67-1+13,y-36+4+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+67-1,y-33+4,x+67-1+12-1,y-33+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+66-1,y-32+4,x+66-1+13,y-32+4+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+66-1,y-30+4,x+66-1+12-1,y-30+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+65-1,y-29+4,x+65-1+13,y-29+4+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+64-1,y-26+4,x+64-1+14-1,y-26+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+64-1,y-25+4,x+64-1+13,y-25+4+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+64-1,y-23+4,x+64-1+12,y-23+4+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+63-1,y-21+4,x+63-1+13-1,y-21+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+63-1,y-20+4,x+63-1+12,y-20+4+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+62-1,y-18+4,x+62-1+13,y-18+4+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+62-1,y-15+4,x+62-1+12-1,y-15+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+61-1,y-14+4,x+61-1+13,y-14+4+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+60-1,y-11+4,x+60-1+13,y-11+4+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+59-1,y-5,x+59-1+13,y-5+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+59-1,y-3,x+59-1+14-1,y-3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+59-1,y-2,x+59-1+13,y-2+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+59-1,y,x+59-1+12-1,y,LCD_COLOR_LOGO);
+	
+	/*n*/
+	LCD_DrawLine(x+88,y-40,x+88+23-1,y-40,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+85,y-39,x+85+27-1,y-39,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+84,y-38,x+84+30-1,y-38,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+83,y-37,x+83+32-1,y-37,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+83,y-36,x+83+3-1,y-36,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+104,y-36,x+104+12-1,y-36,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+83,y-35,x+83+1-1,y-35,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+104,y-35,x+104+12-1,y-35,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+104,y-34,x+104+12,y-34+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+103,y-31,x+103+13,y-31+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+102,y-28,x+102+13-1,y-28,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+103,y-27,x+103+12-1,y-27,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+102,y-26,x+102+13-1,y-26,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+101,y-25,x+101+13,y-25+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+101,y-23,x+101+12,y-23+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+100,y-21,x+100+13,y-21+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+99,y-18,x+99+13,y-18+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+99,y-15,x+99+12-1,y-15,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+98,y-14,x+98+13,y-14+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+98,y-11,x+98+12-1,y-11,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+97,y-10,x+97+13-1,y-10,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+97,y-9,x+97+12,y-9+4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+96,y-5,x+96+12,y-5+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+95,y-2,x+95+13,y-2+3,LCD_COLOR_LOGO);
+	
+	/*k*/
+	LCD_DrawLine(x+127,y-56,x+127+12-1,y-56,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+126,y-55,x+126+13,y-55+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+126,y-52,x+126+12,y-52+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+125,y-50,x+125+12,y-50+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+124,y-48,x+124+13-1,y-48,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+124,y-47,x+124+12-1,y-47,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+124,y-46,x+124+13-1,y-46,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+124,y-45,x+124+12-1,y-45,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+123,y-44,x+123+13,y-44+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+123,y-42,x+123+12,y-42+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+153,y-41,x+153+12-1,y-41,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+151,y-40,x+151+13-1,y-40,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+122,y-39,x+122+13-1,y-39,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+150,y-39,x+150+12-1,y-39,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+122,y-38,x+122+12,y-38+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+148,y-38,x+148+13-1,y-38,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+147,y-37,x+147+12-1,y-37,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+121,y-36,x+121+13,y-36+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+146,y-36,x+146+12-1,y-36,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+145,y-35,x+145+11-1,y-35,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+143,y-34,x+143+12-1,y-34,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+120,y-33,x+120+13-1,y-33,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+141,y-33,x+141+13-1,y-33,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+121,y-32,x+121+12-1,y-32,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+140,y-32,x+140+12-1,y-32,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+120,y-31,x+120+13-1,y-31,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-31,x+138+13-1,y-31,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+120,y-30,x+120+12-1,y-30,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+137,y-30,x+137+13-1,y-30,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+119,y-29,x+119+13-1,y-29,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+135,y-29,x+135+15-1,y-29,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+119,y-28,x+119+12-1,y-28,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+134,y-28,x+134+16-1,y-28,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+119,y-27,x+119+31-1,y-27,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+118,y-26,x+118+31-1,y-26,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+118,y-25,x+118+32-1,y-25,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+118,y-24,x+118+32-1,y-24,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+117,y-23,x+117+33-1,y-23,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+118,y-22,x+118+19-1,y-22,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-22,x+138+12-1,y-22,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+117,y-21,x+117+19-1,y-21,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-21,x+138+12-1,y-21,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+117,y-20,x+117+18-1,y-20,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-20,x+138+13-1,y-20,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+116,y-19,x+116+17-1,y-19,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-19,x+138+13-1,y-19,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+116,y-18,x+116+16-1,y-18,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-18,x+138+14-1,y-18,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+116,y-17,x+116+14-1,y-17,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-17,x+138+14-1,y-17,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+116,y-16,x+116+13-1,y-16,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+138,y-16,x+138+14-1,y-16,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+115,y-15,x+115+13,y-15+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+115,y-12,x+115+12-1,y-12,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+114,y-11,x+114+13,y-11+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+114,y-8,x+114+12-1,y-8,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+113,y-7,x+113+13,y-7+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+112,y-4,x+112+14-1,y-4,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+112,y-3,x+112+13,y-3+3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+112,y,x+112+12-1,y,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+139,y-15,x+139+13,y-15+3,LCD_COLOR_LOGO);	
+	LCD_DrawRect(x+139,y-12,x+139+14,y-12+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+140,y-10,x+140+13,y-10+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+140,y-7,x+140+14,y-7+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+140,y-4,x+140+15,y-4+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+141,y-2,x+141+14-1,y-2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+143,y-1,x+143+12-1,y-1,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+145,y,x+145+10-1,y,LCD_COLOR_LOGO);
+	
+	/*o*/
+	LCD_DrawLine(x+173,y-41,x+173+35-1,y-41,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+171,y-40,x+171+39-1,y-40,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+169,y-39,x+169+41-1,y-39,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+168,y-38,x+168+43-1,y-38,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+167,y-37,x+167+13-1,y-37,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+198,y-37,x+198+13-1,y-37,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+166,y-36,x+166+13-1,y-36,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+199,y-36,x+199+13-1,y-36,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+166,y-35,x+166+12-1,y-35,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+198,y-35,x+198+14-1,y-35,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+165,y-34,x+165+13-1,y-34,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+198,y-34,x+198+14-1,y-34,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+165,y-33,x+165+13-1,y-33,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+198,y-33,x+198+13-1,y-33,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+165,y-32,x+165+13-1,y-32,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+198,y-32,x+198+13-1,y-32,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+164,y-31,x+164+14,y-31+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+197,y-31,x+197+14,y-31+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+164,y-29,x+164+13-1,y-29,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+197,y-29,x+197+13-1,y-29,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+163,y-28,x+163+14,y-28+2,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+196,y-28,x+196+14,y-28+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+163,y-26,x+163-1+13,y-26,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+196,y-26,x+196-1+13,y-26,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+162,y-25,x+162-1+14,y-25,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+196,y-25,x+196-1+13,y-25,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+162,y-25,x+162-1+13,y-25,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+195,y-25,x+195-1+14,y-25,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+162,y-24,x+162-1+14,y-24,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+195,y-24,x+195-1+13,y-24,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+162,y-23,x+162-1+13,y-23,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+195,y-23,x+195-1+13,y-23,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+161,y-22,x+161-1+14,y-22,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+194,y-22,x+194-1+14,y-22,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+161,y-21,x+161-1+14,y-21,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+194,y-21,x+194-1+14,y-21,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+161,y-20,x+161-1+13,y-20,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+194,y-20,x+194-1+13,y-20,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+160,y-19,x+160-1+14,y-19,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+194,y-19,x+194-1+13,y-19,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+160,y-18,x+160-1+14,y-18,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+193,y-18,x+193-1+14,y-18,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+160,y-17,x+160-1+13,y-17,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+193,y-17,x+193-1+14,y-17,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+159,y-16,x+159-1+14,y-16,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+193,y-16,x+193-1+14,y-16,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+160,y-15,x+160-1+13,y-15,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+193,y-15,x+193-1+13,y-15,LCD_COLOR_LOGO);	
+	
+	LCD_DrawRect(x+159,y-14,x+159+13,y-14+4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+192,y-14,x+192-1+14,y-14,LCD_COLOR_LOGO);	
+	LCD_DrawRect(x+192,y-13,x+192+13,y-13+3,LCD_COLOR_LOGO);
+	
+	LCD_DrawRect(x+159,y-10,x+159+12,y-10+3,LCD_COLOR_LOGO);
+	LCD_DrawRect(x+191,y-10,x+191+13,y-10+2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+190,y-8,x+190-1+13,y-8,LCD_COLOR_LOGO);	
+	
+	LCD_DrawLine(x+159,y-7,x+159-1+14,y-7,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+188,y-7,x+188-1+14,y-7,LCD_COLOR_LOGO);
+	
+	LCD_DrawLine(x+159,y-6,x+159-1+43,y-6,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+160,y-5,x+160-1+41,y-5,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+161,y-4,x+161-1+39,y-4,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+162,y-3,x+162-1+36,y-3,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+163,y-2,x+163-1+34,y-2,LCD_COLOR_LOGO);
+	LCD_DrawLine(x+164,y-1,x+164-1+32,y-1,LCD_COLOR_LOGO);
+//	
+//	/*金*/
+//	LCD_DrawLine(x+224,y-36,18,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+223,y-35,22,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+222,y-34,24,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+221,y-33,25,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+221,y-32,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+238,y-32,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+220,y-31,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+238,y-31,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+219,y-30,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+238,y-30,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+218,y-29,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+239,y-29,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+218,y-28,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+239,y-28,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+217,y-27,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+226,y-27,22,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+215,y-26,33,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+214,y-25,35,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+213,y-24,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+227,y-24,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+232,y-24,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+213,y-23,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+227,y-23,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+232,y-23,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+227,y-22,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+226,y-21,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+226,y-20,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+213,y-19,34,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+212,y-18,35,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+212,y-17,35,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+225,y-16,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+213,y-15,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+225,y-15,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+238,y-15,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-14,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+225,y-14,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+237,y-14,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-13,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+224,y-13,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+237,y-13,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-12,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+224,y-12,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+236,y-12,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-11,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+223,y-11,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+235,y-11,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-10,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+223,y-10,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+235,y-10,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-9,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+223,y-9,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+235,y-9,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-8,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+222,y-8,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+234,y-8,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+212,y-7,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+222,y-7,19,LCD_DIR_HORIZONTAL);
+
+//	LCD_DrawLine(x+214,y-6,16,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+231,y-6,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+217,y-5,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+222,y-5,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+232,y-5,4,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+222,y-4,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawFullRect(x+206,y-3,39,2);
+//	
+//	/*科*/
+//	LCD_DrawLine(x+269,y-38,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+285,y-38,6,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+267,y-37,9,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+285,y-37,6,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+265,y-36,11,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+284,y-36,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+256,y-35,18,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+275,y-35,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+284,y-35,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+256,y-34,17,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+275,y-34,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+283,y-34,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+256,y-33,15,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-33,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+283,y-33,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+261,y-32,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-32,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+283,y-32,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+261,y-31,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-31,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-31,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+261,y-30,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-30,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-30,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+260,y-29,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-29,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-29,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+253,y-28,20,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+275,y-28,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-28,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+253,y-27,19,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-27,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-27,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+259,y-26,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-26,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+282,y-26,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+258,y-25,8,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-25,14,LCD_DIR_HORIZONTAL);
+
+//	LCD_DrawLine(x+259,y-24,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+277,y-24,11,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+253,y-23,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+258,y-23,10,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+271,y-23,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+281,y-23,6,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+253,y-22,16,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-22,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+280,y-22,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+253,y-21,16,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-21,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+280,y-21,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+252,y-20,24,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+280,y-20,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+252,y-19,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+257,y-19,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-19,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+280,y-19,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+252,y-18,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+257,y-18,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-18,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+279,y-18,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+251,y-17,18,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-17,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+279,y-17,7,LCD_DIR_HORIZONTAL);
+//		
+//	LCD_DrawLine(x+251,y-16,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+264,y-16,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+269,y-16,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+279,y-16,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+251,y-15,17,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+269,y-15,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+278,y-15,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+251,y-14,11,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+263,y-14,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+269,y-14,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+278,y-14,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+250,y-13,17,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+270,y-13,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+278,y-13,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+250,y-12,17,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+271,y-12,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+278,y-12,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+250,y-11,11,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+262,y-11,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+273,y-11,12,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+249,y-10,18,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+277,y-10,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+249,y-9,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+255,y-9,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+273,y-9,14,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+248,y-8,39,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+248,y-7,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+260,y-7,22,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+248,y-6,12,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+260,y-6,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+275,y-6,7,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+248,y-5,18,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-5,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+248,y-4,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+253,y-4,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+260,y-4,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-4,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+247,y-3,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+253,y-3,6,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+260,y-3,5,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+274,y-3,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+247,y-2,4,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+253,y-2,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+262,y-2,2,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+273,y-2,9,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+247,y-1,1,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+252,y-1,7,LCD_DIR_HORIZONTAL);
+//	LCD_DrawLine(x+273,y-1,8,LCD_DIR_HORIZONTAL);
+//	
+//	LCD_DrawLine(x+273,y,2,LCD_DIR_HORIZONTAL);
+}
+
 //显示 下面的快捷键按键
 void Disp_Fastbutton(void)
 {
@@ -1266,12 +1807,12 @@ void  Disp_Button_Test(void)
 		Disp_Fastbutton();
 		Colour.Fword=White;
 		Colour.black=LCD_COLOR_TEST_BUTON;
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(83, 271-29, "MEASSET",  0);
 		WriteString_16(83+80,271-29, "SYSSET",  0);
 //		WriteString_16(92+80+80,271-29, "COUNT ",  0);
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(83, 271-29, "测量设置",  0);
 		WriteString_16(83+80,271-29, "系统设置",  0);
 //		WriteString_16(92+80+80,271-29, "档计数",  0);
@@ -1294,12 +1835,12 @@ void Disp_Button_value1(uint32_t value)
 	{
 		Colour.Fword=White;
 		Colour.black=LCD_COLOR_TEST_BUTON;
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(83, 271-29, "MEASSET",  0);
 			WriteString_16(83+80,271-29, "No.DISP",  0);
 			WriteString_16(92+80+80,271-29, "COUNT ",  0);
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(83, 271-29, "测量显示",  0);
 			WriteString_16(83+80,271-29, "档号显示",  0);
 			WriteString_16(92+80+80,271-29, "档计数",  0);
@@ -1336,12 +1877,12 @@ void Disp_Button_value1(uint32_t value)
 //			WriteString_16(83, 271-29, "文件管理",  0);
 //			WriteString_16(83+80, 271-29, "保存数据",  0);
 //			WriteString_16(84+80+80+80+80-1, 271-29, "更多",  0);
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(83, 271-29, "FILE SET",  0);
 			WriteString_16(83+80, 271-29, "SaveData",  0);
 			WriteString_16(84+80+80+80+80-1, 271-29, "MORE",  0);
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(83, 271-29, "文件管理",  0);
 			WriteString_16(83+80, 271-29, "保存数据",  0);
 			WriteString_16(84+80+80+80+80-1, 271-29, "更多",  0);
@@ -1354,11 +1895,11 @@ void Disp_Button_value1(uint32_t value)
 		Colour.black=LCD_COLOR_TEST_BUTON;
 //        WriteString_16(83, 271-29, "  取消 ",  0);
 //		WriteString_16(83+80,271-29, "  确认 ",  0);
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			 WriteString_16(83, 271-29, "CANCEL ",  0);
 			WriteString_16(83+80,271-29, "CONFIRM",  0);
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(83, 271-29, "  取消 ",  0);
 			WriteString_16(83+80,271-29, "  确认 ",  0);
 		}
@@ -1374,11 +1915,11 @@ void Disp_Button_ItemScan_no(void)
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BUTON;
 
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(84, 271-40, "CLEA",  0);
 		WriteString_16(84, 271-20, "LIST",  0);
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(84, 271-40, "清除",  0);
 		WriteString_16(84, 271-20, "表格",  0);
 	}
@@ -1389,11 +1930,11 @@ void Disp_Button_ItemScan_no(void)
 //		WriteString_16(84+80+80, 271-20, "设置",  0);
 //	WriteString_16(84+80+80+80, 271-30, "上一页",  0);
 //	WriteString_16(84+80+80+80+80, 271-30, "下一页",  0);
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(84+80+80+80, 271-30, "Last P",  0);
 		WriteString_16(84+80+80+80+80, 271-30, "Next P",  0);
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(84+80+80+80, 271-30, "上一页",  0);
 		WriteString_16(84+80+80+80+80, 271-30, "下一页",  0);
 	}
@@ -1406,7 +1947,7 @@ void Disp_Button_ItemScanSet(uint32_t value)
 	{
 		Colour.Fword=White;
 		Colour.black=LCD_COLOR_TEST_BUTON;
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(84, 271-30, "DelRow",  0);
 			WriteString_16(84+80, 271-40, "LINE",  0);
@@ -1416,7 +1957,7 @@ void Disp_Button_ItemScanSet(uint32_t value)
 			WriteString_16(84+80+80+80, 271-30, "Last P",  0);
 			WriteString_16(84+80+80+80+80, 271-30, "Next P",  0);
 			
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(84, 271-30, "删除行",  0);
 	//		WriteString_16(84, 271-20, "设置",  0);
 			WriteString_16(84+80, 271-40, "线性",  0);
@@ -1459,7 +2000,7 @@ void Disp_Button_ItemScanSet(uint32_t value)
 			{
 				Colour.Fword=White;
 				Colour.black=LCD_COLOR_TEST_BUTON;
-				if(SaveData.Sys_Setup.Language == 1)
+				if(SaveSIM.lang == 1)
 				{
 					WriteString_16(84, 271-30, "DelRow",  0);
 					WriteString_16(84+80, 271-40, "ATOU",  0);
@@ -1467,7 +2008,7 @@ void Disp_Button_ItemScanSet(uint32_t value)
 					WriteString_16(84+80+80+80, 271-30, "Last P",  0);
 					WriteString_16(84+80+80+80+80, 271-30, "Next P",  0);
 					
-				}else if(SaveData.Sys_Setup.Language == 0){
+				}else if(SaveSIM.lang == 0){
 					WriteString_16(84, 271-30, "删除行",  0);
 			//		WriteString_16(84, 271-20, "管理",  0);
 					WriteString_16(84+80, 271-40, "自动",  0);
@@ -1505,14 +2046,14 @@ void Disp_Button_TestSet(uint32_t value)
 //		WriteString_16(84+80, 271-20, "校正",  0);
 //		WriteString_16(84+80+80, 271-40, "极限",  0);
 //		WriteString_16(84+80+80, 271-20, "设置",  0);
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(83, 271-29, "MEADISP",  0);
 			WriteString_16(83+80, 271-29, "SYSSET",  0);
 //			WriteString_16(83+80+80, 271-29, "LMTSET",  0);
 //			WriteString_16(83+80+80+80, 271-29, "SYSSET",  0);
 			
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(83, 271-29, "测量显示",  0);
 			WriteString_16(83+80, 271-29, "系统设置",  0);
 //			WriteString_16(83+80+80, 271-29, "极限设置",  0);
@@ -1537,7 +2078,7 @@ void Disp_Button_TestSet(uint32_t value)
 //        WriteString_16(84+80+80, 271-30, "工具",  0);
 //		WriteString_16(84+80+80, 271-20, "设置",  0);
 //        WriteString_16(84+80+80+80+80, 271-40, "更多",  0);
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(84, 271-40, "FILE",  0);
 			WriteString_16(84, 271-20, "MANE",  0);
@@ -1548,7 +2089,7 @@ void Disp_Button_TestSet(uint32_t value)
 			WriteString_16(84+80+80+80+80, 271-40, "MORE",  0);
 			WriteString_16(84+80+80+80+80, 271-20, " 2/2",  0);  
 			
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(84, 271-40, "文件",  0);
 			WriteString_16(84, 271-20, "管理",  0);
 			WriteString_16(84+80, 271-40, "系统",  0);
@@ -1569,14 +2110,14 @@ void Disp_Button_TestSet(uint32_t value)
 //		WriteString_16(83+80, 271-29, "电阻校正",  0);
 //		WriteString_16(83+80+80, 271-29, "退出保存",  0);
 //		WriteString_16(83+80+80+80, 271-29, "清除校正",  0);
-		if(SaveData.Sys_Setup.Language == 1)
+		if(SaveSIM.lang == 1)
 		{
 			WriteString_16(83, 271-29, "VOLCal",  0);
 			WriteString_16(83+80, 271-29, "CtrlCal",  0);
 			WriteString_16(83+80+80, 271-29, "CurCal",  0);
 //			WriteString_16(83+80+80+80, 271-29, "Cle Corr",  0); 
 			
-		}else if(SaveData.Sys_Setup.Language == 0){
+		}else if(SaveSIM.lang == 0){
 			WriteString_16(83, 271-29, "电压校正",  0);
 			WriteString_16(83+80, 271-29, "控制校正",  0);
 			WriteString_16(83+80+80, 271-29, "电流校正",  0);
@@ -1595,12 +2136,12 @@ void Disp_Button_SysSet(void)
 		
 //		WriteString_16(83, 271-29, "密码设置",  0);
 	//	WriteString_16(83, 271-29, "测量设置",  0);
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(83, 271-29, "MEADISP",  0);
 		WriteString_16(83+80, 271-29, "MeasSet",  0);
 		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(83, 271-29, "测量显示",  0);
 		WriteString_16(83+80, 271-29, "测量设置",  0); 
 	}
@@ -1628,14 +2169,14 @@ void Disp_Button_Correction(void)
 //		WriteString_16(83+80, 271-29, "电阻校正",  0);
 //		WriteString_16(83+160+19, 271-29, "退出",  0);
 //		WriteString_16(83+160+160, 271-29, "清除校正",  0);
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(83, 271-29, "C Corret",  0);
 		WriteString_16(83+80, 271-29, "R Corret",  0);
 		WriteString_16(83+160+19, 271-29, "Exit",  0);
 		WriteString_16(83+160+160, 271-29, "Cle Corr",  0);
 		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(83, 271-29, "电容校正",  0);
 		WriteString_16(83+80, 271-29, "电阻校正",  0);
 		WriteString_16(83+160+19, 271-29, "退出",  0);
@@ -1669,11 +2210,11 @@ void Disp_Test_Item(void)
 	Disp_TestScreen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(0,4, All_TopName_E[0],  0);
 		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(0,4, All_TopName[0],  0);
 	}
 	
@@ -1683,19 +2224,19 @@ void Disp_Test_Item(void)
 	{
 		if(i<3)
 		{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(0, 26+i*22, Test_Setitem_E[i],  0);
 				
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(0, 26+i*22, Test_Setitem[i],  0);
 			}
 		}else{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(250,26+(i-3)*22, Test_Setitem_E[i],  0);
 				
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(250,26+(i-3)*22, Test_Setitem[i],  0);
 			}
 			
@@ -1727,11 +2268,11 @@ void Disp_Range_Item(void)
 	Disp_RangeScreen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(0, 4, All_TopName_E[1],  0);
 		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(0, 4, All_TopName[1],  0);
 	}
 	
@@ -1741,20 +2282,20 @@ void Disp_Range_Item(void)
 	{
 		if(i<3)
 		{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(0, 26+i*22, Range_Item_E[i],  0);
 				
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(0, 26+i*22, Range_Item[i],  0);
 			}
 			
 		}else{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(250, 26+(i-3)*22, Range_Item_E[i],  0);
 				
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(250, 26+(i-3)*22, Range_Item[i],  0);
 			}
 			
@@ -1793,10 +2334,10 @@ void Disp_Range_Count_Item(void)
 	Disp_Range_CountScreen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(0, 4, All_TopName_E[2],  0);	
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(0, 4, All_TopName[2],  0);
 	}
 	
@@ -1806,24 +2347,24 @@ void Disp_Range_Count_Item(void)
 	{
 		if(i==1)
 		{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(i*160+30, FIRSTLINE-2, Range_Count_Item_E[i],  0);	
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(i*160+30, FIRSTLINE-2, Range_Count_Item[i],  0);
 			}		
 		}else if(i==2){
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(i*160+40, FIRSTLINE-2, Range_Count_Item_E[i],  0);	
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(i*160+40, FIRSTLINE-2, Range_Count_Item[i],  0);
 			}			
 		}else{
-			if(SaveData.Sys_Setup.Language == 1)
+			if(SaveSIM.lang == 1)
 			{
 				WriteString_16(i*160, FIRSTLINE-2, Range_Count_Item_E[i],  0);	
-			}else if(SaveData.Sys_Setup.Language == 0){
+			}else if(SaveSIM.lang == 0){
 				WriteString_16(i*160, FIRSTLINE-2, Range_Count_Item[i],  0);
 			}			
 		}
@@ -1951,12 +2492,12 @@ void Disp_List_Count_Item(void)
 //	WriteString_16(LIST1, FIRSTLINE, "方式 :",  0);
 //	WriteString_16(LIST1+40, FIRSTLINE+SPACE1, "频率[Hz]",  0);	
 //	WriteString_16(LIST1+140, FIRSTLINE+SPACE1, "电平[V]",  0);	
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		WriteString_16(LIST1, FIRSTLINE, "Meth :",  0);
 		WriteString_16(LIST1+40, FIRSTLINE+SPACE1, "Freq[Hz]",  0);	
 		WriteString_16(LIST1+140, FIRSTLINE+SPACE1, "Levl[V]",  0);		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		WriteString_16(LIST1, FIRSTLINE, "方式 :",  0);
 		WriteString_16(LIST1+40, FIRSTLINE+SPACE1, "频率[Hz]",  0);	
 		WriteString_16(LIST1+140, FIRSTLINE+SPACE1, "电平[V]",  0);	
@@ -2016,17 +2557,17 @@ void Disp_Test_Set_Item(void)
 	Disp_TestSetScreen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[4],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[4],  0);
 	}
 	
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BACK;
 	for(i=0;i<(sizeof(Set_testitem_E)/(sizeof(Set_testitem_E[0])));i++)
-	if(SaveData.Sys_Setup.Language == 1)
+	if(SaveSIM.lang == 1)
 	{
 		if(i<sizeof(Set_testitem_E)/(sizeof(Set_testitem_E[0]))/2)
 		{
@@ -2050,7 +2591,7 @@ void Disp_Test_Set_Item(void)
 			
 			
 		}		
-	}else if(SaveData.Sys_Setup.Language == 0){
+	}else if(SaveSIM.lang == 0){
 		if(i<sizeof(Set_testitem)/(sizeof(Set_testitem[0]))/2)
 		{
 			if(i>2&&i<5)
@@ -3172,11 +3713,11 @@ void Disp_LimitSEt_value(Button_Page_Typedef* Button_Page)
 		default:
 			Colour.Fword=White;
 			Colour.black=LCD_COLOR_TEST_BUTON;
-			if(SaveData.Sys_Setup.Language==1)
+			if(SaveSIM.lang==1)
 			{
 				WriteString_16(BUTTOM_X_VALUE+9, BUTTOM_Y_VALUE, "Cel R",  0);
 				WriteString_16(BUTTOM_X_VALUE+4*BUTTOM_MID_VALUE, BUTTOM_Y_VALUE+1, "CelList",  0);
-			}else if(SaveData.Sys_Setup.Language==0){
+			}else if(SaveSIM.lang==0){
 				WriteString_16(BUTTOM_X_VALUE+9, BUTTOM_Y_VALUE, "清除行",  0);
 				WriteString_16(BUTTOM_X_VALUE+4*BUTTOM_MID_VALUE, BUTTOM_Y_VALUE+1, "清除表格",  0);
 			}
@@ -3667,10 +4208,10 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	}
 		
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
-	if(SaveData.Sys_Setup.Language==1)
+	if(SaveSIM.lang==1)
 	{
 		WriteString_16(LIST1+95, FIRSTLINE+2, "SimBat",  0);//
-	}else if(SaveData.Sys_Setup.Language==0){
+	}else if(SaveSIM.lang==0){
 		WriteString_16(LIST1+95, FIRSTLINE+2, "模拟电池",  0);//
 	}
 	
@@ -3688,7 +4229,7 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	}
 		
 	LCD_DrawRect( LIST1+94, FIRSTLINE+SPACE1,SELECT_1END , FIRSTLINE+SPACE1*2-4 , Colour.black );//SPACE1
-	WriteString_16(LIST1+95, FIRSTLINE+SPACE1+2, Switch_Value[Saveeeprom.Sys_set.key_board],  1);
+	WriteString_16(LIST1+95, FIRSTLINE+SPACE1+2, Switch_Value[SaveSIM.keybeep],  1);
 	
 	
 //不合格讯响
@@ -3720,7 +4261,7 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 		
 	LCD_DrawRect( LIST1+94, FIRSTLINE+SPACE1*3,SELECT_1END , FIRSTLINE+SPACE1*4-4 , Colour.black ) ;//SPACE1
 //	sprintf((char *)DispBuf,"%3d",SaveData.User_Correction.Short);
-	WriteString_16(LIST1+95, FIRSTLINE+SPACE1*3+2, Sys_Language_Value[SaveData.Sys_Setup.Language],  0);	
+	WriteString_16(LIST1+95, FIRSTLINE+SPACE1*3+2, Sys_Language_Value[SaveSIM.lang],  0);	
 	
 //口令
 //	if(index==5)
@@ -3827,7 +4368,7 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
     Colour.black=LCD_COLOR_TEST_BACK;
     
     WriteString_16(LIST1, FIRSTLINE+SPACE1*6+2, "Fact No.:",  0);
-    WriteString_16(LIST1+94, FIRSTLINE+SPACE1*6+2, Saveeeprom.fac_num,  0);
+    WriteString_16(LIST1+94, FIRSTLINE+SPACE1*6+2, SaveSIM.fac_num,  0);
     //Saveeeprom.fac_num;
 	
 //密码
@@ -4019,10 +4560,10 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 //				Colour.black=LCD_COLOR_TEST_BUTON;
 ////				for(i=0;i<4;i++)
 //			//	WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
-//		if(SaveData.Sys_Setup.Language ==1)
+//		if(SaveSIM.lang ==1)
 //		{
 //			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "Brid",  0);
-//		}else if(SaveData.Sys_Setup.Language ==0){
+//		}else if(SaveSIM.lang ==0){
 //			WriteString_16(BUTTOM_X_VALUE+18, BUTTOM_Y_VALUE, "电桥",  0);
 //		}
         
@@ -4650,10 +5191,10 @@ void Disp_UserCheck_Item(void)
 	Disp_Usercheck_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[5],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[5],  0);
 	}
 	
@@ -4691,16 +5232,16 @@ void Disp_LimitList_Item(void)			//极限列表设置
 	Disp_LimitList_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[6],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[6],  0);
 	}
 	
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BACK;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		for(i=0;i<(sizeof(User_LimitList_Item_E)/(sizeof(User_LimitList_Item_E[0])));i++)
 		if(i<sizeof(User_LimitList_Item_E)/(sizeof(User_LimitList_Item_E[0]))/2)
@@ -4715,7 +5256,7 @@ void Disp_LimitList_Item(void)			//极限列表设置
 			WriteString_16(LIST1+(i-sizeof(User_LimitList_Item_E)/(sizeof(User_LimitList_Item_E[0]))/2)*160,
 			 FIRSTLINE+SPACE1-4, User_LimitList_Item_E[i],  0);
 		}
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		for(i=0;i<(sizeof(User_LimitList_Item)/(sizeof(User_LimitList_Item[0])));i++)
 		if(i<sizeof(User_LimitList_Item)/(sizeof(User_LimitList_Item[0]))/2)
 		{ 
@@ -4771,22 +5312,22 @@ void Disp_ListScan_Item(void)
 	Disp_ListScan_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[7],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[7],  0);
 	}
 	
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BACK;
 	
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(LIST1, FIRSTLINE, User_ListScan_Item_E[0],  0);
 		for(i=1;i<(sizeof(User_ListScan_Item_E)/(sizeof(User_ListScan_Item_E[0])));i++)
 		WriteString_16(LIST1+30+(i-1)*77, FIRSTLINE+SPACE1, User_ListScan_Item_E[i],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(LIST1, FIRSTLINE, User_ListScan_Item[0],  0);
 		for(i=1;i<(sizeof(User_ListScan_Item)/(sizeof(User_ListScan_Item[0])));i++)
 		WriteString_16(LIST1+30+(i-1)*77, FIRSTLINE+SPACE1, User_ListScan_Item[i],  0);
@@ -4803,7 +5344,7 @@ void Disp_ListScan_Item(void)
 void Disp_SysLine(void)
 {
  	uint32_t i;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		for(i=0;i<(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0])));i++)
 		{
@@ -4812,7 +5353,7 @@ void Disp_SysLine(void)
 			else
 				LCD_DrawLine( 95+250, FIRSTLINE+(i-(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0]))-1)/2)*SPACE1-2, 90+100+250,FIRSTLINE+(i-(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0]))-1)/2)*SPACE1-2, White );
 		}
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		for(i=0;i<(sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0])));i++)
 		{
 			if(i<((sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0]))+1)/2))
@@ -4843,7 +5384,7 @@ void Disp_Sys_Screen(void)
 static void  Disp_SysDot(void)
 {
 	uint8_t i;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		for(i=0;i<(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0])));i++)
 		{
@@ -4852,7 +5393,7 @@ static void  Disp_SysDot(void)
 			else
 				WriteString_16(LIST2+84+4, FIRSTLINE+SPACE1*(i-(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0])))/2), ":",  0);	
 		}
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		for(i=0;i<(sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0])));i++)
 		{
 			if(i<((sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0]))+1)/2))
@@ -4872,17 +5413,17 @@ void Disp_Sys_Item(void)
 	Disp_Sys_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[8],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[8],  0);
 	}
 	
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BACK;
 //	WriteString_16(LIST1, FIRSTLINE, User_ListScan_Item[0],  0);
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		for(i=0;i<(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0])));i++)
 		if(i<sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0]))/2)
@@ -4894,7 +5435,7 @@ void Disp_Sys_Item(void)
 		{
 			WriteString_16(LIST2,FIRSTLINE+SPACE1*(i-(sizeof(Sys_Setitem_E)/(sizeof(Sys_Setitem_E[0]))+1)/2), Sys_Setitem_E[i],  0);
 		}
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		for(i=0;i<(sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0])));i++)
 		if(i<sizeof(Sys_Setitem)/(sizeof(Sys_Setitem[0]))/2)
 		{
@@ -4929,10 +5470,10 @@ void Disp_Serve_correction (void)
 	Disp_serve_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[10],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[10],  0);
 	}
 	
@@ -4960,10 +5501,10 @@ void Disp_Start_Corr(void)
 	Disp_serve_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[10],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[10],  0);
 	}
 	
@@ -4986,10 +5527,10 @@ void Disp_Serve_correctionR (void)
 	Disp_serve_Screen();
 	Colour.Fword=White;
 	Colour.black=LCD_COLOR_TEST_BAR;
-	if(SaveData.Sys_Setup.Language ==1)
+	if(SaveSIM.lang ==1)
 	{
 		WriteString_16(0, 4, All_TopName_E[10],  0);
-	}else if(SaveData.Sys_Setup.Language ==0){
+	}else if(SaveSIM.lang ==0){
 		WriteString_16(0, 4, All_TopName[10],  0);
 	}
 	
@@ -5067,11 +5608,11 @@ void Disp_Correction_Set(Button_Page_Typedef* Button_Page)
 		case 8:
 				Colour.Fword=White;
 				Colour.black=LCD_COLOR_TEST_BUTON;
-				if(SaveData.Sys_Setup.Language ==1)
+				if(SaveSIM.lang ==1)
 				{
 					WriteString_16(83+19, 271-29, "CONF",  0);	
 					WriteString_16(83+83+19, 271-29, "SAVE",  0);
-				}else if(SaveData.Sys_Setup.Language ==0){
+				}else if(SaveSIM.lang ==0){
 					WriteString_16(83+19, 271-29, "确定",  0);	
 					WriteString_16(83+83+19, 271-29, "保存",  0);
 				}
@@ -5081,13 +5622,13 @@ void Disp_Correction_Set(Button_Page_Typedef* Button_Page)
 	
 	if(Correc_successflag==1)
 	{		
-		if(SaveData.Sys_Setup.Language ==1)
+		if(SaveSIM.lang ==1)
 		{
 			if(Button_Page->index<5)
 			  WriteString_16(LIST1+210, FIRSTLINE+SPACE1*(Button_Page->index+1), "DONE",  0);
 			else
 			  WriteString_16(LIST2+170, FIRSTLINE+SPACE1*(Button_Page->index-3), "DONE",  0);
-		}else if(SaveData.Sys_Setup.Language ==0){
+		}else if(SaveSIM.lang ==0){
 			if(Button_Page->index<5)
 			  WriteString_16(LIST1+210, FIRSTLINE+SPACE1*(Button_Page->index+1), "完成",  0);
 			else
@@ -5142,11 +5683,11 @@ void Disp_Correction_SetR(Button_Page_Typedef* Button_Page)
 				Colour.black=LCD_COLOR_TEST_BUTON;
 //				WriteString_16(83+19, 271-29, "确定",  0);
 //				WriteString_16(83+83+19, 271-29, "保存",  0);
-		if(SaveData.Sys_Setup.Language ==1)
+		if(SaveSIM.lang ==1)
 		{
 			WriteString_16(83+19, 271-29, "CONF",  0);
 			WriteString_16(83+83+19, 271-29, "SAVE",  0);
-		}else if(SaveData.Sys_Setup.Language ==0){
+		}else if(SaveSIM.lang ==0){
 			WriteString_16(83+19, 271-29, "确定",  0);
 			WriteString_16(83+83+19, 271-29, "保存",  0);
 		}
@@ -5156,10 +5697,10 @@ void Disp_Correction_SetR(Button_Page_Typedef* Button_Page)
 
 	if(Correc_successflag==1)
 	{
-		 if(SaveData.Sys_Setup.Language ==1)
+		 if(SaveSIM.lang ==1)
 		{
 			WriteString_16(LIST2+50, FIRSTLINE+SPACE1*(Button_Page->index+1), "DONE",  0);
-		}else if(SaveData.Sys_Setup.Language ==0){
+		}else if(SaveSIM.lang ==0){
 			WriteString_16(LIST2+50, FIRSTLINE+SPACE1*(Button_Page->index+1), "完成",  0);
 		}
 				

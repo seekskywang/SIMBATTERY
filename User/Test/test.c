@@ -174,18 +174,19 @@ void Power_Process(void)
 	Lock_LedOff();
 	Pass_Led();
 	Power_Off_led();
-//	#ifdef DISP_JK
+	ReadSavedata();
+	#ifdef DISP_JK
 	if(SaveSIM.jkflag)
 	{
-		lcd_image((uint8_t *)gImage_open);
+		DrawLogo(140,160);
 	}
-//	#endif
+	#endif
 	InitGlobalValue();//初始化全局变量
 	init_timer(0, 2);//定时器初始化
 	
 	enable_timer(0);
 	
-	ReadSavedata();
+	
 	Set_Compbcd_float();
 	i=0;//显示延时
 //Delay(2000);
@@ -2472,13 +2473,13 @@ void Use_SysSetProcess(void)
 						case 1:
 							break;
 						case 2:
-							Saveeeprom.Sys_set.key_board=0;
+							SaveSIM.keybeep=0;
 							break;
 						case 3:
 							Saveeeprom.Sys_set.U_flag=0;
 							break;
 						case 4:
-							SaveData.Sys_Setup.Language=0;
+							SaveSIM.lang=0;
 							break;
 //						case 5:
 //							SaveData.Sys_Setup.Password=1;
@@ -2632,13 +2633,13 @@ void Use_SysSetProcess(void)
 						case 1:
 							break;
 						case 2:
-							Saveeeprom.Sys_set.key_board=1;
+							SaveSIM.keybeep=1;
 							break;
 						case 3:
 							Saveeeprom.Sys_set.U_flag=1;
 							break;
 						case 4:
-							SaveData.Sys_Setup.Language=1;
+							SaveSIM.lang=1;
 							break;
 //						case 5:
 //							SaveData.Sys_Setup.Password=0;
@@ -3334,6 +3335,7 @@ void Fac_DebugProcess(void)
     uint8_t debugbuff[20];
     uint8_t setupflag=0,sendnum;
     Disp_Coordinates_Typedef Coordinates;
+	Disp_Coordinates_Typedef Debug_Cood;
 //    uint8_t page=1;
 	uint8_t Disp_flag=1;
 	Button_Page_Typedef Button_Page;
@@ -3412,7 +3414,14 @@ void Fac_DebugProcess(void)
 					SetSystemStatus(SYS_STATUS_TEST);
 				break;
 				case Key_SETUP:
-					
+					if(Button_Page.index==0)
+                    {
+                        Debug_Cood.xpos=70;
+                        Debug_Cood.ypos =272-70;
+                        Debug_Cood.lenth=120;
+                        input_num(&Debug_Cood);
+                    
+                    }
 				break;
 				case Key_FAST:
 					
@@ -5990,7 +5999,7 @@ void input_num(Disp_Coordinates_Typedef *Coordinates )
                     dispflag=0;
                     for(i=0;i<8;i++)
                     {
-                        Saveeeprom.fac_num[i]=Disp_buff[i];
+                        SaveSIM.fac_num[i]=Disp_buff[i];
                     
                     }
                     Savetoeeprom();

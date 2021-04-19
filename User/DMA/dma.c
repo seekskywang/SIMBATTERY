@@ -10,11 +10,11 @@ uint8_t DMADest_Buffer[DMA_SIZE];
 uint8_t DMAsend_Buffer[DMASEND_SIZE];
 GPDMA_Channel_CFG_Type GPDMACfg;
 GPDMA_Channel_CFG_Type GPDMACfg1;
-
+uint8_t missflag;
 void DMA_IRQHandler (void)
 {
 		
-        uint8_t i,ch;
+        uint8_t i,ch,j;
 		for(ch = 0;ch < 2;ch++)
 		{
 			if (GPDMA_IntGetStatus(GPDMA_STAT_INT, ch))/* ?¨¬2¨¦DMA¨ª¡§¦Ì¨¤0?D??¡Á¡ä¨¬? */
@@ -29,10 +29,48 @@ void DMA_IRQHandler (void)
 							{
 								case 0:
 								{
-									for(i = 0;i < 8;i ++)
+									if(DMADest_Buffer[0] != 0x01 && DMADest_Buffer[1] != 0x06)
 									{
-										g_tModS.RxBuf[i] = DMADest_Buffer[i];
+//										for(i = 0;i < 8;i ++)
+//										{
+//											if(DMADest_Buffer[i]==0x01)
+//											{
+//												missflag = i;
+//												for(j = 0;j < 8;j ++)
+//												{
+//													g_tModS.RxBuf[j] = DMADest_Buffer[j+i];
+//													if(j+i > 7)
+//													{
+//														g_tModS.RxBuf[j] = DMADest_Buffer[j+i-8];
+//													}
+//												}
+//												break;
+//											}
+//										}
+										debug_uart3_init(4);//´®¿Ú3³õÊ¼»¯
+										lpc1788_DMA_Init();
+									}else{
+//										if(missflag != 0)
+//										{
+//											for(j = 0;j < 8;j ++)
+//											{
+//												g_tModS.RxBuf[j] = DMADest_Buffer[j+missflag];
+//												if(j+i > 7)
+//												{
+//													g_tModS.RxBuf[j] = DMADest_Buffer[j+missflag-8];
+//												}
+//											}
+//										}else{
+											for(i = 0;i < 8;i ++)
+											{
+												g_tModS.RxBuf[i] = DMADest_Buffer[i];
+											}
+//										}
 									}
+//									for(i = 0;i < 8;i ++)
+//									{
+//										g_tModS.RxBuf[i] = DMADest_Buffer[i];
+//									}
 									g_tModS.RxCount = 8;
 									RecHandle();
 									g_tModS.RxCount = 0;

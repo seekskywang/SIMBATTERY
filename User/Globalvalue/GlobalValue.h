@@ -54,7 +54,7 @@
 #define HW_BEEP_SUPPORT			(_DEBUG_CONFIG_TRUE)
 //==========================================================
 //功能配置
-//#define DISP_JK                 (0)
+#define DISP_JK                 (0)
 //==========================================================
 //AD值滤波配置，增加数据稳定度
 #define AD_FILTER_SUPPORT		(_DEBUG_CONFIG_TRUE)
@@ -492,6 +492,9 @@ typedef struct
 	Sort_TypeDef CALI[6];//测量电流校准
 	uint8_t resflag;//微调分辨率
 	uint8_t jkflag;
+	uint8_t keybeep;
+	uint8_t lang;
+	uint8_t fac_num[10];
 }SaveSet;
 
 extern SaveSet SaveSIM;

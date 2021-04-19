@@ -38,6 +38,7 @@ void Disp_Fastbutton(void);
 void Disp_MidRect(void);
 void Disp_TestScreen(void);
 
+void DrawLogo(uint16_t x,uint16_t y);
 void Disp_Test_Item(void);//测量显示主菜单的项目显示
 void Disp_Range_Item(void);//档号显示主菜单项目显示
 void Disp_Range_Count_Item(void);//档计数显示界面

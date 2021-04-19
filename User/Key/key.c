@@ -388,7 +388,7 @@ void Delay_Key(void)
 }
 void Key_Beep(void)
 {
-    if(Saveeeprom.Sys_set.key_board)
+    if(SaveSIM.keybeep)
 	Beep_on();
 	Delay(20);
 	Beep_Off();
