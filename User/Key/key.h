@@ -44,6 +44,7 @@ u8 HW_KeyScsn1(void);
 void SysTick_Handler (void);
 void Delay (unsigned long tick);
 void GPIO_Led_Configuration(void);
+void GPIO_Encoder_Config(void);
 void GPIO_Plc_Configuration(void);
 
 void Beep_on(void);

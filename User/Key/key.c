@@ -192,6 +192,12 @@ void GPIO_485_Config(void)
 	
 }
 
+void GPIO_Encoder_Config(void)
+{
+	
+	
+}
+
 void GPIO_Led_Configuration(void)
 {
 	GPIO_SetDir(0, (1<<10), GPIO_DIRECTION_OUTPUT);//开机灯
@@ -213,6 +219,9 @@ void GPIO_Plc_Configuration(void)
 	GPIO_SetDir(2, (1<<11), GPIO_DIRECTION_OUTPUT);//不合格继电器
 	GPIO_SetDir(0, (1<<11), GPIO_DIRECTION_INPUT);//启动
 	GPIO_SetDir(4, (1<<27), GPIO_DIRECTION_OUTPUT);//开机继电器
+	
+	GPIO_SetDir(2, (1<<23), GPIO_DIRECTION_INPUT);
+	GPIO_SetDir(2, (1<<22), GPIO_DIRECTION_INPUT);
 }
 void GPIO_Key_Configuration(void)
 {

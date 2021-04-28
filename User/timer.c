@@ -23,12 +23,16 @@
 #include "timer.h"
 #include "system_LPC177x_8x.h"
 #include "Globalvalue/GlobalValue.h"
+#include "test/Test.h"
 volatile uint32_t timer0_counter = 0;
 volatile uint32_t timer1_counter = 0;
 volatile uint32_t timer2_counter = 0;
 volatile uint32_t timer3_counter = 0;
 extern void MODS_Poll(void);
+extern void EncodeScan();
 extern uint32_t Tick_10ms;
+uint32_t spintest;
+uint16_t count1ms;
 /*****************************************************************************
 ** Function name:		delayMs
 **
@@ -105,15 +109,26 @@ void delayMs(uint8_t timer_num, uint32_t delayInMs)
 void TIMER0_IRQHandler (void) 
 {  
     LPC_TIM0->IR = 0x1<<0;		/* clear interrupt flag */
-	Tick_10ms ++;
+	
 //	MODS_Poll();
-	if(mainswitch == 1)
+	if(count1ms == 10)
 	{
-		timer0_counter++;
+		Tick_10ms ++;
+		if(mainswitch == 1)
+		{
+			timer0_counter++;
+		}else{
+			timer2_counter++;
+		}
+		timer1_counter++;
+		count1ms = 0;
 	}else{
-		timer2_counter++;
+		count1ms++;
 	}
-	timer1_counter++;
+//	timer3_counter++;
+//	EncoderHandler();
+
+	EncodeScan();
   return;
 }
 
@@ -129,8 +144,8 @@ void TIMER0_IRQHandler (void)
 void TIMER1_IRQHandler (void)  
 {  
     LPC_TIM1->IR = 0x1<<0;		/* clear interrupt flag */
-  timer1_counter++;
-  return;
+    timer3_counter++;
+    return;
 }
 
 /******************************************************************************
@@ -160,8 +175,10 @@ void TIMER2_IRQHandler (void)
 ******************************************************************************/
 void TIMER3_IRQHandler (void)  
 {  
-  LPC_TIM3->IR = 1;			/* clear interrupt flag */
+  LPC_TIM3->IR |= 0x30;			/* clear interrupt flag */
   timer3_counter++;
+//  spintest = 1;
+  
   return;
 }
 
@@ -264,6 +281,34 @@ void reset_timer( uint8_t timer_num )
   }
   return;
 }
+/*********************************************************************************************************
+** 函数名称：timer3Init
+** 函数描述：定时器3初始化函数
+** 输入参数：无
+** 返回值  ：无
+*********************************************************************************************************/
+void timer3Init (void)
+{
+
+    LPC_IOCON->P2_23           &= ~0x07;    
+    LPC_IOCON->P2_23           |= 0x03;                                 /* Timer3_32 CAP0               */
+    LPC_IOCON->P2_22           &= ~0x07;
+	LPC_IOCON->P2_22           |= 0x03;									/* Timer3_32 CAP1               */
+	LPC_SC->PCONP  |= 1 << 23;                                          /* 打开定时器3的功率控制        */
+    LPC_TIM3->PR    = 60000-1;
+    LPC_TIM3->CCR  |= 0x1B;                                             /* 设置CAP3.0和CAP3.1上升下降沿捕获
+																		并开启中断*/
+	
+//	NVIC_EnableIRQ(TIMER3_IRQn);                                        /* 设置外部中断并使能           */
+//    NVIC_SetPriority(TIMER3_IRQn, 3);
+//	
+    LPC_TIM3->TC    = 0;
+    LPC_TIM3->TCR   = 0x01;                                             /* 启动定时器                   */
+	
+	
+}
+
+
 
 /******************************************************************************
 ** Function name:		init_timer
@@ -283,7 +328,7 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval )
 	timer0_counter = 0;
 	LPC_SC->PCONP |= (0x01<<1);
 	LPC_TIM0->TCR |= (1<<1);//复位定时器
-	LPC_TIM0->PR   = 60000-1;//分频
+	LPC_TIM0->PR   = 30000-1;//分频
 	LPC_TIM0->MR0 = TimerInterval;
 	LPC_TIM0->MCR = 3;				/* Interrupt and Reset on MR0 */
 
@@ -292,10 +337,12 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval )
   }
   else if ( timer_num == 1 )
   {
-	timer1_counter = 0;
-	LPC_SC->PCONP |= (0x1<<2);
-	LPC_TIM1->MR0 = TimerInterval;
-	LPC_TIM1->MCR = 3;				/* Interrupt and Reset on MR0 */
+	timer3_counter = 0;
+	LPC_SC->PCONP |= (0x01<<2);
+	LPC_TIM1->TCR |= (1<<1);//复位定时器
+	LPC_TIM1->PR   = 30000-1;//分频
+	LPC_TIM1->MR1 = TimerInterval;
+	LPC_TIM1->MCR = 0x18;				/* Interrupt and Reset on MR1 */
 
 	NVIC_EnableIRQ(TIMER1_IRQn);
 	return (TRUE);

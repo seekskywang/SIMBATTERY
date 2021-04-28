@@ -143,7 +143,7 @@ int main(void)
     SDRAM_Init();
 	/*Disable LCD controller*/
 	GLCD_Ctrl (FALSE);
-
+	
 	/*Init LCD and copy picture in video RAM*/
 	GLCD_Init (LogoPic.pPicStream, NULL);
    	/*Enable LCD*/
@@ -151,6 +151,8 @@ int main(void)
 //    touch_init();
 //    TouchPanel_Calibrate();
 	HW_Sendvalueto164(0);
+//	delay_ms(200);
+	
 //	lcd_image((uint8_t *)gImage_open);
 //	for(i=0;i<15;i++)
 //	{
@@ -212,42 +214,42 @@ int main(void)
 				Beep_Off();
 				Test_Process();//测试处理
 				break;
-			case SYS_STATUS_RANGE:
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-				Range_Process();//挡号显示
-				break;
-			case SYS_STATUS_RANGECOUNT: //档计数显示
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-			    Range_CountProcess();	
-				break;
-			case SYS_STATUS_ITEM:	 //列表扫描显示
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-				ItemProcess();
-				break;
-			case SYS_STATUS_FILE:   //还没有文件管理的子程序
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-				File_Process();//文件管理
-				break;
-			case SYS_STATUS_DATASTORE://还没有文件管理的子程序
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-				Data_StoreProcess();//数据保存
-				break;
+//			case SYS_STATUS_RANGE:
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//				Range_Process();//挡号显示
+//				break;
+//			case SYS_STATUS_RANGECOUNT: //档计数显示
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//			    Range_CountProcess();	
+//				break;
+//			case SYS_STATUS_ITEM:	 //列表扫描显示
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//				ItemProcess();
+//				break;
+//			case SYS_STATUS_FILE:   //还没有文件管理的子程序
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//				File_Process();//文件管理
+//				break;
+//			case SYS_STATUS_DATASTORE://还没有文件管理的子程序
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//				Data_StoreProcess();//数据保存
+//				break;
 			case SYS_STATUS_SETUPTEST:	//测量设置
                 lcd_Clear(LCD_COLOR_TEST_BACK);
 				Setup_Process();//设置处理
 				break;
-			case SYS_STATUS_USERDEBUG: //用户校正界面
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-				Use_DebugProcess();
-				break;
-            case SYS_STATUS_LIMITSET:  //极限扫描设置
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-                Use_LimitSetProcess();
-                break;
-            case SYS_STATUS_ITEMSET: //列表扫描设置
-                lcd_Clear(LCD_COLOR_TEST_BACK);
-                Use_ITEMSetProcess();
-                break;
+//			case SYS_STATUS_USERDEBUG: //用户校正界面
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//				Use_DebugProcess();
+//				break;
+//            case SYS_STATUS_LIMITSET:  //极限扫描设置
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//                Use_LimitSetProcess();
+//                break;
+//            case SYS_STATUS_ITEMSET: //列表扫描设置
+//                lcd_Clear(LCD_COLOR_TEST_BACK);
+//                Use_ITEMSetProcess();
+//                break;
             case SYS_STATUS_SYSSET : //系统设置
                 
                 Use_SysSetProcess();
@@ -255,52 +257,6 @@ int main(void)
 			case SYS_STATUS_TOOL://工具
 				Soft_Turnon();
 			break;
-            //默认设置
-            //系统复位
-            //文件管理
-//
-//			case SYS_STATUS_FILE:
-////				Disp_Clr( );//清屏
-//				File_Process();//文件管理
-//			//	=SYS_STATUS_TEST;
-//				break;
-//
-//			case SYS_STATUS_SETUPTEST:
-////				Disp_Clr( );//清屏
-//				Setup_Process();//设置处理
-//				break;
-//
-//			case SYS_STATUS_TEST:
-////				Disp_Clr( );//清屏
-//				Test_Process();//测试处理
-//		//	Beep_Off();
-//				break;
-//
-//			case SYS_STATUS_DATASTORE:
-////				Disp_Clr( );//清屏
-//				Data_StoreProcess();//数据保存
-//				break;
-//
-//			case SYS_STATUS_RANGE:
-////				Disp_Clr( );//清屏
-//				Range_Process();//挡号显示
-//				break;
-//
-//			case SYS_STATUS_RANGECOUNT:
-////				Disp_Clr( );//清屏
-//			Range_CountProcess();	
-////				Debug_Process();//档计数显示
-//				break;
-//
-//			case SYS_STATUS_RESET:
-////				Reset_Process();//软件复位处理
-//				break;
-//			case SYS_STATUS_ITEM:	 //列表显示
-//				ItemProcess();
-//				break;
-//			case SYS_STATUS_USERDEBUG: //用户校正界面
-//				Use_DebugProcess();
-//				break;
 			case SYS_STATUS_FACRDEBUG:	 //公司校正界面
 				Fac_DebugProcess();
 				break;

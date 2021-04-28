@@ -106,15 +106,15 @@
 #define RSP_ERR_VALUE		0x03	/* ?????? */
 #define RSP_ERR_WRITE		0x04	/* д??? */
 
-#define SLAVE_REG_P00		0x1000       //R_VOLU
-#define SLAVE_REG_P01		0x1001      //Load_Voltage
-#define SLAVE_REG_P02		0x1002      //Load_Current
-#define SLAVE_REG_P03		0x1003		//Change_Voltage
-#define SLAVE_REG_P04		0x1004		//Change_Current
-#define SLAVE_REG_P05		0x1005		//Load_OCP
-#define SLAVE_REG_P06		0x1006		//Change_OCP
-#define SLAVE_REG_P07		0x1007		//Short_Time
-#define SLAVE_REG_P08		0x1008		//Leak_Current
+#define SLAVE_REG_P00		0x1000      //输出电压RMS值
+#define SLAVE_REG_P01		0x1001      //输出电流RMS值
+#define SLAVE_REG_P02		0x1002      //输出电压
+#define SLAVE_REG_P03		0x1003		//输出电流
+#define SLAVE_REG_P04		0x1004		//输出功率
+#define SLAVE_REG_P05		0x1005		//输入电流
+#define SLAVE_REG_P06		0x1006		//输入电流RMS值
+#define SLAVE_REG_P07		0x1007		//输入功率
+#define SLAVE_REG_P08		0x1008		//温度
 #define SLAVE_REG_P09		0x1009		//R1_Volu
 #define SLAVE_REG_P10		0x100A		//R2_Volu
 #define SLAVE_REG_P11		0x100B		//Temper
@@ -126,13 +126,13 @@
 #define SLAVE_REG_P17		0x1011		//Change_SET_Voltage
 #define SLAVE_REG_P18		0x1012		//Change_SET_Current
 
-#define WRITE_REG_P00		0x2000       //R_VOLU
-#define WRITE_REG_P01		0x2001      //Load_Voltage
-#define WRITE_REG_P02		0x2002      //Load_Current
-#define WRITE_REG_P03		0x2003		//Change_Voltage
-#define WRITE_REG_P04		0x2004		//Change_Current
-#define WRITE_REG_P05		0x2005		//Load_OCP
-#define WRITE_REG_P06		0x3000		//Change_OCP
+#define WRITE_REG_P00		0x2000       //设置输出电压
+#define WRITE_REG_P01		0x2001      //设置放电保护电流
+#define WRITE_REG_P02		0x2002      //预留
+#define WRITE_REG_P03		0x2003		//设置充电保护电流
+#define WRITE_REG_P04		0x2004		//预留
+#define WRITE_REG_P05		0x2005		//设定单位 0=A;1=mA
+#define WRITE_REG_P06		0x3000		//开关00：初始化 (关机) 01：输出使能 (开机)
 
 
 #define WRITE_REG_P07		0x1007		//Short_Time
@@ -176,6 +176,7 @@ extern uint8_t busyflag;
 extern uint8_t ptflag;
 extern struct MODS_T g_tModS;
 extern uint8_t g_mods_timeout;
+extern uint32_t spintest;
 //数值框属性定义
 //typedef struct
 //{

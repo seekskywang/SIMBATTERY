@@ -3146,11 +3146,27 @@ void Disp_Test_value(Button_Page_Typedef* Button_Page)
 	{
 		Colour.black=LCD_COLOR_TEST_BACK;
 	}
-	//if()
-	Hex_Format(SaveSIM.Voltage.Num,3,5,0);
 	LCD_DrawRect( LIST1+87+16,FIRSTLINE-2,SELECT_1END ,FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
+	if(Black_Select && coder_flag == 1)
+	{
+		Colour.black=LCD_COLOR_YELLOW;
+		if(spinbit < 3)
+		{
+			LCD_DrawRect(LIST1+88+16+50-spinbit*10, FIRSTLINE+16,LIST1+88+16+50-spinbit*10+8, FIRSTLINE+16+2,Colour.black);
+		}else{
+			LCD_DrawRect(LIST1+88+16+40-spinbit*10, FIRSTLINE+16,LIST1+88+16+40-spinbit*10+8, FIRSTLINE+16+2,Colour.black);
+		}
+		Colour.black=LCD_COLOR_SELECT;	
+	}	
+	Hex_Format(SaveSIM.Voltage.Num,3,5,0);
 	WriteString_16(LIST1+88+16,FIRSTLINE, DispBuf,  0);//增加算法  把顺序改过来
 	WriteString_16(LIST1+88+16+70, FIRSTLINE, "V",  1);
+	if(DispBuf[0] == 0x20)
+	{
+		spinbitmax = 3;
+	}else{
+		spinbitmax = 4;
+	}
 //	WriteString_16(LIST2-88, SCREENHIGH-FIRSTLINE, User_Range[SaveData.Main_Func.Range.Range],  0);
 //充电保护电流	
 	Black_Select=(Button_Page->index==2)?1:0;
@@ -3276,13 +3292,13 @@ void Disp_Test_value(Button_Page_Typedef* Button_Page)
 			//	Disp_Button_value1(Button_Page->page);
 			break;
 		case 1:				//显示功能项的按键值
-			Colour.Fword=White;
-			Colour.black=LCD_COLOR_TEST_BUTON;
-			WriteString_16(BUTTOM_X_VALUE+4, BUTTOM_Y_VALUE,Set_V_Res[SaveSIM.resflag],  0);
-			for(i=1;i<3;i++)
-			{
-				WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,Tune_V[i-1],  0);
-			}
+//			Colour.Fword=White;
+//			Colour.black=LCD_COLOR_TEST_BUTON;
+//			WriteString_16(BUTTOM_X_VALUE+4, BUTTOM_Y_VALUE,Set_V_Res[SaveSIM.resflag],  0);
+//			for(i=1;i<3;i++)
+//			{
+//				WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,Tune_V[i-1],  0);
+//			}
 		break;
 		case 2:
 

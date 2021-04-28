@@ -16,6 +16,7 @@
 #include 	"use_disp.h"
 #include "lpc177x_8x_rtc.h"
 #include "open.h"
+#include "lpc177x_8x_gpio.h"
 
 const char *PASSWORD="12345789";
 uint8_t  Avg_Test_Main[25][6];
@@ -25,10 +26,21 @@ uint8_t USART_RX_BUF[200];
 u8 primcomp,scedcomp;
 uint32_t Tick_10ms=0;
 uint32_t OldTick;
+
 const uint8_t Disp_Unit1[]={'p','n','u','m',' ','k','M'};
 const uint8_t Uart_Ordel[]={0x60,0x70,0x71,0x80,0x90,0xa0,0xb0,0xc0,0xe0};
 const uint8_t READDATA[7]={0xAB,0x01,0x06,0x03,0x08,0xbf,'\0'};
 extern uint16_t USART_RX_STA;
+uint32_t encodertest1;
+uint32_t encodertest2;
+uint32_t encodertest3;
+uint32_t encodertest4;
+uint8_t coder_flag;
+uint8_t spinbit;
+uint8_t spinbitmax;
+uint8_t spindelay;
+uint8_t spinsave;
+uint8_t bootdelay;
 //const uint8_t Disp_Main_Ord[][3]={
 //	{1,1,0},
 //	{1,1,1},
@@ -182,13 +194,16 @@ void Power_Process(void)
 	}
 	#endif
 	InitGlobalValue();//初始化全局变量
-	init_timer(0, 2);//定时器初始化
-	
+	init_timer(0, 1);//定时器0初始化
 	enable_timer(0);
-	
+//	init_timer(1, 1);//定时器1初始化
+//	enable_timer(1);
+//	timer3Init();
 	
 	Set_Compbcd_float();
 	i=0;//显示延时
+	bootdelay = 50;
+	
 //Delay(2000);
 	while(GetSystemStatus()==SYS_STATUS_POWER)
 	{    
@@ -218,7 +233,7 @@ void Power_Process(void)
 			Key_Beep();
             switch(key)
 			{
-				case Key_FAST:
+				case Key_UP:
                     lcd_Clear(LCD_COLOR_TEST_BACK);
                     Debug_Cood.xpos=180;
                     Debug_Cood.ypos =120;
@@ -382,8 +397,74 @@ void Send_T0_USB(void)
 		*(UserBuffer+29)='\n';
         ComBuf3.send.buf[7+12]=0XBF;
 }	
+void EncoderHandler(void)
+{
+	
+	if(encodertest3 != LPC_TIM3->CR1 && encodertest4 != LPC_TIM3->CR0)
+	{
+		
+		encodertest3 = (LPC_TIM3->CR1/*%1000*/);
+		encodertest4 = (LPC_TIM3->CR0/*%1000*/);
+		if(EnccounterA > EnccounterB)
+		{
+			spintest = 1;
+		}else if(EnccounterB > EnccounterA){
+			spintest = 2;
+		}
+	}
+}
 
+void EncodeScan()
+{	
+	unsigned char BC,ZX=0,FX=0;
+	
+//	if(!(GPIO_ReadValue(2) & (1<<23)))
+//	{
+//		encodertest1 = 0;
+//	}else{
+//		encodertest1 = 1;
+//	}
 
+//	if(!(GPIO_ReadValue(2) & (1<<22)))
+//	{
+//		encodertest2 = 0;
+//	}else{
+//		encodertest2 = 1;
+//	}
+	if(EncoderA != encodertest1)
+	{
+		encodertest1 = EncoderA;
+		if(EncoderB != EncoderA)
+		{
+			spintest = 2;
+		}else {
+			spintest = 1;
+		}
+	}
+//	if(EncoderA==0 && FX == 0)
+//	{
+//		ZX = 1;
+//		if(EncoderB==0 && BC == 0)
+//		{
+//			BC = 1;
+//			spintest = 1;//正向旋转
+//		}
+//	}else
+//	
+//	if(EncoderB==0 && ZX == 0)
+//	{
+//		FX = 1;
+//		if(EncoderA==0 && BC == 0)
+//		{
+//			BC = 1;
+//			spintest = 2;//反向旋转
+//		}
+//	}
+
+	
+	
+	
+}
 //测试程序
 void Test_Process(void)
 {
@@ -419,10 +500,95 @@ void Test_Process(void)
 	Send_Request(10,1);//开机设置
     GPIO_ClearInt(0, 1<<19);
     NVIC_EnableIRQ(GPIO_IRQn);
+	encodertest1 = EncoderA;
+	spintest = 0;
+	coder_flag = 0;
+	spinbit = 0;
 	while(GetSystemStatus()==SYS_STATUS_TEST)
 	{
 		Colour.Fword=LCD_COLOR_WHITE;
         Colour.black=LCD_COLOR_TEST_BACK;
+		if(bootdelay > 0)
+		{
+			bootdelay --;
+		}
+//		encodertest1 = (GPIO_ReadValue(2) & (1<<23))>>23;
+//		encodertest2 = (GPIO_ReadValue(2) & (1<<22))>>22;
+//		if(!(GPIO_ReadValue(2) & (1<<23)))
+//		{
+//			encodertest1 = 0;
+//		}else{
+//			encodertest1 = 1;
+//		}
+
+//		if(!(GPIO_ReadValue(2) & (1<<22)))
+//		{
+//			encodertest2 = 0;
+//		}else{
+//			encodertest2 = 1;
+//		}
+//		EncoderHandler();
+		if(spintest != 0)
+		{
+			Key_Beep();
+			if(coder_flag == 0)
+			{
+				if(spintest == 1)
+				{
+					if(Button_Page.index>5)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;
+					Button_Page.page=0;
+				}else if(spintest == 2){
+					if(Button_Page.index<1)
+						Button_Page.index=6;
+					else
+						Button_Page.index--;
+					Button_Page.page=0;
+				}
+				
+			}else if(coder_flag == 1){
+				if(Button_Page.index == 1)
+				{
+					if(spintest == 1)
+					{
+						SaveSIM.Voltage.Num += pow(10,spinbit);
+						if(SaveSIM.Voltage.Num > 20000)
+						{
+							SaveSIM.Voltage.Num = 20000;
+						}
+					}else if(spintest == 2){
+						if(SaveSIM.Voltage.Num < pow(10,spinbit))
+						{
+							SaveSIM.Voltage.Num = 0;
+						}else{
+							SaveSIM.Voltage.Num -= pow(10,spinbit);
+							if(SaveSIM.Voltage.Num < pow(10,spinbit))
+							{
+								if(spinbit > 0)
+								spinbit --;
+							}
+						}
+					}
+					spinsave = 1;
+					spindelay = 20;
+				}
+
+			}
+			spintest = 0;
+			Disp_Flag=1;
+		}
+		if(spindelay == 0 && spinsave == 1)
+		{
+			Send_Request(10,1);
+			Savetoeeprom();
+			spinsave = 0;
+		}else{
+			spindelay--;
+		}
+//		encodertest1 = GPIO_ReadValue(2) & (1<<23);
+//		encodertest2 = GPIO_ReadValue(2) & (1<<25);
         if(Rtc_intflag)
         {
             Rtc_intflag=0;
@@ -502,7 +668,7 @@ void Test_Process(void)
 //		else
 //			Disp_Usbflag(0);
 		 
-	  key=HW_KeyScsn();
+		key=HW_KeyScsn();
 		if(key==0xff)
 		{
 			keynum=0;
@@ -528,11 +694,11 @@ void Test_Process(void)
 							break;
 						case 1:
 						{
-							SaveSIM.resflag ++;
-							if(SaveSIM.resflag > 3)
-							{
-								SaveSIM.resflag = 0;
-							}
+//							SaveSIM.resflag ++;
+//							if(SaveSIM.resflag > 3)
+//							{
+//								SaveSIM.resflag = 0;
+//							}
 						}break;
 						case 4:
 							SaveSIM.qvflag = 0 + 3*Button_Page.page;
@@ -558,12 +724,12 @@ void Test_Process(void)
 						}break;
 						case 1:
 						{
-							SaveSIM.Voltage.Num += 1 * pow(10.0,(float)SaveSIM.resflag);
-							if(SaveSIM.Voltage.Num > 20000)
-							{
-								SaveSIM.Voltage.Num = 20000;
-							}
-							Send_Request(10,1);
+//							SaveSIM.Voltage.Num += 1 * pow(10.0,(float)SaveSIM.resflag);
+//							if(SaveSIM.Voltage.Num > 20000)
+//							{
+//								SaveSIM.Voltage.Num = 20000;
+//							}
+//							Send_Request(10,1);
 						}break;
 						case 4:
 							SaveSIM.qvflag = 1 + 3*Button_Page.page;
@@ -590,13 +756,13 @@ void Test_Process(void)
 						break;
 						case 1:
 						{
-							if(SaveSIM.Voltage.Num < 1 * pow(10.0,(float)SaveSIM.resflag))
-							{
-								SaveSIM.Voltage.Num = 0;
-							}else{
-								SaveSIM.Voltage.Num -= 1 * pow(10.0,(float)SaveSIM.resflag);
-							}
-							Send_Request(10,1);
+//							if(SaveSIM.Voltage.Num < 1 * pow(10.0,(float)SaveSIM.resflag))
+//							{
+//								SaveSIM.Voltage.Num = 0;
+//							}else{
+//								SaveSIM.Voltage.Num -= 1 * pow(10.0,(float)SaveSIM.resflag);
+//							}
+//							Send_Request(10,1);
 						}break;
 						case 4://MAX_R_RANGE
 							SaveSIM.qvflag = 2 + 3*Button_Page.page;
@@ -648,54 +814,67 @@ void Test_Process(void)
 				break;
 				case Key_Disp:
 					
-                    SetSystemStatus(SYS_STATUS_TEST);
+//                    SetSystemStatus(SYS_STATUS_TEST);
 				break;
 				case Key_SETUP:
-					
-                    SetSystemStatus(SYS_STATUS_SETUPTEST);
+					if(coder_flag == 1)
+					{
+						coder_flag = 0;
+						spinbit = 0;
+					}else{
+						SetSystemStatus(SYS_STATUS_SETUPTEST);
+					}
 				break;
 				case Key_FAST:
 					
 				break;
-				case Key_LEFT:
-					
-					if(Button_Page.index==0)
-						Button_Page.index=6;
-					else
-					if(Button_Page.index>3)
-						Button_Page.index-=3;
-					else
-						Button_Page.index+=2;
-					Button_Page.page=0;
-				break;
-				case Key_RIGHT:
-					
-					if(Button_Page.index==0)
-						Button_Page.index=1;
-					else
-					if(Button_Page.index<=3)
-						Button_Page.index+=3;
-					else
-						Button_Page.index-=2;
-					Button_Page.page=0;
-						
-				break;
-				case Key_DOWN:
-					
-					if(Button_Page.index>5)
-						Button_Page.index=0;
-					else
-						Button_Page.index++;
-					Button_Page.page=0;
-					
-				break;
+//				case Key_LEFT:
+//					
+//					if(Button_Page.index==0)
+//						Button_Page.index=6;
+//					else
+//					if(Button_Page.index>3)
+//						Button_Page.index-=3;
+//					else
+//						Button_Page.index+=2;
+//					Button_Page.page=0;
+//				break;
+//				case Key_RIGHT:
+//					
+//					if(Button_Page.index==0)
+//						Button_Page.index=1;
+//					else
+//					if(Button_Page.index<=3)
+//						Button_Page.index+=3;
+//					else
+//						Button_Page.index-=2;
+//					Button_Page.page=0;
+//						
+//				break;
+//				case Key_DOWN:
+//					
+//					if(Button_Page.index>5)
+//						Button_Page.index=0;
+//					else
+//						Button_Page.index++;
+//					Button_Page.page=0;
+//					
+//				break;
 				case Key_UP:
+					if(coder_flag == 1 && Button_Page.index == 1)
+					{
+						if(spinbit < spinbitmax)
+						{
+							spinbit ++;
+						}else{
+							spinbit = 0;
+						}
+					}
+					if(coder_flag == 0  && Button_Page.index == 1)
+					{
+						coder_flag = 1;
+					}
 					
-					if(Button_Page.index<1)
-						Button_Page.index=6;
-					else
-						Button_Page.index--;
-					Button_Page.page=0;
 				break;
 				
 				case Key_NUM1:
@@ -925,13 +1104,35 @@ void Setup_Process(void)
 	Delay_Key();
  	while(GetSystemStatus()==SYS_STATUS_SETUPTEST)
 	{
-	    
+	    if(spintest != 0)
+		{
+			Key_Beep();
+			if(spintest == 1)
+			{
+				if(Button_Page.index>5)
+					Button_Page.index=0;
+				else
+					Button_Page.index++;
+				Button_Page.page=0;
+			}else if(spintest == 2){
+				if(Button_Page.index<1)
+					Button_Page.index=6;
+				else
+					Button_Page.index--;
+				Button_Page.page=0;
+			}
+			
+			spintest = 0;
+			Disp_Flag=1;
+		}
+		
 		if(Disp_Flag==1)
 		{
 			DispSet_value(&Button_Page);
 			Disp_Flag=0;
 		
 		}
+		
 //		if(timer0_counter>0)//请求数据
 //		{
 //			switch(Uart_Send_Flag)
@@ -1070,47 +1271,47 @@ void Setup_Process(void)
 				case Key_FAST:
 					
 				break;
-				case Key_LEFT:
-					
-					if(Button_Page.index==0)
-						Button_Page.index=6;
-					else
-					if(Button_Page.index>3)
-						Button_Page.index-=3;
-					else
-						Button_Page.index+=2;
-					Button_Page.page=0;
-						
-				break;
-				case Key_RIGHT:
-					
-					if(Button_Page.index==0)
-						Button_Page.index=1;
-					else
-					if(Button_Page.index<=3)
-						Button_Page.index+=3;
-					else
-						Button_Page.index-=2;
-					Button_Page.page=0;
-						
-				break;
-				case Key_DOWN:
-					
-					if(Button_Page.index>5)
-						Button_Page.index=0;
-					else
-						Button_Page.index++;
-					Button_Page.page=0;
-					
-				break;
-				case Key_UP:
-					
-					if(Button_Page.index<1)
-						Button_Page.index=6;
-					else
-						Button_Page.index--;
-					Button_Page.page=0;
-				break;
+//				case Key_LEFT:
+//					
+//					if(Button_Page.index==0)
+//						Button_Page.index=6;
+//					else
+//					if(Button_Page.index>3)
+//						Button_Page.index-=3;
+//					else
+//						Button_Page.index+=2;
+//					Button_Page.page=0;
+//						
+//				break;
+//				case Key_RIGHT:
+//					
+//					if(Button_Page.index==0)
+//						Button_Page.index=1;
+//					else
+//					if(Button_Page.index<=3)
+//						Button_Page.index+=3;
+//					else
+//						Button_Page.index-=2;
+//					Button_Page.page=0;
+//						
+//				break;
+//				case Key_DOWN:
+//					
+//					if(Button_Page.index>5)
+//						Button_Page.index=0;
+//					else
+//						Button_Page.index++;
+//					Button_Page.page=0;
+//					
+//				break;
+//				case Key_UP:
+//					
+//					if(Button_Page.index<1)
+//						Button_Page.index=6;
+//					else
+//						Button_Page.index--;
+//					Button_Page.page=0;
+//				break;
 				case Key_NUM1:											
 				//break;
 				case Key_NUM2:
@@ -2428,19 +2629,82 @@ void Use_SysSetProcess(void)
 	Delay_Key();
  	while(GetSystemStatus()==SYS_STATUS_SYSSET)
 	{
-	  				
-//           (u8 *) &RTC_TIME_Type=
-			if(Disp_flag==1||Rtc_intflag)
-            {
-                Rtc_intflag=0;
-                //if(Button_Page.page==0)
-                Disp_Sys_value(&Button_Page);
-    //			else if(Button_Page.page==1) 
-    //			  Disp_Correction_Set(&Button_Page);
-    //			else if(Button_Page.page==2)
-    //				Disp_Correction_SetR(&Button_Page);
-                Disp_flag=0;
-            }
+	  	if(spintest != 0)
+		{
+			Key_Beep();
+			if(spintest == 1)
+			{
+				if(Button_Page.page==0)
+				{
+					if(Button_Page.index>15)
+						Button_Page.index=0;
+					else if(Button_Page.index<8)
+						Button_Page.index++;
+					else if(Button_Page.index==14)
+						Button_Page.index++;
+					else if(Button_Page.index==15)
+						Button_Page.index++;
+					else
+						Button_Page.index = 14;
+				}
+				else if(Button_Page.page==1)
+				{
+					if(Button_Page.index>7)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;					
+				}
+				else
+				{
+					if(Button_Page.index>4)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;	
+				
+				}
+			}else if(spintest == 2){
+				if(Button_Page.page==0)
+				{
+					if(Button_Page.index<1)
+						Button_Page.index=16;
+					else if(Button_Page.index<9)
+						Button_Page.index--;
+					else if(Button_Page.index==16)
+						Button_Page.index--;
+					else if(Button_Page.index==15)
+						Button_Page.index--;
+					else if(Button_Page.index==14)
+						Button_Page.index=8;
+				}
+				else if(Button_Page.page==1)
+				{
+					if(Button_Page.index<1)
+						Button_Page.index=8;
+					else
+						Button_Page.index--;
+				
+				}
+				else
+				{
+				
+					if(Button_Page.index<1)
+						Button_Page.index=5;
+					else
+						Button_Page.index--;
+				
+				}
+			}
+			
+			spintest = 0;
+			Disp_flag=1;
+		}
+		
+		if(Disp_flag==1||Rtc_intflag)
+		{
+			Rtc_intflag=0;
+			Disp_Sys_value(&Button_Page);
+			Disp_flag=0;
+		}
 		key=HW_KeyScsn();
 		if(key==0xff)
 		{
@@ -2896,108 +3160,132 @@ void Use_SysSetProcess(void)
 				case Key_FAST:
 					
 				break;
-				case Key_LEFT:
-					
-					if(Button_Page.page==0)
-					{
-						if(Button_Page.index>8&&Button_Page.index<14)
-							Button_Page.index-=8;
-						else if(Button_Page.index==15||Button_Page.index==16)
-							Button_Page.index-=1;
-						else if(Button_Page.index==7||Button_Page.index==8)
-							Button_Page.index-=1;
-						else if(Button_Page.index==14)
-							Button_Page.index-=6;
-                        else if(Button_Page.index==1)
-                            Button_Page.index=16;
-//                            
-//                        else
-//                            Button_Page.index+=7;
-                            
-				    }
-				break;
-				case Key_RIGHT:
-					
-					if(Button_Page.page==0)
-					{
-						if(Button_Page.index<6)
-							Button_Page.index = 14;
-						else if(Button_Page.index<8)	//Button_Page.index==7||Button_Page.index==8
-							Button_Page.index+=1;
-						else if(Button_Page.index==14||Button_Page.index==15)
-							Button_Page.index+=1;
-						else if(Button_Page.index==8)
-							Button_Page.index+=6;
-                        else if(Button_Page.index==16)
-                            Button_Page.index=1;
-                        else
-                            Button_Page.index=1;
-					}
-				break;
-				case Key_DOWN:
-					
-					if(Button_Page.page==0)
-					{
-						if(Button_Page.index>15)
-							Button_Page.index=0;
-						else if(Button_Page.index<8)
-							Button_Page.index++;
-						else if(Button_Page.index==14)
-							Button_Page.index++;
-						else if(Button_Page.index==15)
-							Button_Page.index++;
-						else
-							Button_Page.index = 14;
-					}
-					else if(Button_Page.page==1)
-					{
-						if(Button_Page.index>7)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;					
-					}
-					else
-					{
-						if(Button_Page.index>4)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;	
-					
-					}
-				break;
 				case Key_UP:
-					
-					if(Button_Page.page==0)
-					{
-						if(Button_Page.index<1)
-							Button_Page.index=16;
-						else if(Button_Page.index<9)
-							Button_Page.index--;
-						else if(Button_Page.index==16)
-							Button_Page.index--;
-						else if(Button_Page.index==15)
-							Button_Page.index--;
-						else if(Button_Page.index==14)
-							Button_Page.index=8;
-				    }
-					else if(Button_Page.page==1)
-					{
-						if(Button_Page.index<1)
-							Button_Page.index=8;
-						else
-							Button_Page.index--;
-					
+				{
+					switch(Button_Page.index)
+					{ 
+						case 2:
+						{
+							if(SaveSIM.keybeep == 1)
+							{
+								SaveSIM.keybeep = 0;
+							}else{
+								SaveSIM.keybeep = 1;
+							}
+						}break;
+						case 4:
+						{
+							if(SaveSIM.lang == 1)
+							{
+								SaveSIM.lang = 0;
+							}else{
+								SaveSIM.lang = 1;
+							}
+						}break;
 					}
-					else
-					{
-					
-						if(Button_Page.index<1)
-							Button_Page.index=5;
-						else
-							Button_Page.index--;
-					
-					}
-				break;
+				}break;
+//				case Key_LEFT:
+//					
+//					if(Button_Page.page==0)
+//					{
+//						if(Button_Page.index>8&&Button_Page.index<14)
+//							Button_Page.index-=8;
+//						else if(Button_Page.index==15||Button_Page.index==16)
+//							Button_Page.index-=1;
+//						else if(Button_Page.index==7||Button_Page.index==8)
+//							Button_Page.index-=1;
+//						else if(Button_Page.index==14)
+//							Button_Page.index-=6;
+//                        else if(Button_Page.index==1)
+//                            Button_Page.index=16;
+////                            
+////                        else
+////                            Button_Page.index+=7;
+//                            
+//				    }
+//				break;
+//				case Key_RIGHT:
+//					
+//					if(Button_Page.page==0)
+//					{
+//						if(Button_Page.index<6)
+//							Button_Page.index = 14;
+//						else if(Button_Page.index<8)	//Button_Page.index==7||Button_Page.index==8
+//							Button_Page.index+=1;
+//						else if(Button_Page.index==14||Button_Page.index==15)
+//							Button_Page.index+=1;
+//						else if(Button_Page.index==8)
+//							Button_Page.index+=6;
+//                        else if(Button_Page.index==16)
+//                            Button_Page.index=1;
+//                        else
+//                            Button_Page.index=1;
+//					}
+//				break;
+//				case Key_DOWN:
+//					
+//					if(Button_Page.page==0)
+//					{
+//						if(Button_Page.index>15)
+//							Button_Page.index=0;
+//						else if(Button_Page.index<8)
+//							Button_Page.index++;
+//						else if(Button_Page.index==14)
+//							Button_Page.index++;
+//						else if(Button_Page.index==15)
+//							Button_Page.index++;
+//						else
+//							Button_Page.index = 14;
+//					}
+//					else if(Button_Page.page==1)
+//					{
+//						if(Button_Page.index>7)
+//							Button_Page.index=0;
+//						else
+//							Button_Page.index++;					
+//					}
+//					else
+//					{
+//						if(Button_Page.index>4)
+//							Button_Page.index=0;
+//						else
+//							Button_Page.index++;	
+//					
+//					}
+//				break;
+//				case Key_UP:
+//					
+//					if(Button_Page.page==0)
+//					{
+//						if(Button_Page.index<1)
+//							Button_Page.index=16;
+//						else if(Button_Page.index<9)
+//							Button_Page.index--;
+//						else if(Button_Page.index==16)
+//							Button_Page.index--;
+//						else if(Button_Page.index==15)
+//							Button_Page.index--;
+//						else if(Button_Page.index==14)
+//							Button_Page.index=8;
+//				    }
+//					else if(Button_Page.page==1)
+//					{
+//						if(Button_Page.index<1)
+//							Button_Page.index=8;
+//						else
+//							Button_Page.index--;
+//					
+//					}
+//					else
+//					{
+//					
+//						if(Button_Page.index<1)
+//							Button_Page.index=5;
+//						else
+//							Button_Page.index--;
+//					
+//					}
+//				break;
 				case Key_NUM1:		//passwordnum
 					
 					if(Button_Page.index==10)
@@ -3348,7 +3636,137 @@ void Fac_DebugProcess(void)
 	Send_Request(2,1);
  	while(GetSystemStatus()==SYS_STATUS_FACRDEBUG)
 	{
-
+		if(spintest != 0)
+		{
+			Key_Beep();
+			if(spintest == 1)
+			{
+				if(Button_Page.page == 1)
+				{//电压校正3档
+					if(Button_Page.index>6)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;
+					
+					if(Button_Page.index == 1)
+					{
+						SaveSIM.Voltage.Num = 1000;
+					}else if(Button_Page.index == 2)
+					{
+						SaveSIM.Voltage.Num = 10000;
+					}else if(Button_Page.index == 3)
+					{
+						SaveSIM.Voltage.Num = 13000;
+					}else if(Button_Page.index == 4)
+					{
+						SaveSIM.Voltage.Num = 17000;
+					}else if(Button_Page.index == 5)
+					{
+						SaveSIM.Voltage.Num = 19000;
+					}else if(Button_Page.index == 6)
+					{
+						SaveSIM.Voltage.Num = 19500;
+					}
+					Send_Request(10,1);
+				}else if(Button_Page.page == 2){//电压控制4档
+					if(Button_Page.index>4)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;
+					
+					if(Button_Page.index == 1)
+					{
+						SaveSIM.Voltage.Num = 1000;
+					}else if(Button_Page.index == 2)
+					{
+						SaveSIM.Voltage.Num = 10000;
+					}else if(Button_Page.index == 3)
+					{
+						SaveSIM.Voltage.Num = 15000;
+					}else if(Button_Page.index == 4)
+					{
+						SaveSIM.Voltage.Num = 19000;
+					}
+					Send_Request(10,1);
+				}else if(Button_Page.page == 3){//电流校准
+					if(Button_Page.index>6)
+						Button_Page.index=0;
+					else
+						Button_Page.index++;
+					if(Button_Page.index == 1 ||Button_Page.index == 4)
+					{
+						Send_Request(4,0);//电流低档位
+					}else{
+						Send_Request(4,1);//电流高档位
+					}
+				}
+			}else if(spintest == 2){
+				if(Button_Page.page == 1)
+				{//电压校正3档
+					if(Button_Page.index>0)
+						Button_Page.index--;
+					else
+						Button_Page.index=6;
+					
+					if(Button_Page.index == 1)
+					{
+						SaveSIM.Voltage.Num = 1000;
+					}else if(Button_Page.index == 2)
+					{
+						SaveSIM.Voltage.Num = 10000;
+					}else if(Button_Page.index == 3)
+					{
+						SaveSIM.Voltage.Num = 13000;
+					}else if(Button_Page.index == 4)
+					{
+						SaveSIM.Voltage.Num = 17000;
+					}else if(Button_Page.index == 5)
+					{
+						SaveSIM.Voltage.Num = 19000;
+					}else if(Button_Page.index == 6)
+					{
+						SaveSIM.Voltage.Num = 19500;
+					}
+					Send_Request(10,1);
+				}else if(Button_Page.page == 2){//电压控制4档
+					if(Button_Page.index>0)
+						Button_Page.index--;
+					else
+						Button_Page.index=4;
+					
+					if(Button_Page.index == 1)
+					{
+						SaveSIM.Voltage.Num = 1000;
+					}else if(Button_Page.index == 2)
+					{
+						SaveSIM.Voltage.Num = 10000;
+					}else if(Button_Page.index == 3)
+					{
+						SaveSIM.Voltage.Num = 15000;
+					}else if(Button_Page.index == 4)
+					{
+						SaveSIM.Voltage.Num = 19000;
+					}
+					Send_Request(10,1);
+				}else if(Button_Page.page == 3){//电流测量
+					if(Button_Page.index>0)
+						Button_Page.index--;
+					else
+						Button_Page.index=6;
+					
+					if(Button_Page.index == 1 ||Button_Page.index == 4)
+					{
+						Send_Request(4,0);//电流低档位
+					}else{
+						Send_Request(4,1);//电流高档位
+					}
+				}
+			}
+			
+			spintest = 0;
+			Disp_flag=1;
+		}
+		
 		if(Disp_flag==1)
 		{
             Disp_FacCal(&Button_Page);
@@ -3426,137 +3844,137 @@ void Fac_DebugProcess(void)
 				case Key_FAST:
 					
 				break;
-				case Key_LEFT:
-					
-				break;
-				case Key_RIGHT:
-					
-				break;
-				case Key_UP:
-					
-					if(Button_Page.page == 1)
-					{//电压校正3档
-						if(Button_Page.index>0)
-							Button_Page.index--;
-						else
-							Button_Page.index=6;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 1000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 3)
-						{
-							SaveSIM.Voltage.Num = 13000;
-						}else if(Button_Page.index == 4)
-						{
-							SaveSIM.Voltage.Num = 17000;
-						}else if(Button_Page.index == 5)
-						{
-							SaveSIM.Voltage.Num = 19000;
-						}else if(Button_Page.index == 6)
-						{
-							SaveSIM.Voltage.Num = 19500;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 2){//电压控制4档
-						if(Button_Page.index>0)
-							Button_Page.index--;
-						else
-							Button_Page.index=4;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 1000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 3)
-						{
-							SaveSIM.Voltage.Num = 15000;
-						}else if(Button_Page.index == 4)
-						{
-							SaveSIM.Voltage.Num = 19000;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 3){//电流测量
-						if(Button_Page.index>0)
-							Button_Page.index--;
-						else
-							Button_Page.index=6;
-						
-						if(Button_Page.index == 1 ||Button_Page.index == 4)
-						{
-							Send_Request(4,0);//电流低档位
-						}else{
-							Send_Request(4,1);//电流高档位
-						}
-					}
-				break;
-				case Key_DOWN:
-					
-					if(Button_Page.page == 1)
-					{//电压校正3档
-						if(Button_Page.index>6)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 1000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 3)
-						{
-							SaveSIM.Voltage.Num = 13000;
-						}else if(Button_Page.index == 4)
-						{
-							SaveSIM.Voltage.Num = 17000;
-						}else if(Button_Page.index == 5)
-						{
-							SaveSIM.Voltage.Num = 19000;
-						}else if(Button_Page.index == 6)
-						{
-							SaveSIM.Voltage.Num = 19500;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 2){//电压控制4档
-						if(Button_Page.index>4)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;
-						
-						if(Button_Page.index == 1)
-						{
-							SaveSIM.Voltage.Num = 1000;
-						}else if(Button_Page.index == 2)
-						{
-							SaveSIM.Voltage.Num = 10000;
-						}else if(Button_Page.index == 3)
-						{
-							SaveSIM.Voltage.Num = 15000;
-						}else if(Button_Page.index == 4)
-						{
-							SaveSIM.Voltage.Num = 19000;
-						}
-						Send_Request(10,1);
-					}else if(Button_Page.page == 3){//电流校准
-						if(Button_Page.index>6)
-							Button_Page.index=0;
-						else
-							Button_Page.index++;
-						if(Button_Page.index == 1 ||Button_Page.index == 4)
-						{
-							Send_Request(4,0);//电流低档位
-						}else{
-							Send_Request(4,1);//电流高档位
-						}
-					}
-				break;
+//				case Key_LEFT:
+//					
+//				break;
+//				case Key_RIGHT:
+//					
+//				break;
+//				case Key_UP:
+//					
+//					if(Button_Page.page == 1)
+//					{//电压校正3档
+//						if(Button_Page.index>0)
+//							Button_Page.index--;
+//						else
+//							Button_Page.index=6;
+//						
+//						if(Button_Page.index == 1)
+//						{
+//							SaveSIM.Voltage.Num = 1000;
+//						}else if(Button_Page.index == 2)
+//						{
+//							SaveSIM.Voltage.Num = 10000;
+//						}else if(Button_Page.index == 3)
+//						{
+//							SaveSIM.Voltage.Num = 13000;
+//						}else if(Button_Page.index == 4)
+//						{
+//							SaveSIM.Voltage.Num = 17000;
+//						}else if(Button_Page.index == 5)
+//						{
+//							SaveSIM.Voltage.Num = 19000;
+//						}else if(Button_Page.index == 6)
+//						{
+//							SaveSIM.Voltage.Num = 19500;
+//						}
+//						Send_Request(10,1);
+//					}else if(Button_Page.page == 2){//电压控制4档
+//						if(Button_Page.index>0)
+//							Button_Page.index--;
+//						else
+//							Button_Page.index=4;
+//						
+//						if(Button_Page.index == 1)
+//						{
+//							SaveSIM.Voltage.Num = 1000;
+//						}else if(Button_Page.index == 2)
+//						{
+//							SaveSIM.Voltage.Num = 10000;
+//						}else if(Button_Page.index == 3)
+//						{
+//							SaveSIM.Voltage.Num = 15000;
+//						}else if(Button_Page.index == 4)
+//						{
+//							SaveSIM.Voltage.Num = 19000;
+//						}
+//						Send_Request(10,1);
+//					}else if(Button_Page.page == 3){//电流测量
+//						if(Button_Page.index>0)
+//							Button_Page.index--;
+//						else
+//							Button_Page.index=6;
+//						
+//						if(Button_Page.index == 1 ||Button_Page.index == 4)
+//						{
+//							Send_Request(4,0);//电流低档位
+//						}else{
+//							Send_Request(4,1);//电流高档位
+//						}
+//					}
+//				break;
+//				case Key_DOWN:
+//					
+//					if(Button_Page.page == 1)
+//					{//电压校正3档
+//						if(Button_Page.index>6)
+//							Button_Page.index=0;
+//						else
+//							Button_Page.index++;
+//						
+//						if(Button_Page.index == 1)
+//						{
+//							SaveSIM.Voltage.Num = 1000;
+//						}else if(Button_Page.index == 2)
+//						{
+//							SaveSIM.Voltage.Num = 10000;
+//						}else if(Button_Page.index == 3)
+//						{
+//							SaveSIM.Voltage.Num = 13000;
+//						}else if(Button_Page.index == 4)
+//						{
+//							SaveSIM.Voltage.Num = 17000;
+//						}else if(Button_Page.index == 5)
+//						{
+//							SaveSIM.Voltage.Num = 19000;
+//						}else if(Button_Page.index == 6)
+//						{
+//							SaveSIM.Voltage.Num = 19500;
+//						}
+//						Send_Request(10,1);
+//					}else if(Button_Page.page == 2){//电压控制4档
+//						if(Button_Page.index>4)
+//							Button_Page.index=0;
+//						else
+//							Button_Page.index++;
+//						
+//						if(Button_Page.index == 1)
+//						{
+//							SaveSIM.Voltage.Num = 1000;
+//						}else if(Button_Page.index == 2)
+//						{
+//							SaveSIM.Voltage.Num = 10000;
+//						}else if(Button_Page.index == 3)
+//						{
+//							SaveSIM.Voltage.Num = 15000;
+//						}else if(Button_Page.index == 4)
+//						{
+//							SaveSIM.Voltage.Num = 19000;
+//						}
+//						Send_Request(10,1);
+//					}else if(Button_Page.page == 3){//电流校准
+//						if(Button_Page.index>6)
+//							Button_Page.index=0;
+//						else
+//							Button_Page.index++;
+//						if(Button_Page.index == 1 ||Button_Page.index == 4)
+//						{
+//							Send_Request(4,0);//电流低档位
+//						}else{
+//							Send_Request(4,1);//电流高档位
+//						}
+//					}
+//				break;
 				case Key_NUM1:
 				//break;
 				case Key_NUM2:
@@ -5994,7 +6412,7 @@ void input_num(Disp_Coordinates_Typedef *Coordinates )
 //					Sort_set.Updata_flag=0;
 //				SetSystemStatus(SYS_STATUS_SETUPTEST);
 				break;
-				case Key_FAST:
+				case Key_UP:
                     While_flag=0;//保存
                     dispflag=0;
                     for(i=0;i<8;i++)
@@ -6009,8 +6427,8 @@ void input_num(Disp_Coordinates_Typedef *Coordinates )
 				break;
 				case Key_RIGHT:
 				break;
-				case Key_UP:
-				break;
+//				case Key_UP:
+//				break;
 				case Key_DOWN:
 				break;
 				case Key_NUM1:

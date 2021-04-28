@@ -314,7 +314,7 @@ uint32_t GPIO_ReadValue(uint8_t portNum)
  **********************************************************************/
 void GPIO_IntCmd(uint8_t portNum, uint32_t bitValue, uint8_t edgeState)
 {
-	if((portNum == 0)&&(edgeState == 0))
+	if((portNum == 0)&&(edgeState == 0))	
 		LPC_GPIOINT->IO0IntEnR = bitValue;
 	else if ((portNum == 2)&&(edgeState == 0))
 		LPC_GPIOINT->IO2IntEnR = bitValue;

@@ -16,9 +16,18 @@
 #define CMD_ERR        2
 #define REM_ERR        3
 
+#define EncoderA  ((GPIO_ReadValue(2) & (1<<23))>>23)
+#define EncoderB  ((GPIO_ReadValue(2) & (1<<22))>>22)
+
+#define EnccounterA  LPC_TIM3->CR1
+#define EnccounterB  LPC_TIM3->CR0
+
 extern const uint8_t Disp_Main_Ord[][3];
 extern uint8_t CorrectionflagC,CorrectionflagR,Correc_successflag;
-
+extern uint8_t coder_flag;
+extern uint8_t spinbit;
+extern uint8_t spinbitmax;
+extern uint8_t bootdelay;
 void Power_Process(void);
 
 
@@ -62,7 +71,7 @@ uint8_t Test_Comp(All_Compvalue_Typedef *pt);
 void Soft_Turnon(void);
 void Test_Comp_Fmq(void);
 uint8_t Uart3_Process(void);
-
+void EncodeScan();
 
 void  Avg_Test(uint8_t *buff,uint8_t dot,uint8_t *buff1,uint8_t dot1);//∆Ωæ˘≤‚ ‘÷µ
 void  Write_Usbdata (volatile uint8_t  *buffer,uint32_t num);
