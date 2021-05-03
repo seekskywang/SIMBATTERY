@@ -151,8 +151,8 @@ int main(void)
 //    touch_init();
 //    TouchPanel_Calibrate();
 	HW_Sendvalueto164(0);
-//	delay_ms(200);
-	
+	delay_ms(200);
+	delay_ms(200);
 //	lcd_image((uint8_t *)gImage_open);
 //	for(i=0;i<15;i++)
 //	{

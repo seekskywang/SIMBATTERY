@@ -3158,15 +3158,20 @@ void Disp_Test_value(Button_Page_Typedef* Button_Page)
 		}
 		Colour.black=LCD_COLOR_SELECT;	
 	}	
-	Hex_Format(SaveSIM.Voltage.Num,3,5,0);
+	if(coder_flag == 1)
+	{
+		Hex_Format(SaveSIM.Voltage.Num,3,5,1);
+	}else{
+		Hex_Format(SaveSIM.Voltage.Num,3,5,0);
+	}
 	WriteString_16(LIST1+88+16,FIRSTLINE, DispBuf,  0);//增加算法  把顺序改过来
 	WriteString_16(LIST1+88+16+70, FIRSTLINE, "V",  1);
-	if(DispBuf[0] == 0x20)
-	{
-		spinbitmax = 3;
-	}else{
+//	if(DispBuf[0] == 0x20)
+//	{
+//		spinbitmax = 3;
+//	}else{
 		spinbitmax = 4;
-	}
+//	}
 //	WriteString_16(LIST2-88, SCREENHIGH-FIRSTLINE, User_Range[SaveData.Main_Func.Range.Range],  0);
 //充电保护电流	
 	Black_Select=(Button_Page->index==2)?1:0;

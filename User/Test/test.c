@@ -564,11 +564,11 @@ void Test_Process(void)
 							SaveSIM.Voltage.Num = 0;
 						}else{
 							SaveSIM.Voltage.Num -= pow(10,spinbit);
-							if(SaveSIM.Voltage.Num < pow(10,spinbit))
-							{
-								if(spinbit > 0)
-								spinbit --;
-							}
+//							if(SaveSIM.Voltage.Num < pow(10,spinbit))
+//							{
+//								if(spinbit > 0)
+//								spinbit --;
+//							}
 						}
 					}
 					spinsave = 1;
