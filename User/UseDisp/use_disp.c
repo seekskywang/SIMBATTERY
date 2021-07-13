@@ -440,7 +440,7 @@ const uint8_t User_Comp[][10+1]=
 {
     
     {"OFF"},
-	{"ON"},
+	{"ON "},
    
 };
 const uint8_t Limit_Scan_Fun[][4+1]=
