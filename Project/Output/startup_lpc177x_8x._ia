@@ -1,7 +1,0 @@
---cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"
--I.\RTE\_Open1788
--ID:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0\Device\Include
--IE:\Keil_v5\ARM\CMSIS\Include
--ID:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0
---pd "__UVISION_VERSION SETA 525" --pd "LPC177x_8x SETA 1" --pd "NO_CRP SETA 1"
---list .\listing\startup_lpc177x_8x.lst --xref -o .\output\startup_lpc177x_8x.o --depend .\output\startup_lpc177x_8x.d "..\Libraries\Core\CM3\DeviceSupport\NXP\LPC177x_8x\startup\arm\startup_LPC177x_8x.s"

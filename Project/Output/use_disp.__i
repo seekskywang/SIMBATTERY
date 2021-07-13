@@ -1,7 +1,0 @@
--c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork -I ..\Libraries\Core\CM3\CoreSupport -I ..\Libraries\Core\CM3\DeviceSupport\NXP\LPC177x_8x -I ..\Libraries\Drivers\include -I ..\User -I ..\Libraries\BoardSupport -I ..\User\UseDisp -I ..\User\Globalvalue -I ..\User\Include -I ..\User\Fat -I ..\User\Host -I ..\User\MassStorage -I ..\User\rtc -I ..\Libraries\Drivers\include
--I.\RTE\_Open1788
--ID:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0\Device\Include
--IE:\Keil_v5\ARM\CMSIS\Include
--ID:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0
--D__UVISION_VERSION="525" -DLPC177x_8x
--o .\output\use_disp.o --omf_browse .\output\use_disp.crf --depend .\output\use_disp.d "..\User\UseDisp\use_disp.c"
