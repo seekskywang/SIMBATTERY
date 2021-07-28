@@ -49,7 +49,8 @@ typedef uint32_t LdcPixel_t, *pLdcPixel_t;
 #define LCD_VRAM_BASE_ADDR 	((unsigned long)SDRAM_BASE + 0x00010000)
 #define LCD_CURSOR_BASE_ADDR 	((unsigned long)0x20088800)
 
-#define C_GLCD_REFRESH_FREQ     (50)	// Hz
+//#define C_GLCD_REFRESH_FREQ     (50)	// Hz
+#define C_GLCD_REFRESH_FREQ     (40)	// Hz
 #define C_GLCD_H_SIZE           480
 #define C_GLCD_H_PULSE          2	//
 #define C_GLCD_H_FRONT_PORCH    5	//

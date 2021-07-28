@@ -5732,8 +5732,8 @@ void Disp_Correction_SetR(Button_Page_Typedef* Button_Page)
 
 Sort_TypeDef Time_Set_Cot(Sort_TypeDef *Time)
 {
-	if(Time->Num > 200000)
-		Time->Num=200000;
+	if(Time->Num > 999000)
+		Time->Num=999000;
 //	Time->Dot=0;
 //	Time->Unit=1;
 	
