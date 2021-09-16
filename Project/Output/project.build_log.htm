@@ -22,11 +22,12 @@ Dialog DLL:      TARMP1.DLL V1.26.0.0
  
 <h2>Project:</h2>
 F:\SIMBATTERY\Project\project.uvprojx
-Project File Date:  07/13/2021
+Project File Date:  09/10/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Open1788'
+compiling EX_SDRAM.c...
 compiling main.c...
 ..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
   void EncodeScan();
@@ -41,6 +42,12 @@ compiling main.c...
 ..\User\main.c(118): warning:  #177-D: variable "buff"  was declared but never referenced
         char buff[10];
 ..\User\main.c: 6 warnings, 0 errors
+compiling timer.c...
+..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  void EncodeScan();
+..\User\timer.c(32): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  extern void EncodeScan();
+..\User\timer.c: 2 warnings, 0 errors
 compiling lpc177x_8x_lcd.c...
 ..\User\hzk.h(1100): warning:  #375-D: declaration requires a typedef name
   };
@@ -242,11 +249,48 @@ compiling test.c...
 ..\User\Test\test.c(6343): warning:  #550-D: variable "password_flag"  was set but never used
       char password_flag=0;
 ..\User\Test\test.c: 61 warnings, 0 errors
+compiling GlobalValue.c...
+compiling key.c...
+compiling rtc.c...
+compiling dma.c...
+..\User\DMA\dma.c(75): warning:  #223-D: function "RecHandle" declared implicitly
+                                                                        RecHandle();
+..\User\DMA\dma.c(17): warning:  #177-D: variable "j"  was declared but never referenced
+          uint8_t i,ch,j;
+..\User\DMA\dma.c: 2 warnings, 0 errors
+compiling lpc177x_8x_uart.c...
+compiling debug_frmwrk.c...
+..\Libraries\Drivers\source\debug_frmwrk.c(493): warning:  #223-D: function "vsprintf" declared implicitly
+      vsprintf((char *)buffer, (char const *)format, vArgs);
+..\Libraries\Drivers\source\debug_frmwrk.c(491): warning:  #177-D: variable "tmp"  was declared but never referenced
+              char      *tmp;
+..\Libraries\Drivers\source\debug_frmwrk.c(617): warning:  #550-D: variable "Status"  was set but never used
+         uint8_t Status,Res;
+..\Libraries\Drivers\source\debug_frmwrk.c(714): warning:  #177-D: variable "buf"  was declared but never referenced
+        uint8_t buf[S_TX_BUF_SIZE];
+..\Libraries\Drivers\source\debug_frmwrk.c(833): warning:  #223-D: function "memcpy" declared implicitly
+        memcpy(buf, _pBuf, _ucLen);
+..\Libraries\Drivers\source\debug_frmwrk.c(882): warning:  #177-D: variable "data"  was declared but never referenced
+        uint32_t data;
+..\Libraries\Drivers\source\debug_frmwrk.c(973): warning:  #177-D: variable "dat"  was declared but never referenced
+      uint8_t Status,dat;
+..\Libraries\Drivers\source\debug_frmwrk.c(1131): warning:  #223-D: function "Send_Request" declared implicitly
+                        Send_Request(10,1);
+..\Libraries\Drivers\source\debug_frmwrk.c(1135): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(1145): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(1158): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(689): warning:  #177-D: function "MODS_SendAckOk"  was declared but never referenced
+  static void MODS_SendAckOk(void)
+..\Libraries\Drivers\source\debug_frmwrk.c: 12 warnings, 0 errors
+compiling usbhost_lpc17xx.c...
 linking...
 Program Size: Code=73164 RO-data=35212 RW-data=768 ZI-data=19384  
 FromELF: creating hex file...
 After Build - User command #1: E:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin  -o ..\update\update.bin Output\project.axf
-".\Output\project.axf" - 0 Error(s), 102 Warning(s).
+".\Output\project.axf" - 0 Error(s), 118 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -260,7 +304,7 @@ Package Vendor: Keil
   D:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:13
 </pre>
 </body>
 </html>
