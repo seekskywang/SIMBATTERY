@@ -405,6 +405,7 @@ void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint32_t charColor, ui
 }
 
 
+
 void PutChar_12( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint32_t charColor, uint32_t bkColor )
 {
 	uint32_t i, j;
@@ -809,6 +810,47 @@ void WriteString_Big(uint16_t x0, uint16_t y0, const uint8_t *pcStr)
 		
 	}                                                                                                            
 }
+
+void WriteString_Big2(uint16_t x0, uint16_t y0, const uint8_t *pcStr)
+{
+	uint16_t usIndex=0;
+	uint16_t i,usWidth = 0; 
+	while(1)
+	{
+		if(*pcStr == 0) 
+		{
+			break;                                     /*字符串结束         */
+		}      		
+//		if((x0 + 8) > C_GLCD_H_SIZE)                     /* 检查剩余空间是否充足       */
+//		{
+//			x0 = 0;
+//			y0 = y0 + 8;                        /* 改变显示坐标                  */
+//			if(y0 > C_GLCD_V_SIZE)                       /* 纵坐标超出                   */
+//			{ 
+//				y0 = 0;
+//			}
+//		}
+		//usWidth = WriteOneASCII(pcStr, x0, y0, mode);
+//		PutChar( x0, y0, *pcStr, Colour.Fword, Colour.black );  
+		if(*pcStr>='0'&&*pcStr<='9')
+		{
+			i=*pcStr-'0';
+		
+		}
+		else if(*pcStr=='.')
+			i=10;
+		else 
+			i=11;
+		
+		LCD_ShowFontCN_40_55(x0+usWidth,y0,16,32,(uint8_t*)(_num16)+i*16/8*32);		
+		/* ASCII码表21H的值对应区位码3区*/
+		pcStr += 1;
+		usWidth+=16;
+		
+		
+	}                                                                                                            
+}
+
 void WriteString_16(uint16_t x0, uint16_t y0, const uint8_t *pcStr, uint8_t mode)
 {
 	uint16_t usIndex=0;

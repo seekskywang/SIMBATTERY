@@ -6827,22 +6827,36 @@ void Disp_Testvalue(uint8_t siwtch)
 		Test_Dispvalue.Imvalue.Num = 0;
 		Test_Dispvalue.Pvalue.Num = 0;
 		Hex_Format(0, 3 , 5 , 0);//显示电压
-		WriteString_Big(130-40,95 ,DispBuf);
+		WriteString_Big2(130-40-30,95+10,DispBuf);
 		
-		Hex_Format(0, 3 , 5 , 0);//显示电流
-		WriteString_Big(130-40,95+55 ,DispBuf);
+		LCD_ShowFontCN_40_55(300-30-32,95+10,16,32,(uint8_t*)Out_Assic2+8*(32*16/8));
+		Hex_Format(0, 3 , 5 , 0);//显示电流+
+		WriteString_Big2(300-30,95+10,DispBuf);
+		
+		LCD_ShowFontCN_40_55(300-30-32,150+10,16,32,(uint8_t*)Out_Assic2+7*(32*16/8));
+		Hex_Format(0, 3 , 5 , 0);//显示电流-
+		WriteString_Big2(300-30,150+10,DispBuf);
 		
 		Hex_Format(0, 3 , 6 , 0);//显示功率
-		WriteString_16(390,185 ,DispBuf,0);
-		LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
+		WriteString_Big2(130-40-16-30,150+10,DispBuf);
+//		LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
 	}else if(siwtch == 1)
 	{
 		
 		Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示电压
-		WriteString_Big(130-40,95 ,DispBuf);
+		WriteString_Big2(130-40-30,95+10,DispBuf);
 		
-		Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//显示电流
-		WriteString_Big(130-40,95+55 ,DispBuf);
+		Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//
+		if(Test_Dispvalue.Imvalue.sign == 0)
+		{
+			WriteString_Big2(300-30,150+10,DispBuf);//显示电流-
+//			LCD_ShowFontCN_40_55(90-40-30,95+55,16,32,(uint8_t*)Out_Assic2+7*(32*16/8));
+		}else if(Test_Dispvalue.Imvalue.sign == 1){
+			
+			WriteString_Big2(300-30,95+10,DispBuf);//显示电流+
+//			LCD_ShowFontCN_40_55(90-40-30,95+55,16,32,(uint8_t*)Out_Assic2+8*(32*16/8));
+		}
+		
 		
 		if(Irange == 1)
 		{
@@ -6851,13 +6865,9 @@ void Disp_Testvalue(uint8_t siwtch)
 			Test_Dispvalue.Pvalue.Num = (uint32_t)(((float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0)));
 		}
 		Hex_Format(Test_Dispvalue.Pvalue.Num, 3 , 6 , 0);//显示功率
-		WriteString_16(390,185,DispBuf,0);
-		if(Test_Dispvalue.Imvalue.sign == 0)
-		{
-			LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+29*(55*40/8));
-		}else if(Test_Dispvalue.Imvalue.sign == 1){
-			LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+30*(55*40/8));
-		}
+		WriteString_Big2(130-40-16-30,150+10,DispBuf);
+		
+		
 	}
 	FAN_CTRL();//风扇控制
 
@@ -6866,7 +6876,10 @@ void Disp_Big_MainUnit(uint8_t unit,uint8_t unit1)		//显示主参数单位
 {
 //	const uint8_t nuitnum[]={12,15,16,17,22,14,13};
 //	const uint8_t nuit_nuit[]={18,19,20,2,11,23,22};//F,H,Ω，S r °空格
-	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS,DISP_UNIT_YPOS,40,55,(uint8_t*)Out_Assic+27*(55*40/8));
+//	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS,DISP_UNIT_YPOS,40,55,(uint8_t*)Out_Assic+27*(55*40/8));
+	
+	LCD_ShowFontCN_40_55(200-30,95+10,16,32,(uint8_t*)Out_Assic2+0*(32*16/8));
+	LCD_ShowFontCN_40_55(200-30,150+10,16,32,(uint8_t*)Out_Assic2+6*(32*16/8));
 //	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS+40,DISP_UNIT_YPOS,40,55,(uint8_t*)Out_Assic+28*(55*40/8));
 }
 
@@ -6874,13 +6887,24 @@ void Disp_Big_SecondUnit(uint8_t unit,uint8_t unit1)	//显示副参数单位
 {
 //	const uint8_t nuitnum[]={12,15,16,17,22,14,13};
 //	const uint8_t nuit_nuit[]={18,19,20,2,11,23,22};//F,H,Ω，S r °空格
+//	if(Irange == 1)
+//	{
+//		LCD_ShowFontCN_40_55(DISP_UNIT_XPOS-40,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
+//	}else{
+//		LCD_ShowFontCN_40_55(DISP_UNIT_XPOS-40,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+31*(55*40/8));
+//	}
+//	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+28*(55*40/8));
+	
 	if(Irange == 1)
 	{
-		LCD_ShowFontCN_40_55(DISP_UNIT_XPOS-40,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
+		LCD_ShowFontCN_40_55(430-16-16-30,95+10,16,32,(uint8_t*)Out_Assic2+5*(32*16/8));
+		LCD_ShowFontCN_40_55(430-16-16-30,150+10,16,32,(uint8_t*)Out_Assic2+5*(32*16/8));
 	}else{
-		LCD_ShowFontCN_40_55(DISP_UNIT_XPOS-40,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+31*(55*40/8));
+		LCD_ShowFontCN_40_55(430-16-16-30,95+10,16,32,(uint8_t*)Out_Assic2+3*(32*16/8));
+		LCD_ShowFontCN_40_55(430-16-16-30,150+10,16,32,(uint8_t*)Out_Assic2+3*(32*16/8));
 	}
-	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+28*(55*40/8));
+	LCD_ShowFontCN_40_55(430-16-30,95+10,16,32,(uint8_t*)Out_Assic2+2*(32*16/8));
+	LCD_ShowFontCN_40_55(430-16-30,150+10,16,32,(uint8_t*)Out_Assic2+2*(32*16/8));
 //	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS+40,DISP_UNIT_YPOS+55,40,55,(uint8_t*)Out_Assic+nuit_nuit[unit1]*(55*40/8));
 }
 

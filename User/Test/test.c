@@ -656,7 +656,7 @@ void Test_Process(void)
 			timer1_counter = 0;
 		}
 
-		WriteString_16(462,186,"W",0);
+//		WriteString_16(462,186,"W",0);
 		Disp_Big_MainUnit(Test_Dispvalue.Unit[0],DISP_UnitMain[SaveData.Main_Func.Param.test]);//显示单位
 //			Test_Dispvalue.Secondvalue.Dot=3;
 		Disp_Big_SecondUnit(Test_Dispvalue.Unit[1],DISP_UnitSecond[SaveData.Main_Func.Param.test]);//副参数单位

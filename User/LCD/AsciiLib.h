@@ -7,7 +7,9 @@
 extern const unsigned char _C[][40];
 extern const unsigned char _p[][40];
 extern const unsigned char _num[][32];
+extern const unsigned char _num16[][16];
 extern const unsigned char Out_Assic[][40];
+extern const unsigned char Out_Assic2[][32];
 extern const unsigned char nBitmapDot[];
 /* Private define ------------------------------------------------------------*/
 #define  ASCII_8X16_MS_Gothic
@@ -16,6 +18,7 @@ extern const unsigned char nBitmapDot[];
 /* Private function prototypes -----------------------------------------------*/
 void GetASCIICode(unsigned char* pBuffer,unsigned char ASCII);
 void GetASCIICode_12(unsigned char* pBuffer,unsigned char ASCII);
+void GetASCIICode_32(unsigned char* pBuffer,unsigned char ASCII);
 #endif 
 
 

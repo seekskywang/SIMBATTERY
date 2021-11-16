@@ -8,7 +8,7 @@
 #include "system_LPC177x_8x.h" 
 
 //#define SDRAM_CONFIG_32BIT	// 外接2颗16位SDRAM
-#define SDRAM_CONFIG_16BIT	// 外接2颗16位SDRAM
+#define SDRAM_CONFIG_16BIT	// 外接1颗16位SDRAM
 #ifdef SDRAM_CONFIG_16BIT 
 #define SDRAM_SIZE               0x2000000	// 256Mbit
 /* LCD color */

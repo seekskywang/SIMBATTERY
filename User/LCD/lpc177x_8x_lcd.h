@@ -90,7 +90,8 @@ void WriteString(uint16_t x0, uint16_t y0, const uint8_t *pcStr, uint8_t mode);
 void WriteString_16(uint16_t x0, uint16_t y0, const uint8_t *pcStr, uint8_t mode);
 void WriteString_12(uint16_t x0, uint16_t y0, const uint8_t *pcStr, uint8_t mode);
 void WriteString_Big(uint16_t x0, uint16_t y0, const uint8_t *pcStr);
- 
+ void WriteString_Big2(uint16_t x0, uint16_t y0, const uint8_t *pcStr);
+ void WriteString_32(uint16_t x0, uint16_t y0, const uint8_t *pcStr, uint8_t mode);
 #endif   /*__LPC177X_8X_LCD_H_*/
 
 
