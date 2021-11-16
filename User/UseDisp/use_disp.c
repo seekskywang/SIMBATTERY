@@ -4231,9 +4231,9 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
 	if(SaveSIM.lang==1)
 	{
-		WriteString_16(LIST1+95, FIRSTLINE+2, "SimBat",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.0)",  0);//
 	}else if(SaveSIM.lang==0){
-		WriteString_16(LIST1+95, FIRSTLINE+2, "模拟电池",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.0)",  0);//
 	}
 	
 	
@@ -6846,14 +6846,21 @@ void Disp_Testvalue(uint8_t siwtch)
 		Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示电压
 		WriteString_Big2(130-40-30,95+10,DispBuf);
 		
-		Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//
+		
 		if(Test_Dispvalue.Imvalue.sign == 0)
 		{
+			Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//
 			WriteString_Big2(300-30,150+10,DispBuf);//显示电流-
+			
+			Hex_Format(0, 3 , 5 , 0);//显示电流+
+			WriteString_Big2(300-30,95+10,DispBuf);
 //			LCD_ShowFontCN_40_55(90-40-30,95+55,16,32,(uint8_t*)Out_Assic2+7*(32*16/8));
 		}else if(Test_Dispvalue.Imvalue.sign == 1){
-			
+			Hex_Format(Test_Dispvalue.Imvalue.Num, 3 , 5 , 0);//
 			WriteString_Big2(300-30,95+10,DispBuf);//显示电流+
+			
+			Hex_Format(0, 3 , 5 , 0);//显示电流-
+			WriteString_Big2(300-30,150+10,DispBuf);
 //			LCD_ShowFontCN_40_55(90-40-30,95+55,16,32,(uint8_t*)Out_Assic2+8*(32*16/8));
 		}
 		
