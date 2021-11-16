@@ -200,7 +200,7 @@ void Power_Process(void)
 //	enable_timer(1);
 //	timer3Init();
 	
-	Set_Compbcd_float();
+//	Set_Compbcd_float();
 	i=0;//œ‘ æ—” ±
 	bootdelay = 50;
 	
@@ -4017,7 +4017,12 @@ void Fac_DebugProcess(void)
 					
 				break;
 				case Key_BIAS:
-					
+					if(SaveSIM.JK5506 == 0)
+					{
+						SaveSIM.JK5506 = 1;
+					}else if(SaveSIM.JK5506 == 1){
+						SaveSIM.JK5506 = 0;
+					}
 				break;
 				case Key_REST:
 					if(SaveSIM.jkflag == 1)

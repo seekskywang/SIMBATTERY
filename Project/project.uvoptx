@@ -119,6 +119,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>PWSTATINFO</Key>
           <Name>200,50,700</Name>
         </SetRegEntry>
@@ -374,6 +378,11 @@
           <count>41</count>
           <WinNumber>1</WinNumber>
           <ItemText>str</ItemText>
+        </Ww>
+        <Ww>
+          <count>42</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PRaw</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -631,6 +640,16 @@
           <count>50</count>
           <WinNumber>2</WinNumber>
           <ItemText>DispBuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>51</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>PRaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>52</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>PRaw</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

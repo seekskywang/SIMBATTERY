@@ -16,7 +16,6 @@
 //==========================================================
 //软件版本：10
 #define SOFTWARE_VERSION		(0x10)
-
 //==========================================================
 //默认出厂编号(0)
 #define DEFAULT_MACHINE_ID 		(0)
@@ -171,6 +170,7 @@ extern uint8_t Comp_flag;
 extern uint8_t Debug_over;
 extern uint8_t mainswitch;
 extern uint8_t Irange;
+extern uint8_t Prange;
 extern uint8_t overflag;
 extern uint8_t busyflag;
 extern uint8_t ptflag;
@@ -496,6 +496,7 @@ typedef struct
 	uint8_t keybeep;
 	uint8_t lang;
 	uint8_t fac_num[10];
+	uint8_t JK5506;
 }SaveSet;
 
 extern SaveSet SaveSIM;

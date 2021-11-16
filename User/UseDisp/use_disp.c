@@ -15,6 +15,7 @@
 #include "lpc177x_8x_rtc.h"
 
 extern u8 primcomp,scedcomp;
+float PRaw;
 uint8_t CorrectionflagC=0,CorrectionflagR=0,Correc_successflag=0;
 const uint8_t Num_1[][9]=
 {"1","2","3","4","5","6","7","8","9"};
@@ -4229,10 +4230,10 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	}
 		
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
-	if(SaveSIM.lang==1)
+	if(SaveSIM.JK5506==1)
 	{
-		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.0)",  0);//
-	}else if(SaveSIM.lang==0){
+		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.0)",  0);//
+	}else if(SaveSIM.JK5506==0){
 		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.0)",  0);//
 	}
 	
@@ -6821,6 +6822,7 @@ void FAN_CTRL(void)
 }
 void Disp_Testvalue(uint8_t siwtch)
 {
+	
 	if(siwtch == 0)
 	{
 		Test_Dispvalue.Vmvalue.Num = 0;
@@ -6837,6 +6839,10 @@ void Disp_Testvalue(uint8_t siwtch)
 		Hex_Format(0, 3 , 5 , 0);//显示电流-
 		WriteString_Big2(300-30,150+10,DispBuf);
 		
+		if(SaveSIM.JK5506 == 0)
+		{
+			Prange = 1;
+		}
 		Hex_Format(0, 3 , 6 , 0);//显示功率
 		WriteString_Big2(130-40-16-30,150+10,DispBuf);
 //		LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
@@ -6864,13 +6870,39 @@ void Disp_Testvalue(uint8_t siwtch)
 //			LCD_ShowFontCN_40_55(90-40-30,95+55,16,32,(uint8_t*)Out_Assic2+8*(32*16/8));
 		}
 		
-		
 		if(Irange == 1)
 		{
-			Test_Dispvalue.Pvalue.Num = (uint32_t)(((float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0))*1000);
+			PRaw = (float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0)*1000;//单位mW
 		}else{
-			Test_Dispvalue.Pvalue.Num = (uint32_t)(((float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0)));
+			PRaw = (float)Test_Dispvalue.Vmvalue.Num/1000.0*((float)Test_Dispvalue.Imvalue.Num/1000.0);//单位mW
 		}
+		
+
+		if(SaveSIM.JK5506 == 0)
+		{
+			Prange = 1;
+			Test_Dispvalue.Pvalue.Num = (uint32_t)(PRaw);
+		}else if(SaveSIM.JK5506 == 1){
+			if(Prange == 1)
+			{
+				if(PRaw < 10)
+				{
+					Prange = 0;
+					Test_Dispvalue.Pvalue.Num = (uint32_t)(PRaw*1000);
+				}else{
+					Test_Dispvalue.Pvalue.Num = (uint32_t)(PRaw);
+				}
+			}else if(Prange == 0){
+				if(PRaw > 100)
+				{
+					Prange = 1;
+					Test_Dispvalue.Pvalue.Num = (uint32_t)(PRaw);
+				}else{
+					Test_Dispvalue.Pvalue.Num = (uint32_t)(PRaw*1000);
+				}
+			}
+		}
+
 		Hex_Format(Test_Dispvalue.Pvalue.Num, 3 , 6 , 0);//显示功率
 		WriteString_Big2(130-40-16-30,150+10,DispBuf);
 		
@@ -6881,13 +6913,16 @@ void Disp_Testvalue(uint8_t siwtch)
 }
 void Disp_Big_MainUnit(uint8_t unit,uint8_t unit1)		//显示主参数单位
 {
-//	const uint8_t nuitnum[]={12,15,16,17,22,14,13};
-//	const uint8_t nuit_nuit[]={18,19,20,2,11,23,22};//F,H,Ω，S r °空格
-//	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS,DISP_UNIT_YPOS,40,55,(uint8_t*)Out_Assic+27*(55*40/8));
+
+	LCD_ShowFontCN_40_55(200-30,95+10,16,32,(uint8_t*)Out_Assic2+0*(32*16/8));//V
 	
-	LCD_ShowFontCN_40_55(200-30,95+10,16,32,(uint8_t*)Out_Assic2+0*(32*16/8));
-	LCD_ShowFontCN_40_55(200-30,150+10,16,32,(uint8_t*)Out_Assic2+6*(32*16/8));
-//	LCD_ShowFontCN_40_55(DISP_UNIT_XPOS+40,DISP_UNIT_YPOS,40,55,(uint8_t*)Out_Assic+28*(55*40/8));
+	if(Prange == 1)
+	{
+		LCD_ShowFontCN_40_55(158,150+10,16,32,(uint8_t*)Out_Assic2+5*(32*16/8));
+	}else{
+		LCD_ShowFontCN_40_55(158,150+10,16,32,(uint8_t*)Out_Assic2+3*(32*16/8));
+	}
+	LCD_ShowFontCN_40_55(158+16,150+10,16,32,(uint8_t*)Out_Assic2+6*(32*16/8));//W
 }
 
 void Disp_Big_SecondUnit(uint8_t unit,uint8_t unit1)	//显示副参数单位
@@ -7952,6 +7987,13 @@ void Savetoeeprom(void)
 
 
 }
+void ReadComp(void)
+{
+	if(SaveSIM.JK5506 > 1)
+	{
+		SaveSIM.JK5506 = 0;
+	}
+}
 void ReadSavedata(void)
 {
 	u8 i;
@@ -7959,6 +8001,7 @@ void ReadSavedata(void)
 	//Saveeeprom_Typedef 
 	pt=&SaveSIM;
 	EEPROM_Read(0, 0, (u8 *)pt, MODE_8_BIT, sizeof(SaveSIM));
+	
 }
 
 

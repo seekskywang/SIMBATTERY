@@ -27,73 +27,135 @@ Project File Date:  09/10/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Open1788'
-compiling use_disp.c...
-..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+compiling test.c...
+..\User\Test\test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
   void EncodeScan();
-..\User\UseDisp\use_disp.c(3360): warning:  #177-D: variable "i"  was declared but never referenced
-        uint32_t i;
-..\User\UseDisp\use_disp.c(7097): warning:  #177-D: variable "i"  was declared but never referenced
-        uint8_t i=3;            
-..\User\UseDisp\use_disp.c(7149): warning:  #177-D: variable "i"  was declared but never referenced
-        uint8_t i=5;
-..\User\UseDisp\use_disp.c(7207): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-        strcpy(USART_RX_BUF,CmdStr[x-1]);
-..\User\UseDisp\use_disp.c(7217): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7221): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7226): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7230): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7246): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7257): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7263): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7269): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7274): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7284): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7203): warning:  #177-D: variable "i"  was declared but never referenced
-        u8 i,len;
-..\User\UseDisp\use_disp.c(7347): warning:  #177-D: variable "Gmode_Vale"  was declared but never referenced
-    uint8_t Gmode_Vale;
-..\User\UseDisp\use_disp.c(7354): warning:  #177-D: variable "tmpFg"  was declared but never referenced
+..\User\Test\test.c(148): warning:  #223-D: function "RecHandle" declared implicitly
+                RecHandle();
+..\User\Test\test.c(161): warning:  #127-D: expected a statement
+  }     
+..\User\Test\test.c(130): warning:  #177-D: variable "addr"  was declared but never referenced
+        uint16_t addr;
+..\User\Test\test.c(131): warning:  #177-D: variable "crc1"  was declared but never referenced
+        static uint16_t crc1;
+..\User\Test\test.c(154): warning:  #177-D: label "err_ret"  was declared but never referenced
+  err_ret:
+..\User\Test\test.c(355): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(363): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(374): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(383): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(398): warning:  #175-D: subscript out of range
+          ComBuf3.send.buf[7+12]=0XBF;
+..\User\Test\test.c(419): warning:  #177-D: variable "BC"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(419): warning:  #177-D: variable "ZX"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(419): warning:  #177-D: variable "FX"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(627): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
+                        len = SerialRemoteHandleL(len1,USART_RX_BUF);
+..\User\Test\test.c(471): warning:  #177-D: variable "t"  was declared but never referenced
+        int t=0;
+..\User\Test\test.c(472): warning:  #550-D: variable "len"  was set but never used
+        uint16_t len;
+..\User\Test\test.c(476): warning:  #177-D: variable "numBlks"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\Test\test.c(476): warning:  #177-D: variable "blkSize"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\Test\test.c(477): warning:  #177-D: variable "inquiryResult"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH],rc;
+..\User\Test\test.c(477): warning:  #177-D: variable "rc"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH],rc;
+..\User\Test\test.c(479): warning:  #550-D: variable "Main_Second"  was set but never used
+        Main_Second_TypeDed Main_Second;//主参数和幅参赛的序号
+..\User\Test\test.c(482): warning:  #177-D: variable "page"  was declared but never referenced
+      uint8_t page=1,i;
+..\User\Test\test.c(482): warning:  #177-D: variable "i"  was declared but never referenced
+      uint8_t page=1,i;
+..\User\Test\test.c(485): warning:  #177-D: variable "TrigFlag"  was declared but never referenced
+        static uint8_t TrigFlag=0;
+..\User\Test\test.c(487): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(1092): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(1504): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(2622): warning:  #177-D: variable "Set_Time"  was declared but never referenced
+      RTC_TIME_Type Set_Time;
+..\User\Test\test.c(3621): warning:  #177-D: variable "set_num"  was declared but never referenced
+      uint8_t set_num;
+..\User\Test\test.c(3622): warning:  #177-D: variable "num_flag"  was declared but never referenced
+      uint8_t num_flag=0;
+..\User\Test\test.c(3623): warning:  #177-D: variable "debugbuff"  was declared but never referenced
+      uint8_t debugbuff[20];
+..\User\Test\test.c(3624): warning:  #177-D: variable "setupflag"  was declared but never referenced
+      uint8_t setupflag=0,sendnum;
+..\User\Test\test.c(3624): warning:  #177-D: variable "sendnum"  was declared but never referenced
+      uint8_t setupflag=0,sendnum;
+..\User\Test\test.c(4103): warning:  #223-D: function "SetErr_ACK" declared implicitly
+                return SetErr_ACK(buf,addr ,CMD_ERR); 
+..\User\Test\test.c(4109): warning:  #940-D: missing return statement at end of non-void function "Uart_Process" 
+  }
+..\User\Test\test.c(4069): warning:  #177-D: variable "temp1"  was declared but never referenced
+      uint32_t temp1;
+..\User\Test\test.c(4070): warning:  #550-D: variable "Gmode_Vale"  was set but never used
+      uint8_t Gmode_Vale;
+..\User\Test\test.c(4071): warning:  #177-D: variable "i"  was declared but never referenced
+        uint8_t i,j;
+..\User\Test\test.c(4071): warning:  #177-D: variable "j"  was declared but never referenced
+        uint8_t i,j;
+..\User\Test\test.c(4074): warning:  #177-D: variable "str"  was declared but never referenced
+        char str[30]={0};
+..\User\Test\test.c(4075): warning:  #177-D: variable "cmd_flag"  was declared but never referenced
+        int cmd_flag=255;
+..\User\Test\test.c(4076): warning:  #177-D: variable "templen"  was declared but never referenced
+        uint8_t templen =0;
+..\User\Test\test.c(4077): warning:  #177-D: variable "tmpFg"  was declared but never referenced
         uint8_t tmpFg;
-..\User\UseDisp\use_disp.c(7355): warning:  #177-D: variable "LM_S_Vale"  was declared but never referenced
+..\User\Test\test.c(4078): warning:  #550-D: variable "LM_S_Vale"  was set but never used
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7355): warning:  #177-D: variable "LOW_I_Vale"  was declared but never referenced
+..\User\Test\test.c(4078): warning:  #550-D: variable "LOW_I_Vale"  was set but never used
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7355): warning:  #177-D: variable "H_L_Vale"  was declared but never referenced
+..\User\Test\test.c(4078): warning:  #550-D: variable "H_L_Vale"  was set but never used
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7355): warning:  #177-D: variable "SWITCH_Vale"  was declared but never referenced
+..\User\Test\test.c(4078): warning:  #550-D: variable "SWITCH_Vale"  was set but never used
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7356): warning:  #177-D: variable "I_ADC_Vale"  was declared but never referenced
+..\User\Test\test.c(4079): warning:  #550-D: variable "I_ADC_Vale"  was set but never used
         uint16_t I_ADC_Vale,V_ADC_Vale;
-..\User\UseDisp\use_disp.c(7356): warning:  #177-D: variable "V_ADC_Vale"  was declared but never referenced
+..\User\Test\test.c(4079): warning:  #550-D: variable "V_ADC_Vale"  was set but never used
         uint16_t I_ADC_Vale,V_ADC_Vale;
-..\User\UseDisp\use_disp.c(7358): warning:  #177-D: variable "Lvl_Vale"  was declared but never referenced
+..\User\Test\test.c(4080): warning:  #550-D: variable "V_CS_Vale"  was set but never used
+        int32_t V_CS_Vale,I_CS_Vale;
+..\User\Test\test.c(4080): warning:  #550-D: variable "I_CS_Vale"  was set but never used
+        int32_t V_CS_Vale,I_CS_Vale;
+..\User\Test\test.c(4081): warning:  #550-D: variable "Lvl_Vale"  was set but never used
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7358): warning:  #177-D: variable "fadcx"  was declared but never referenced
+..\User\Test\test.c(4081): warning:  #177-D: variable "fadcx"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7358): warning:  #177-D: variable "fsingal"  was declared but never referenced
+..\User\Test\test.c(4081): warning:  #177-D: variable "fsingal"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7358): warning:  #177-D: variable "fVale"  was declared but never referenced
+..\User\Test\test.c(4081): warning:  #177-D: variable "fVale"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7957): warning:  #177-D: variable "i"  was declared but never referenced
-        u8 i;
-..\User\UseDisp\use_disp.c(2529): warning:  #177-D: function "Dis_Dot"  was declared but never referenced
-  static  void  Dis_Dot(void)
-..\User\UseDisp\use_disp.c: 30 warnings, 0 errors
+..\User\Test\test.c(4084): warning:  #177-D: variable "pntlen"  was declared but never referenced
+        uint8_t pntlen = 0;
+..\User\Test\test.c(5643): warning:  #550-D: variable "j"  was set but never used
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5643): warning:  #177-D: variable "k"  was declared but never referenced
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5828): warning:  #550-D: variable "bytes_written"  was set but never used
+      uint32_t  bytes_written;
+..\User\Test\test.c(6348): warning:  #550-D: variable "password_flag"  was set but never used
+      char password_flag=0;
+..\User\Test\test.c: 61 warnings, 0 errors
 linking...
-Program Size: Code=73304 RO-data=36552 RW-data=768 ZI-data=19384  
+Program Size: Code=73532 RO-data=36556 RW-data=772 ZI-data=19388  
 FromELF: creating hex file...
 After Build - User command #1: E:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin  -o ..\update\update.bin Output\project.axf
-".\Output\project.axf" - 0 Error(s), 30 Warning(s).
+".\Output\project.axf" - 0 Error(s), 61 Warning(s).
 
 <h2>Software Packages used:</h2>
 
