@@ -2749,6 +2749,7 @@ void Use_SysSetProcess(void)
 //							SaveData.Sys_Setup.Password=1;
 //							break;
 						case 5:
+							SaveSIM.Iraly = 0;
 							break;
 						case 6:
 							if(RTC_TIME_DISP.YEAR<1)
@@ -2909,6 +2910,7 @@ void Use_SysSetProcess(void)
 //							SaveData.Sys_Setup.Password=0;
 //							break;
 						case 5:
+							SaveSIM.Iraly = 1;
 							break;
 						case 6:
 							if(RTC_TIME_DISP.YEAR>RTC_YEAR_MAX)
@@ -3062,6 +3064,9 @@ void Use_SysSetProcess(void)
 					if(Button_Page.page==0)
 					switch(Button_Page.index)
 					{
+						case 5:
+							SaveSIM.Iraly = 2;
+							break;
 						case 11:
 							SaveData.Sys_Setup.Bus_Mode=2;
 							

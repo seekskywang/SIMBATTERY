@@ -481,6 +481,15 @@ const uint8_t Switch_Value[][4+1]=
 	{"NONE"}
 
 };
+
+const uint8_t IRaly_Value[][4+1]=
+{
+	{"LOW "},
+	{"HIGH"},
+	{"AUTO"}
+
+};
+
 const uint8_t CompButton_Tip[][7+1]=  //频率选择时候的下面的提示符号
 {
     {"ON"},
@@ -806,7 +815,7 @@ const uint8_t Sys_Setitem[][10+1]=
 	{"U盘开关 "},
 	{"显示语言 "},
 //	{"口令     "},
-	{"菜单保持 "},
+	{"电流档位 "},
 	{"日期     "},
 //	{"密码     "},
 	{"波特率   "},
@@ -4232,9 +4241,9 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
 	if(SaveSIM.JK5506==1)
 	{
-		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.0)",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.1)",  0);//
 	}else if(SaveSIM.JK5506==0){
-		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.0)",  0);//
+		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.1)",  0);//
 	}
 	
 	
@@ -4305,7 +4314,7 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 //	else
 //		WriteString_16(LIST1+95, FIRSTLINE+SPACE1*4, "----------",  1);
 		
-//菜单保持
+//档位选择
 	Black_Select=(Button_Page->index==5)?1:0;
 	if(Black_Select)
 	{
@@ -4321,7 +4330,7 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	//if(SaveData.Sys_Setup.Menu_Disp==0)
 	//{
 		//sprintf((char *)DispBuf,"%3d",SaveData.User_Correction.Ref_A);
-		WriteString_16(LIST1+95, FIRSTLINE+SPACE1*4+2,"HOLD",  0);
+		WriteString_16(LIST1+95, FIRSTLINE+SPACE1*4+2,IRaly_Value[SaveSIM.Iraly],  0);
 		//显示单位
 //	}
 //	else
@@ -4653,10 +4662,10 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 		case 5:
 			Colour.Fword=White;
 			Colour.black=LCD_COLOR_TEST_BUTON;
-			//for(i=0;i<2;i++)
+			for(i=0;i<3;i++)
 			{
 				
-				WriteString_16(BUTTOM_X_VALUE+14, BUTTOM_Y_VALUE, "HOLD",  0);
+				WriteString_16(BUTTOM_X_VALUE+i*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE, IRaly_Value[i],  0);
 			}
 			break;
 		case 6:
@@ -6850,7 +6859,7 @@ void Disp_Testvalue(uint8_t siwtch)
 	{
 		
 		Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示电压
-		WriteString_Big2(130-40-30,95+10,DispBuf);
+		WriteString_Big2(130-40-30,95+10,DispBuf); 	
 		
 		
 		if(Test_Dispvalue.Imvalue.sign == 0)
@@ -7276,8 +7285,8 @@ void Send_Request(u8 x,u8 req)
 		}break;
 		case 10:
 		{
-			sprintf(buf,"+%07.3f,%07.3f,%07.3f,%03d,%03d",SaveSIM.Voltage.Num/1000.0,SaveSIM.ChargePC.Num/1000.0,SaveSIM.LoadPC.Num/1000.0
-			,SaveSIM.ChargePT.Num,SaveSIM.LoadPT.Num);
+			sprintf(buf,"+%07.3f,%07.3f,%07.3f,%03d,%03d,%01d",SaveSIM.Voltage.Num/1000.0,SaveSIM.ChargePC.Num/1000.0,SaveSIM.LoadPC.Num/1000.0
+			,SaveSIM.ChargePT.Num,SaveSIM.LoadPT.Num,SaveSIM.Iraly);
 			strcat(USART_RX_BUF,buf);
 			len+=strlen(buf)-1;
 			sendflag = 2;

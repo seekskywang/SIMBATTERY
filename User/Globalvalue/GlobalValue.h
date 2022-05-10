@@ -497,6 +497,7 @@ typedef struct
 	uint8_t lang;
 	uint8_t fac_num[10];
 	uint8_t JK5506;
+	uint8_t Iraly;
 }SaveSet;
 
 extern SaveSet SaveSIM;
