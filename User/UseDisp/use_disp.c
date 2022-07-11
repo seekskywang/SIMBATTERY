@@ -4241,9 +4241,15 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	LCD_DrawRect( LIST1+94, FIRSTLINE,SELECT_1END , FIRSTLINE+SPACE1-4 , Colour.black ) ;//SPACE1
 	if(SaveSIM.JK5506==1)
 	{
-		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.1)",  0);//
+		if(SaveSIM.jkflag==0)
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.1)",  0);//
+		else
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.1)",  0);//
 	}else if(SaveSIM.JK5506==0){
-		WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.1)",  0);//
+		if(SaveSIM.jkflag==0)
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.1)",  0);//
+		else
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.1)",  0);//
 	}
 	
 	

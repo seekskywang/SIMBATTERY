@@ -27,73 +27,379 @@ Project File Date:  09/10/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Open1788'
+compiling EX_SDRAM.c...
+compiling main.c...
+..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  void EncodeScan();
+..\User\main.c(107): warning:  #177-D: variable "numBlks"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\main.c(107): warning:  #177-D: variable "blkSize"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\main.c(108): warning:  #177-D: variable "inquiryResult"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH];
+..\User\main.c(111): warning:  #177-D: variable "rc"  was declared but never referenced
+        uint8_t key,rc;
+..\User\main.c(118): warning:  #177-D: variable "buff"  was declared but never referenced
+        char buff[10];
+..\User\main.c: 6 warnings, 0 errors
+compiling timer.c...
+..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  void EncodeScan();
+..\User\timer.c(32): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  extern void EncodeScan();
+..\User\timer.c: 2 warnings, 0 errors
+compiling lpc177x_8x_lcd.c...
+..\User\hzk.h(1100): warning:  #375-D: declaration requires a typedef name
+  };
+..\User\LCD\lpc177x_8x_lcd.c(52): warning:  #177-D: variable "pDst"  was declared but never referenced
+        unsigned long *pDst = (unsigned long *)LCD_VRAM_BASE_ADDR;
+..\User\LCD\lpc177x_8x_lcd.c(527): warning:  #177-D: variable "i"  was declared but never referenced
+      uint16_t i,j;
+..\User\LCD\lpc177x_8x_lcd.c(776): warning:  #177-D: variable "usIndex"  was declared but never referenced
+        uint16_t usIndex=0;
+..\User\LCD\lpc177x_8x_lcd.c(816): warning:  #177-D: variable "usIndex"  was declared but never referenced
+        uint16_t usIndex=0;
+..\User\LCD\lpc177x_8x_lcd.c: 5 warnings, 0 errors
+compiling logo.c...
+compiling TouchPanel.c...
+..\User\TouchPanel\TouchPanel.c(373): warning:  #223-D: function "LCD_SetPoint" declared implicitly
+    LCD_SetPoint(Xpos,Ypos,Blue);     /* Center point */
+..\User\TouchPanel\TouchPanel.c: 1 warning, 0 errors
 compiling use_disp.c...
 ..\User\test/Test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
   void EncodeScan();
 ..\User\UseDisp\use_disp.c(3370): warning:  #177-D: variable "i"  was declared but never referenced
         uint32_t i;
-..\User\UseDisp\use_disp.c(7141): warning:  #177-D: variable "i"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7147): warning:  #177-D: variable "i"  was declared but never referenced
         uint8_t i=3;            
-..\User\UseDisp\use_disp.c(7193): warning:  #177-D: variable "i"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7199): warning:  #177-D: variable "i"  was declared but never referenced
         uint8_t i=5;
-..\User\UseDisp\use_disp.c(7251): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7257): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
         strcpy(USART_RX_BUF,CmdStr[x-1]);
-..\User\UseDisp\use_disp.c(7261): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7267): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7265): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7271): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7270): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7276): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7274): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7280): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7290): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7301): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7296): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         strcat(USART_RX_BUF,buf);
 ..\User\UseDisp\use_disp.c(7307): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         strcat(USART_RX_BUF,buf);
 ..\User\UseDisp\use_disp.c(7313): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7318): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-                        sprintf(&USART_RX_BUF[len],"%1d",req);
-..\User\UseDisp\use_disp.c(7328): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+..\User\UseDisp\use_disp.c(7319): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
                         strcat(USART_RX_BUF,buf);
-..\User\UseDisp\use_disp.c(7247): warning:  #177-D: variable "i"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7324): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+                        sprintf(&USART_RX_BUF[len],"%1d",req);
+..\User\UseDisp\use_disp.c(7334): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+                        strcat(USART_RX_BUF,buf);
+..\User\UseDisp\use_disp.c(7253): warning:  #177-D: variable "i"  was declared but never referenced
         u8 i,len;
-..\User\UseDisp\use_disp.c(7391): warning:  #177-D: variable "Gmode_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7397): warning:  #177-D: variable "Gmode_Vale"  was declared but never referenced
     uint8_t Gmode_Vale;
-..\User\UseDisp\use_disp.c(7398): warning:  #177-D: variable "tmpFg"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7404): warning:  #177-D: variable "tmpFg"  was declared but never referenced
         uint8_t tmpFg;
-..\User\UseDisp\use_disp.c(7399): warning:  #177-D: variable "LM_S_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7405): warning:  #177-D: variable "LM_S_Vale"  was declared but never referenced
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7399): warning:  #177-D: variable "LOW_I_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7405): warning:  #177-D: variable "LOW_I_Vale"  was declared but never referenced
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7399): warning:  #177-D: variable "H_L_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7405): warning:  #177-D: variable "H_L_Vale"  was declared but never referenced
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7399): warning:  #177-D: variable "SWITCH_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7405): warning:  #177-D: variable "SWITCH_Vale"  was declared but never referenced
         uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
-..\User\UseDisp\use_disp.c(7400): warning:  #177-D: variable "I_ADC_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7406): warning:  #177-D: variable "I_ADC_Vale"  was declared but never referenced
         uint16_t I_ADC_Vale,V_ADC_Vale;
-..\User\UseDisp\use_disp.c(7400): warning:  #177-D: variable "V_ADC_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7406): warning:  #177-D: variable "V_ADC_Vale"  was declared but never referenced
         uint16_t I_ADC_Vale,V_ADC_Vale;
-..\User\UseDisp\use_disp.c(7402): warning:  #177-D: variable "Lvl_Vale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7408): warning:  #177-D: variable "Lvl_Vale"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7402): warning:  #177-D: variable "fadcx"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7408): warning:  #177-D: variable "fadcx"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7402): warning:  #177-D: variable "fsingal"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7408): warning:  #177-D: variable "fsingal"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(7402): warning:  #177-D: variable "fVale"  was declared but never referenced
+..\User\UseDisp\use_disp.c(7408): warning:  #177-D: variable "fVale"  was declared but never referenced
         float Lvl_Vale,fadcx,fsingal, fVale;
-..\User\UseDisp\use_disp.c(8008): warning:  #177-D: variable "i"  was declared but never referenced
+..\User\UseDisp\use_disp.c(8014): warning:  #177-D: variable "i"  was declared but never referenced
         u8 i;
 ..\User\UseDisp\use_disp.c(2539): warning:  #177-D: function "Dis_Dot"  was declared but never referenced
   static  void  Dis_Dot(void)
 ..\User\UseDisp\use_disp.c: 30 warnings, 0 errors
+compiling test.c...
+..\User\Test\test.h(74): warning:  #1295-D: Deprecated declaration EncodeScan - give arg types
+  void EncodeScan();
+..\User\Test\test.c(148): warning:  #223-D: function "RecHandle" declared implicitly
+                RecHandle();
+..\User\Test\test.c(161): warning:  #127-D: expected a statement
+  }     
+..\User\Test\test.c(130): warning:  #177-D: variable "addr"  was declared but never referenced
+        uint16_t addr;
+..\User\Test\test.c(131): warning:  #177-D: variable "crc1"  was declared but never referenced
+        static uint16_t crc1;
+..\User\Test\test.c(154): warning:  #177-D: label "err_ret"  was declared but never referenced
+  err_ret:
+..\User\Test\test.c(355): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(363): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(374): warning:  #175-D: subscript out of range
+                      ComBuf3.send.buf[7+11]='F';
+..\User\Test\test.c(383): warning:  #175-D: subscript out of range
+                                ComBuf3.send.buf[7+11]='P';
+..\User\Test\test.c(398): warning:  #175-D: subscript out of range
+          ComBuf3.send.buf[7+12]=0XBF;
+..\User\Test\test.c(419): warning:  #177-D: variable "BC"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(419): warning:  #177-D: variable "ZX"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(419): warning:  #177-D: variable "FX"  was declared but never referenced
+        unsigned char BC,ZX=0,FX=0;
+..\User\Test\test.c(627): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
+                        len = SerialRemoteHandleL(len1,USART_RX_BUF);
+..\User\Test\test.c(471): warning:  #177-D: variable "t"  was declared but never referenced
+        int t=0;
+..\User\Test\test.c(472): warning:  #550-D: variable "len"  was set but never used
+        uint16_t len;
+..\User\Test\test.c(476): warning:  #177-D: variable "numBlks"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\Test\test.c(476): warning:  #177-D: variable "blkSize"  was declared but never referenced
+        uint32_t  numBlks, blkSize;
+..\User\Test\test.c(477): warning:  #177-D: variable "inquiryResult"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH],rc;
+..\User\Test\test.c(477): warning:  #177-D: variable "rc"  was declared but never referenced
+        uint8_t  inquiryResult[INQUIRY_LENGTH],rc;
+..\User\Test\test.c(479): warning:  #550-D: variable "Main_Second"  was set but never used
+        Main_Second_TypeDed Main_Second;//主参数和幅参赛的序号
+..\User\Test\test.c(482): warning:  #177-D: variable "page"  was declared but never referenced
+      uint8_t page=1,i;
+..\User\Test\test.c(482): warning:  #177-D: variable "i"  was declared but never referenced
+      uint8_t page=1,i;
+..\User\Test\test.c(485): warning:  #177-D: variable "TrigFlag"  was declared but never referenced
+        static uint8_t TrigFlag=0;
+..\User\Test\test.c(487): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(1092): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(1504): warning:  #177-D: variable "Uart"  was declared but never referenced
+        Send_Ord_Typedef Uart;
+..\User\Test\test.c(2622): warning:  #177-D: variable "Set_Time"  was declared but never referenced
+      RTC_TIME_Type Set_Time;
+..\User\Test\test.c(3626): warning:  #177-D: variable "set_num"  was declared but never referenced
+      uint8_t set_num;
+..\User\Test\test.c(3627): warning:  #177-D: variable "num_flag"  was declared but never referenced
+      uint8_t num_flag=0;
+..\User\Test\test.c(3628): warning:  #177-D: variable "debugbuff"  was declared but never referenced
+      uint8_t debugbuff[20];
+..\User\Test\test.c(3629): warning:  #177-D: variable "setupflag"  was declared but never referenced
+      uint8_t setupflag=0,sendnum;
+..\User\Test\test.c(3629): warning:  #177-D: variable "sendnum"  was declared but never referenced
+      uint8_t setupflag=0,sendnum;
+..\User\Test\test.c(4108): warning:  #223-D: function "SetErr_ACK" declared implicitly
+                return SetErr_ACK(buf,addr ,CMD_ERR); 
+..\User\Test\test.c(4114): warning:  #940-D: missing return statement at end of non-void function "Uart_Process" 
+  }
+..\User\Test\test.c(4074): warning:  #177-D: variable "temp1"  was declared but never referenced
+      uint32_t temp1;
+..\User\Test\test.c(4075): warning:  #550-D: variable "Gmode_Vale"  was set but never used
+      uint8_t Gmode_Vale;
+..\User\Test\test.c(4076): warning:  #177-D: variable "i"  was declared but never referenced
+        uint8_t i,j;
+..\User\Test\test.c(4076): warning:  #177-D: variable "j"  was declared but never referenced
+        uint8_t i,j;
+..\User\Test\test.c(4079): warning:  #177-D: variable "str"  was declared but never referenced
+        char str[30]={0};
+..\User\Test\test.c(4080): warning:  #177-D: variable "cmd_flag"  was declared but never referenced
+        int cmd_flag=255;
+..\User\Test\test.c(4081): warning:  #177-D: variable "templen"  was declared but never referenced
+        uint8_t templen =0;
+..\User\Test\test.c(4082): warning:  #177-D: variable "tmpFg"  was declared but never referenced
+        uint8_t tmpFg;
+..\User\Test\test.c(4083): warning:  #550-D: variable "LM_S_Vale"  was set but never used
+        uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
+..\User\Test\test.c(4083): warning:  #550-D: variable "LOW_I_Vale"  was set but never used
+        uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
+..\User\Test\test.c(4083): warning:  #550-D: variable "H_L_Vale"  was set but never used
+        uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
+..\User\Test\test.c(4083): warning:  #550-D: variable "SWITCH_Vale"  was set but never used
+        uint8_t LM_S_Vale,LOW_I_Vale,H_L_Vale,SWITCH_Vale;
+..\User\Test\test.c(4084): warning:  #550-D: variable "I_ADC_Vale"  was set but never used
+        uint16_t I_ADC_Vale,V_ADC_Vale;
+..\User\Test\test.c(4084): warning:  #550-D: variable "V_ADC_Vale"  was set but never used
+        uint16_t I_ADC_Vale,V_ADC_Vale;
+..\User\Test\test.c(4085): warning:  #550-D: variable "V_CS_Vale"  was set but never used
+        int32_t V_CS_Vale,I_CS_Vale;
+..\User\Test\test.c(4085): warning:  #550-D: variable "I_CS_Vale"  was set but never used
+        int32_t V_CS_Vale,I_CS_Vale;
+..\User\Test\test.c(4086): warning:  #550-D: variable "Lvl_Vale"  was set but never used
+        float Lvl_Vale,fadcx,fsingal, fVale;
+..\User\Test\test.c(4086): warning:  #177-D: variable "fadcx"  was declared but never referenced
+        float Lvl_Vale,fadcx,fsingal, fVale;
+..\User\Test\test.c(4086): warning:  #177-D: variable "fsingal"  was declared but never referenced
+        float Lvl_Vale,fadcx,fsingal, fVale;
+..\User\Test\test.c(4086): warning:  #177-D: variable "fVale"  was declared but never referenced
+        float Lvl_Vale,fadcx,fsingal, fVale;
+..\User\Test\test.c(4089): warning:  #177-D: variable "pntlen"  was declared but never referenced
+        uint8_t pntlen = 0;
+..\User\Test\test.c(5648): warning:  #550-D: variable "j"  was set but never used
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5648): warning:  #177-D: variable "k"  was declared but never referenced
+        uint8_t i,j,k=0;
+..\User\Test\test.c(5833): warning:  #550-D: variable "bytes_written"  was set but never used
+      uint32_t  bytes_written;
+..\User\Test\test.c(6353): warning:  #550-D: variable "password_flag"  was set but never used
+      char password_flag=0;
+..\User\Test\test.c: 61 warnings, 0 errors
+compiling GlobalValue.c...
+compiling lpc177x_8x_rtc.c...
+compiling key.c...
+compiling rtc.c...
+compiling dma.c...
+..\User\DMA\dma.c(75): warning:  #223-D: function "RecHandle" declared implicitly
+                                                                        RecHandle();
+..\User\DMA\dma.c(17): warning:  #177-D: variable "j"  was declared but never referenced
+          uint8_t i,ch,j;
+..\User\DMA\dma.c: 2 warnings, 0 errors
+compiling system_LPC177x_8x.c...
+compiling core_cm3.c...
+compiling lpc177x_8x_gpio.c...
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(346): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO0IntStatR)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(348): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO2IntStatR)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(350): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO0IntStatF)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(352): warning:  #188-D: enumerated type mixed with another type
+                return (((LPC_GPIOINT->IO2IntStatF)>>pinNum)& 0x1);
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(706): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(714): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(750): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(757): warning:  #186-D: pointless comparison of unsigned integer with zero
+                        if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(785): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(813): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c(836): warning:  #186-D: pointless comparison of unsigned integer with zero
+                if ((byteNum >= 0) && (byteNum <= 3))
+..\Libraries\Drivers\source\lpc177x_8x_gpio.c: 11 warnings, 0 errors
+compiling lpc177x_8x_systick.c...
+compiling lpc177x_8x_clkpwr.c...
+compiling lpc177x_8x_ssp.c...
+compiling lpc177x_8x_uart.c...
+compiling debug_frmwrk.c...
+..\Libraries\Drivers\source\debug_frmwrk.c(493): warning:  #223-D: function "vsprintf" declared implicitly
+      vsprintf((char *)buffer, (char const *)format, vArgs);
+..\Libraries\Drivers\source\debug_frmwrk.c(491): warning:  #177-D: variable "tmp"  was declared but never referenced
+              char      *tmp;
+..\Libraries\Drivers\source\debug_frmwrk.c(617): warning:  #550-D: variable "Status"  was set but never used
+         uint8_t Status,Res;
+..\Libraries\Drivers\source\debug_frmwrk.c(714): warning:  #177-D: variable "buf"  was declared but never referenced
+        uint8_t buf[S_TX_BUF_SIZE];
+..\Libraries\Drivers\source\debug_frmwrk.c(833): warning:  #223-D: function "memcpy" declared implicitly
+        memcpy(buf, _pBuf, _ucLen);
+..\Libraries\Drivers\source\debug_frmwrk.c(882): warning:  #177-D: variable "data"  was declared but never referenced
+        uint32_t data;
+..\Libraries\Drivers\source\debug_frmwrk.c(973): warning:  #177-D: variable "dat"  was declared but never referenced
+      uint8_t Status,dat;
+..\Libraries\Drivers\source\debug_frmwrk.c(1131): warning:  #223-D: function "Send_Request" declared implicitly
+                        Send_Request(10,1);
+..\Libraries\Drivers\source\debug_frmwrk.c(1135): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(1145): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(1158): warning:  #223-D: function "Disp_Test_value" declared implicitly
+                                Disp_Test_value(&Button_Page);
+..\Libraries\Drivers\source\debug_frmwrk.c(689): warning:  #177-D: function "MODS_SendAckOk"  was declared but never referenced
+  static void MODS_SendAckOk(void)
+..\Libraries\Drivers\source\debug_frmwrk.c: 12 warnings, 0 errors
+compiling lpc177x_8x_pinsel.c...
+compiling lpc177x_8x_eeprom.c...
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(109): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint8_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(119): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint16_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(129): warning:  #1441-D: nonstandard cast on lvalue
+                        LPC_EEPROM -> WDATA = *(((uint32_t *)data)++);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(198): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint8_t *)data)++) = (uint8_t)(LPC_EEPROM -> RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(208): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint16_t *)data)++) = (uint16_t)(LPC_EEPROM -> RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c(217): warning:  #1441-D: nonstandard cast on lvalue
+                         *(((uint32_t *)data)++) = (uint32_t)(LPC_EEPROM ->RDATA);
+..\Libraries\Drivers\source\lpc177x_8x_eeprom.c: 6 warnings, 0 errors
+compiling lpc177x_8x_gpdma.c...
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(83): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_MCI->FIFO),                                     // SD Card
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(84): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP0->DR),                                      // SSP0 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(85): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP0->DR),                                      // SSP0 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(86): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP1->DR),                                      // SSP1 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(87): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP1->DR),                                      // SSP1 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(88): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP2->DR),                                      // SSP2 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(89): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_SSP2->DR),                                      // SSP2 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(90): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_ADC->GDR),                                      // ADC
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(91): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_DAC->CR),                                       // DAC
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(92): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART0->/*RBTHDLR.*/THR),        // UART0 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(93): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART0->/*RBTHDLR.*/RBR),        // UART0 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(94): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART1->/*RBTHDLR.*/THR),        // UART1 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(95): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART1->/*RBTHDLR.*/RBR),        // UART1 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(96): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART2->/*RBTHDLR.*/THR),        // UART2 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(97): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART2->/*RBTHDLR.*/RBR),        // UART2 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(98): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM0->MR0),                                     // MAT0.0
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(99): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM0->MR1),                                     // MAT0.1
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(100): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM1->MR0),                                     // MAT1.0
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(101): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM1->MR1),                                     // MAT1.1
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(102): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM2->MR0),                                     // MAT2.0
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(103): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM2->MR1),                                     // MAT2.1
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(104): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_I2S->TXFIFO),                           // I2S Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(105): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_I2S->RXFIFO),                           // I2S Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(108): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART3->/*RBTHDLR.*/THR),        // UART3 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(109): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART3->/*RBTHDLR.*/RBR),        // UART3 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(110): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART4->/*RBTHDLR.*/THR),        // UART4 Tx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(111): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_UART4->/*RBTHDLR.*/RBR),        // UART4 Rx
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(112): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM3->MR0),                                     // MAT3.0
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c(113): warning:  #1296-D: extended constant initialiser used
+                ((uint32_t)&LPC_TIM3->MR1),                                     // MAT3.1
+..\Libraries\Drivers\source\lpc177x_8x_gpdma.c: 29 warnings, 0 errors
+compiling usbhost_fat.c...
+compiling usbhost_lpc17xx.c...
+compiling usbhost_ms.c...
 linking...
-Program Size: Code=73612 RO-data=36564 RW-data=772 ZI-data=19388  
+Program Size: Code=73660 RO-data=36564 RW-data=772 ZI-data=19388  
 FromELF: creating hex file...
 After Build - User command #1: E:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin  -o ..\update\update.bin Output\project.axf
-".\Output\project.axf" - 0 Error(s), 30 Warning(s).
+".\Output\project.axf" - 0 Error(s), 165 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -107,7 +413,7 @@ Package Vendor: Keil
   D:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.6.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:19
 </pre>
 </body>
 </html>
