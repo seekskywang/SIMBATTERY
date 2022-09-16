@@ -4242,14 +4242,14 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	if(SaveSIM.JK5506==1)
 	{
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.1)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.2)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.1)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.2)",  0);//
 	}else if(SaveSIM.JK5506==0){
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.1)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.2)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.1)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.2)",  0);//
 	}
 	
 	

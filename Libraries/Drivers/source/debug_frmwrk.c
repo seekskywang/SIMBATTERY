@@ -1022,13 +1022,13 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P01:
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;
-			if(Irange == 0)
-			{
-				if(graphunit == 1)
-				{
-					value/=1000;
-				}
-			}
+//			if(Irange == 0)
+//			{
+//				if(graphunit == 1)
+//				{
+//					value/=1000;
+//				}
+//			}
 			break;
 	
 		case SLAVE_REG_P02://输出电压
@@ -1036,13 +1036,13 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P03: //输出电流
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;
-			if(Irange == 0)
-			{
-				if(graphunit == 1)
-				{
-					value/=1000;
-				}
-			}
+//			if(Irange == 0)
+//			{
+//				if(graphunit == 1)
+//				{
+//					value/=1000;
+//				}
+//			}
 			break;
 
 		case SLAVE_REG_P04://输出功率
@@ -1050,23 +1050,23 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 		case SLAVE_REG_P05://输入电流
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Imvalue.Num:0;
-			if(Irange == 0)
-			{
-				if(graphunit == 1)
-				{
-					value/=1000;
-				}
-			}
+//			if(Irange == 0)
+//			{
+//				if(graphunit == 1)
+//				{
+//					value/=1000;
+//				}
+//			}
 			break;
 		case SLAVE_REG_P06:
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Imvalue.Num:0;
-			if(Irange == 0)
-			{
-				if(graphunit == 1)
-				{
-					value/=1000;
-				}
-			}
+//			if(Irange == 0)
+//			{
+//				if(graphunit == 1)
+//				{
+//					value/=1000;
+//				}
+//			}
 			break;
 		case SLAVE_REG_P07://输入功率
 			value = (Test_Dispvalue.Imvalue.sign == 0)?Test_Dispvalue.Pvalue.Num/10:0;
@@ -1076,7 +1076,7 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 
 		case SLAVE_REG_P09:
-			value =	0;							/* ??????? */
+			value =	Irange;							/* ??????? */
 			break;
 		case SLAVE_REG_P10:
 			value =	0;	
