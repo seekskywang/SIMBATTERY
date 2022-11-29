@@ -41,6 +41,7 @@ uint8_t spinbitmax;
 uint8_t spindelay;
 uint8_t spinsave;
 uint8_t bootdelay;
+uint8_t spinlock;
 //const uint8_t Disp_Main_Ord[][3]={
 //	{1,1,0},
 //	{1,1,1},
@@ -436,9 +437,11 @@ void EncodeScan()
 		encodertest1 = EncoderA;
 		if(EncoderB != EncoderA)
 		{
-			spintest = 2;
+			if(spinlock == 0)
+				spintest = 2;
 		}else {
-			spintest = 1;
+			if(spinlock == 0)
+				spintest = 1;
 		}
 	}
 //	if(EncoderA==0 && FX == 0)
@@ -528,7 +531,7 @@ void Test_Process(void)
 //			encodertest2 = 1;
 //		}
 //		EncoderHandler();
-		if(spintest != 0)
+		if(spintest != 0 && spinlock == 0)
 		{
 			Key_Beep();
 			if(coder_flag == 0)
@@ -973,7 +976,11 @@ void Test_Process(void)
 					
 				break;
 				case Key_BIAS:
-					
+					spinlock=!spinlock;
+					if(spinlock)
+						Bais_LedOn();
+					else
+						Bais_LedOff();
 				break;
 				case Key_REST:
 					
