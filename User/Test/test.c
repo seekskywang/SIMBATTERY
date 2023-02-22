@@ -30,6 +30,22 @@ uint32_t OldTick;
 const uint8_t Disp_Unit1[]={'p','n','u','m',' ','k','M'};
 const uint8_t Uart_Ordel[]={0x60,0x70,0x71,0x80,0x90,0xa0,0xb0,0xc0,0xe0};
 const uint8_t READDATA[7]={0xAB,0x01,0x06,0x03,0x08,0xbf,'\0'};
+const u32 MaxVoltage[3]={20000,30000,40000};//最大电压
+const u32 MaxCurrent[3]={10000,6000,5000};//最大电流
+
+//测量电压校准点
+const u32 CalTestV[3][6]={
+	{1000,10000,13000,17000,19000,19500},
+	{1000,10000,13000,17000,19000,19500},
+	{1000,10000,13000,17000,19000,19500}
+};
+
+//控制电压校准点
+const u32 CalCtrlV[3][4]={
+	{1000,10000,13000,17000},
+	{1000,10000,13000,17000},
+	{1000,10000,13000,17000}
+};
 extern uint16_t USART_RX_STA;
 uint32_t encodertest1;
 uint32_t encodertest2;
@@ -557,9 +573,9 @@ void Test_Process(void)
 					if(spintest == 1)
 					{
 						SaveSIM.Voltage.Num += pow(10,spinbit);
-						if(SaveSIM.Voltage.Num > 20000)
+						if(SaveSIM.Voltage.Num > MaxVoltage[SaveSIM.Version])
 						{
-							SaveSIM.Voltage.Num = 20000;
+							SaveSIM.Voltage.Num = MaxVoltage[SaveSIM.Version];
 						}
 					}else if(spintest == 2){
 						if(SaveSIM.Voltage.Num < pow(10,spinbit))
@@ -3655,7 +3671,7 @@ void Fac_DebugProcess(void)
 			{
 				if(Button_Page.page == 1)
 				{//电压校正3档
-					if(Button_Page.index>6)
+					if(Button_Page.index>7)
 						Button_Page.index=0;
 					else
 						Button_Page.index++;
@@ -3671,17 +3687,23 @@ void Fac_DebugProcess(void)
 						SaveSIM.Voltage.Num = 13000;
 					}else if(Button_Page.index == 4)
 					{
-						SaveSIM.Voltage.Num = 17000;
+						SaveSIM.Voltage.Num = 18000;
 					}else if(Button_Page.index == 5)
 					{
 						SaveSIM.Voltage.Num = 19000;
 					}else if(Button_Page.index == 6)
 					{
-						SaveSIM.Voltage.Num = 19500;
+						SaveSIM.Voltage.Num = 29000;
+					}else if(Button_Page.index == 7)
+					{
+						SaveSIM.Voltage.Num = 30000;
+					}else if(Button_Page.index == 8)
+					{
+						SaveSIM.Voltage.Num = 39000;
 					}
 					Send_Request(10,1);
 				}else if(Button_Page.page == 2){//电压控制4档
-					if(Button_Page.index>4)
+					if(Button_Page.index>7)
 						Button_Page.index=0;
 					else
 						Button_Page.index++;
@@ -3718,7 +3740,7 @@ void Fac_DebugProcess(void)
 					if(Button_Page.index>0)
 						Button_Page.index--;
 					else
-						Button_Page.index=6;
+						Button_Page.index=8;
 					
 					if(Button_Page.index == 1)
 					{
@@ -3744,7 +3766,7 @@ void Fac_DebugProcess(void)
 					if(Button_Page.index>0)
 						Button_Page.index--;
 					else
-						Button_Page.index=4;
+						Button_Page.index=8;
 					
 					if(Button_Page.index == 1)
 					{
@@ -3781,7 +3803,7 @@ void Fac_DebugProcess(void)
 		
 		if(Disp_flag==1)
 		{
-            Disp_FacCal(&Button_Page);
+      Disp_FacCal(&Button_Page);
 			Disp_flag=0;	
 		}	
 		
@@ -3853,10 +3875,13 @@ void Fac_DebugProcess(void)
                     
                     }
 				break;
-				case Key_FAST:
-					
+				case Key_UP:
+					SaveSIM.Version++;
+					if(SaveSIM.Version>2)
+						SaveSIM.Version=0;
+					Savetoeeprom();
 				break;
-//				case Key_LEFT:
+//				case Key_LEFT: 
 //					
 //				break;
 //				case Key_RIGHT:
@@ -5408,9 +5433,9 @@ Sort_TypeDef Disp_Set_C(Disp_Coordinates_Typedef *Coordinates)
 	Disp_button_Num_A();
 	Sort_num=Disp_NumKeyboard_Set(Coordinates);
 	Sort_num1=Time_Set_Cov(&Sort_num);
-	if(Sort_num1.Num>10000)
+	if(Sort_num1.Num>MaxCurrent[SaveSIM.Version])
 	{
-		Sort_num1.Num = 10000;
+		Sort_num1.Num = MaxCurrent[SaveSIM.Version];
 	}
 	if(Sort_num1.Updata_flag==0)
 	{

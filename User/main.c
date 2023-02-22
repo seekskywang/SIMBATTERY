@@ -116,9 +116,9 @@ int main(void)
 	
 	/* Generate interrupt each 1 ms   */
 	char buff[10];
-	SCB->VTOR  =0x018000 & 0x1FFFFF80;
+	SCB->VTOR  =0x018000 & 0x1FFFFF80;//中断向量偏移
 	NVIC_EnableIRQ(MCI_IRQn);
-	__enable_irq();
+	__enable_irq();//使能中断
 	SysTick_Config(cclk/1000 - 1); 
 	GPIO_IntCmd(0, 1<<19, 1);//p0_19 下降沿中断
 	NVIC_SetPriority(GPIO_IRQn, 1);
@@ -235,7 +235,7 @@ int main(void)
 //				Data_StoreProcess();//数据保存
 //				break;
 			case SYS_STATUS_SETUPTEST:	//测量设置
-                lcd_Clear(LCD_COLOR_TEST_BACK);
+        lcd_Clear(LCD_COLOR_TEST_BACK);
 				Setup_Process();//设置处理
 				break;
 //			case SYS_STATUS_USERDEBUG: //用户校正界面

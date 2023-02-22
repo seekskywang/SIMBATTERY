@@ -177,6 +177,8 @@ extern uint8_t ptflag;
 extern struct MODS_T g_tModS;
 extern uint8_t g_mods_timeout;
 extern uint32_t spintest;
+extern const u32 MaxVoltage[3];
+extern const u32 MaxCurrent[3];
 //数值框属性定义
 //typedef struct
 //{
@@ -488,8 +490,8 @@ typedef struct
 	Sort_TypeDef ChargePT;//充电保护时间
 	Sort_TypeDef LoadPT;//放电保护时间
 	uint8_t qvflag;//快捷电压选项
-	Sort_TypeDef CALV[4];//测量电压校准
-	Sort_TypeDef CTRLV[4];//控制电压校准
+	Sort_TypeDef CALV[10];//测量电压校准
+	Sort_TypeDef CTRLV[10];//控制电压校准
 	Sort_TypeDef CALI[6];//测量电流校准
 	uint8_t resflag;//微调分辨率
 	uint8_t jkflag;
@@ -498,6 +500,7 @@ typedef struct
 	uint8_t fac_num[10];
 	uint8_t JK5506;
 	uint8_t Iraly;
+	uint8_t Version;
 }SaveSet;
 
 extern SaveSet SaveSIM;

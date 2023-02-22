@@ -97,8 +97,10 @@ const uint8_t Fac_Calitem[][14+1]=
 	{"10V   "},
 	{"13V   "},
 	{"18V   "},	
-	{"19V   "},
-	{"19.5V "}
+	{"20V   "},
+	{"29V   "},
+	{"30V   "},
+	{"39V   "},
 };
 
 const uint8_t Fac_ICalitem[][14+1]=
@@ -117,8 +119,10 @@ const uint8_t CtrV_Calitem[][14+1]=
 	{"10V   "},
 	{"15V   "},
 	{"19V   "},
-	{"      "},
-	{"      "}
+	{"21V   "},
+	{"29V   "},
+	{"31V   "},
+	{"39V   "}
 };
 
 const uint8_t Button_TipPage1[][7+1]=  //测试参数选择时候的下面的提示符号
@@ -1074,8 +1078,17 @@ const uint8_t Set_Unit[][5+1]=
 
 
 };
+
+const uint8_t Version_Item[][8]=
+{
+	{"20V10A"},
+	{"30V6A "},
+	{"40V5A "},
+
+};
+
 const uint8_t Disp_Unit[][2+1]=
-{"p","n","u","m"," ","k","M","G",""};
+{"p","n","u","m"," ","k","M","G",""}; 
 
 const uint8_t Disp_Range_Main_NUm[]={0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,3,3,3,2,2,1,1};
 const uint8_t Disp_Range_Main_Disp[][2+1]=
@@ -4242,16 +4255,16 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	if(SaveSIM.JK5506==1)
 	{
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.2)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.3)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.2)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.3)",  0);//
 	}else if(SaveSIM.JK5506==0){
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.2)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.3)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.2)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.3)",  0);//
 	}
-	
+//1.3增加30V6A和40V5A版本；电压增加2段线性校准；电压显示改为跳动误差不超过0.02%时显示设置值
 	
 //合格讯响
 	Black_Select=(Button_Page->index==2)?1:0;
@@ -4818,12 +4831,12 @@ void Disp_FacrCheck_Item(Button_Page_Typedef* Button_Page)
 	
 	if(Button_Page->page == 1)
 	{
-		for(i=0;i<6;i++)
+		for(i=0;i<8;i++)
 		{
 			WriteString_16(0, 26+i*22, Fac_Calitem[i],  0);		
 		}
 	}else if(Button_Page->page == 2){
-		for(i=0;i<6;i++)
+		for(i=0;i<8;i++)
 		{
 			WriteString_16(0, 26+i*22, CtrV_Calitem[i],  0);		
 		}
@@ -4844,19 +4857,24 @@ void Disp_FacrCheck_Item(Button_Page_Typedef* Button_Page)
 	Disp_Button_TestSet(2);
 }
 
+void Disp_Version(void)
+{
+	WriteString_16(180, 2,Version_Item[SaveSIM.Version],  0);
+}
+
 void Disp_FacCal(Button_Page_Typedef* Button_Page)
 {
 	uint32_t i;
 	uint32_t Black_Select;
-	
+	Disp_Version();
 	if(Button_Page->page == 1)
 	{
-		for(i=0;i<6;i++)
+		for(i=0;i<8;i++)
 		{
 			Colour.black=LCD_COLOR_TEST_BACK;
 			LCD_DrawRect(80, 26+i*22,172 ,26+i*22+16 , Colour.black ) ;
 		}
-		for(i=0;i<6;i++)
+		for(i=0;i<8;i++)
 		{
 			Black_Select=(Button_Page->index==(i+1))?1:0;
 			if(Black_Select)
@@ -4873,12 +4891,12 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 			WriteString_16(80+76, 26+i*22, "V",  1);
 		}
 	}else if(Button_Page->page == 2){
-		for(i=0;i<6;i++)
+		for(i=0;i<8;i++)
 		{
 			Colour.black=LCD_COLOR_TEST_BACK;
 			LCD_DrawRect(80, 26+i*22,172 ,26+i*22+16 , Colour.black ) ;
 		}
-		for(i=0;i<4;i++)
+		for(i=0;i<8;i++)
 		{
 			Black_Select=(Button_Page->index==(i+1))?1:0;
 			if(Black_Select)
@@ -4930,6 +4948,8 @@ void Disp_FacCal(Button_Page_Typedef* Button_Page)
 		case 4:
 		case 5:
 		case 6:
+		case 7:
+		case 8:
 			Colour.Fword=White;
 			Colour.black=LCD_COLOR_TEST_BUTON;
 			WriteString_16(BUTTOM_X_VALUE+3*BUTTOM_MID_VALUE+4, BUTTOM_Y_VALUE,"清零",  0);
@@ -5763,9 +5783,9 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 	{
 		if(Time->Unit==0)//单位是毫秒
 		{
-			if(Time->Num>20000)//大于60.000  显示60.000
+			if(Time->Num>MaxVoltage[SaveSIM.Version])//大于60.000  显示60.000
 			{
-				Time->Num=20000;
+				Time->Num=MaxVoltage[SaveSIM.Version];
 				Time->Dot=3;
 			}
 			else
@@ -5893,9 +5913,9 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		}
 		else//单位是秒
 		{
-			if(Time->Num>20000)//
+			if(Time->Num>MaxVoltage[SaveSIM.Version])//
 			{
-				Time->Num=20000;
+				Time->Num=MaxVoltage[SaveSIM.Version];
 			
 			}
 //			else if(Time->Num>=10000)//xx.xxx时显示xx.xxx
@@ -5959,9 +5979,9 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		}
 		else//单位是秒
 		{
-			if(Time->Num>20000)
+			if(Time->Num>MaxVoltage[SaveSIM.Version])
 			{
-				Time->Num=20000;//加一位显示
+				Time->Num=MaxVoltage[SaveSIM.Version];//加一位显示
 				Time->Dot=3;
 				Time->Unit=1;
 				
@@ -6046,11 +6066,11 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 		if(Time->Unit==0)//单位为毫秒时
 		{
 			
-			if(Time->Num>20000)//xxxx.x时 显示最高位xxx
+			if(Time->Num>MaxVoltage[SaveSIM.Version])//xxxx.x时 显示最高位xxx
 			{
 				
 				{
-					Time->Num=20000;	
+					Time->Num=MaxVoltage[SaveSIM.Version];	
 					Time->Dot=3;//因为是毫秒  所以没有小数点
 					Time->Unit=1;
 				}
@@ -6094,7 +6114,7 @@ Sort_TypeDef Time_Set_Cov(Sort_TypeDef *Time)
 	else
 	{
 	
-		Time->Num=20000;
+		Time->Num=MaxVoltage[SaveSIM.Version];
 		Time->Dot=3;
 		Time->Unit=1;
 	
@@ -6835,6 +6855,27 @@ void FAN_CTRL(void)
 	}
 	
 }
+
+//计算显示值和设置值误差，误差超过允许值返回1，否则返回0
+u8 VError(u32 testv,u32 setv)
+{
+	float rate;
+	if(testv > setv)
+	{
+		rate = ((float)(testv - setv))/(float)(setv);
+	}else if(testv < setv){
+		rate = ((float)(setv - testv))/(float)(setv);	
+	}else if(testv == setv){
+		return 0;
+	}
+	if(rate>0.0005)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
 void Disp_Testvalue(uint8_t siwtch)
 {
 	
@@ -6863,8 +6904,13 @@ void Disp_Testvalue(uint8_t siwtch)
 //		LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
 	}else if(siwtch == 1)
 	{
-		
-		Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示电压
+		if(VError(Test_Dispvalue.Vmvalue.Num,SaveSIM.Voltage.Num))
+		{
+			Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示测试电压
+		}else{
+			Hex_Format(SaveSIM.Voltage.Num, 3 , 5 , 0);//显示设置电压
+		}
+//		Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示电压
 		WriteString_Big2(130-40-30,95+10,DispBuf); 	
 		
 		
