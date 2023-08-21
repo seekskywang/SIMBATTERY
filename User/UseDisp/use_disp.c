@@ -7299,7 +7299,7 @@ void Send_Request(u8 x,u8 req)
 	u8 i,len;
 	char buf[50];
 	DE485();
-	busyflag = 1;
+//	busyflag = 1;
 	strcpy(USART_RX_BUF,CmdStr[x-1]);
 	len = strlen(CmdStr[x-1]);
 	switch(x)

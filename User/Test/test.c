@@ -26,6 +26,7 @@ uint8_t USART_RX_BUF[200];
 u8 primcomp,scedcomp;
 uint32_t Tick_10ms=0;
 uint32_t OldTick;
+uint32_t sendcount;
 
 const uint8_t Disp_Unit1[]={'p','n','u','m',' ','k','M'};
 const uint8_t Uart_Ordel[]={0x60,0x70,0x71,0x80,0x90,0xa0,0xb0,0xc0,0xe0};
@@ -651,9 +652,9 @@ void Test_Process(void)
 		//	printf("\r\n\r\n");//插入换行
 			USART_RX_STA=0;			  //清零 虚拟寄存器		  为一下次采集做准备
 		}else{
-			if(mainswitch == 1 && timer0_counter>50 && Disp_Flag == 0 && busyflag == 0)//请求数据
+			if(/*mainswitch == 1 && */timer0_counter>50 && Disp_Flag == 0 && busyflag == 0)//请求数据
 			{
-				
+				sendcount ++;
 				Send_Request(6,0);
 				timer0_counter=0;
 			}

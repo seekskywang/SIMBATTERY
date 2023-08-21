@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>4</nTsel>
+        <nTsel>3</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -384,6 +384,11 @@
           <count>43</count>
           <WinNumber>1</WinNumber>
           <ItemText>Test_Dispvalue,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>44</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sendcount,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

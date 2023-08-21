@@ -114,12 +114,12 @@ void TIMER0_IRQHandler (void)
 	if(count1ms == 10)
 	{
 		Tick_10ms ++;
-		if(mainswitch == 1)
-		{
+//		if(mainswitch == 1)
+//		{
 			timer0_counter++;
-		}else{
-			timer2_counter++;
-		}
+//		}else{
+//			timer2_counter++;
+//		}
 		timer1_counter++;
 		count1ms = 0;
 	}else{

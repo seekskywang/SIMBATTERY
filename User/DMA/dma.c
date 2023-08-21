@@ -104,38 +104,38 @@ void lpc1788_DMA_Init(void)
 {
 //        GPDMA_Channel_CFG_Type GPDMACfg;
 
-		GPDMA_Init();  
-        NVIC_DisableIRQ(DMA_IRQn);               
-        NVIC_SetPriority(DMA_IRQn, ((0x01<<3)|0x01));
-            
-	//DMA USART RX CONFIG	
-        GPDMACfg.ChannelNum = 0;
-        GPDMACfg.SrcMemAddr =0;       
-        GPDMACfg.DstMemAddr = (uint32_t)&DMADest_Buffer;       
-        GPDMACfg.TransferSize = sizeof(DMADest_Buffer);
-        GPDMACfg.TransferType = GPDMA_TRANSFERTYPE_P2M;       
-        GPDMACfg.SrcConn = GPDMA_CONN_UART3_Rx;       
-        GPDMACfg.DstConn = 0;       
-        GPDMACfg.DMALLI = 0;       
+	GPDMA_Init();  
+	NVIC_DisableIRQ(DMA_IRQn);               
+	NVIC_SetPriority(DMA_IRQn, ((0x01<<3)|0x01));
+			
+//DMA USART RX CONFIG	
+	GPDMACfg.ChannelNum = 0;
+	GPDMACfg.SrcMemAddr =0;       
+	GPDMACfg.DstMemAddr = (uint32_t)&DMADest_Buffer;       
+	GPDMACfg.TransferSize = sizeof(DMADest_Buffer);
+	GPDMACfg.TransferType = GPDMA_TRANSFERTYPE_P2M;       
+	GPDMACfg.SrcConn = GPDMA_CONN_UART3_Rx;       
+	GPDMACfg.DstConn = 0;       
+	GPDMACfg.DMALLI = 0;       
 
-        GPDMA_Setup(&GPDMACfg);
-       
-	//DMA USART TX CONFIG	
-        GPDMACfg1.ChannelNum = 1;
-        GPDMACfg1.SrcMemAddr =(uint32_t)&g_tModS.TxBuf;       
-        GPDMACfg1.DstMemAddr = 0;       
-        GPDMACfg1.TransferSize = 23;
-		GPDMACfg1.TransferWidth = 0;
-        GPDMACfg1.TransferType = GPDMA_TRANSFERTYPE_M2P;       
-        GPDMACfg1.SrcConn = 0;       
-        GPDMACfg1.DstConn = GPDMA_CONN_UART3_Tx;       
-        GPDMACfg1.DMALLI = 0;       
-        GPDMA_Setup(&GPDMACfg1);
+	GPDMA_Setup(&GPDMACfg);
+ 
+//DMA USART TX CONFIG	
+	GPDMACfg1.ChannelNum = 1;
+	GPDMACfg1.SrcMemAddr =(uint32_t)&g_tModS.TxBuf;       
+	GPDMACfg1.DstMemAddr = 0;       
+	GPDMACfg1.TransferSize = 23;
+	GPDMACfg1.TransferWidth = 0;
+	GPDMACfg1.TransferType = GPDMA_TRANSFERTYPE_M2P;       
+	GPDMACfg1.SrcConn = 0;       
+	GPDMACfg1.DstConn = GPDMA_CONN_UART3_Tx;       
+	GPDMACfg1.DMALLI = 0;       
+	GPDMA_Setup(&GPDMACfg1);
 //        LPC_SSP0->DMACR |=0x11;//SSP_DMACmd (0, SSP_DMA_RXDMA_EN, ENABLE);
-       
-        NVIC_EnableIRQ(DMA_IRQn);
-        GPDMA_ChannelCmd(0, ENABLE);
-		GPDMA_ChannelCmd(1, DISABLE);
+ 
+	NVIC_EnableIRQ(DMA_IRQn);
+	GPDMA_ChannelCmd(0, ENABLE);
+	GPDMA_ChannelCmd(1, DISABLE);
 }
 
 void DMASendInit(void)
