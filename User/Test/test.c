@@ -3721,6 +3721,18 @@ void Fac_DebugProcess(void)
 					}else if(Button_Page.index == 4)
 					{
 						SaveSIM.Voltage.Num = 19000;
+					}else if(Button_Page.index == 5)
+					{
+						SaveSIM.Voltage.Num = 21000;
+					}else if(Button_Page.index == 6)
+					{
+						SaveSIM.Voltage.Num = 29000;
+					}else if(Button_Page.index == 7)
+					{
+						SaveSIM.Voltage.Num = 31000;
+					}else if(Button_Page.index == 8)
+					{
+						SaveSIM.Voltage.Num = 39000;
 					}
 					Send_Request(10,1);
 				}else if(Button_Page.page == 3){//电流校准
@@ -3781,6 +3793,18 @@ void Fac_DebugProcess(void)
 					}else if(Button_Page.index == 4)
 					{
 						SaveSIM.Voltage.Num = 19000;
+					}else if(Button_Page.index == 5)
+					{
+						SaveSIM.Voltage.Num = 21000;
+					}else if(Button_Page.index == 6)
+					{
+						SaveSIM.Voltage.Num = 29000;
+					}else if(Button_Page.index == 7)
+					{
+						SaveSIM.Voltage.Num = 31000;
+					}else if(Button_Page.index == 8)
+					{
+						SaveSIM.Voltage.Num = 39000;
 					}
 					Send_Request(10,1);
 				}else if(Button_Page.page == 3){//电流测量
