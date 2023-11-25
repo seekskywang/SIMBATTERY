@@ -1032,7 +1032,13 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 			break;
 	
 		case SLAVE_REG_P02://输出电压
-			value = Test_Dispvalue.Vmvalue.Num;
+			if(VError(Test_Dispvalue.Vmvalue.Num,SaveSIM.Voltage.Num))
+			{
+				value = Test_Dispvalue.Vmvalue.Num;
+			}else{
+				value = SaveSIM.Voltage.Num;
+			}
+//			value = Test_Dispvalue.Vmvalue.Num;
 			break;
 		case SLAVE_REG_P03: //输出电流
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;

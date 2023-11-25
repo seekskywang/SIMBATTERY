@@ -4255,17 +4255,18 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	if(SaveSIM.JK5506==1)
 	{
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.4)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.5)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.4)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.5)",  0);//
 	}else if(SaveSIM.JK5506==0){
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.4)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.5)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.4)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.5)",  0);//
 	}
 //1.3增加30V6A和40V5A版本；电压增加2段线性校准；电压显示改为跳动误差不超过0.02%时显示设置值
 //1.4修正控制电压21V开始四个高档没有控制的bug
+//1.5电压误差修正改到千分之一
 //合格讯响
 	Black_Select=(Button_Page->index==2)?1:0;
 	if(Black_Select)
@@ -6868,7 +6869,7 @@ u8 VError(u32 testv,u32 setv)
 	}else if(testv == setv){
 		return 0;
 	}
-	if(rate>0.0005)
+	if(rate>0.005/*0.0005*/)
 	{
 		return 1;
 	}else{

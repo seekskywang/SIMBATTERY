@@ -739,5 +739,5 @@ void ReadSaveData(void);//读取保存参数
 void Check_Calibrate_Limit(void);//校准值检查
 void Hex_Format(uint32_t dat , uint8_t Dot , uint8_t len , uint8_t dispzero);
 extern uint8_t USART_RX_BUF[200];
-
+u8 VError(u32 testv,u32 setv);
 #endif
