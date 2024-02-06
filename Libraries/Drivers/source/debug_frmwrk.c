@@ -1017,9 +1017,14 @@ static uint8_t MODS_ReadRegValue(uint16_t reg_addr, uint8_t *reg_value)
 
 	switch (reg_addr)									/* ??????? */
 	{
-        case SLAVE_REG_P00:
-			value = Test_Dispvalue.Vmvalue.Num;
-			break;
+		case SLAVE_REG_P00:
+			if(VError(Test_Dispvalue.Vmvalue.Num,SaveSIM.Voltage.Num))
+			{
+				value = Test_Dispvalue.Vmvalue.Num;
+			}else{
+				value = SaveSIM.Voltage.Num;
+			}
+		break;
 		case SLAVE_REG_P01:
 			value = (Test_Dispvalue.Imvalue.sign == 1)?Test_Dispvalue.Imvalue.Num:0;
 //			if(Irange == 0)

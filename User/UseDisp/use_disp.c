@@ -14,6 +14,7 @@
 #include "rtc.h"
 #include "lpc177x_8x_rtc.h"
 
+uint32_t datamonitor;
 extern u8 primcomp,scedcomp;
 float PRaw;
 uint8_t CorrectionflagC=0,CorrectionflagR=0,Correc_successflag=0;
@@ -4255,18 +4256,19 @@ void Disp_Sys_value(Button_Page_Typedef* Button_Page)
 	if(SaveSIM.JK5506==1)
 	{
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.5)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506B(1.6)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.5)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506B(1.6)",  0);//
 	}else if(SaveSIM.JK5506==0){
 		if(SaveSIM.jkflag==0)
-			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.5)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "5506(1.6)",  0);//
 		else
-			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.5)",  0);//
+			WriteString_16(LIST1+95, FIRSTLINE+2, "JK5506(1.6)",  0);//
 	}
 //1.3增加30V6A和40V5A版本；电压增加2段线性校准；电压显示改为跳动误差不超过0.02%时显示设置值
 //1.4修正控制电压21V开始四个高档没有控制的bug
 //1.5电压误差修正改到千分之一
+//1.6修正电压数据跳动问题
 //合格讯响
 	Black_Select=(Button_Page->index==2)?1:0;
 	if(Black_Select)
@@ -6861,19 +6863,25 @@ void FAN_CTRL(void)
 u8 VError(u32 testv,u32 setv)
 {
 	float rate;
-	if(testv > setv)
+	if(testv > setv && testv - setv > 20)
 	{
-		rate = ((float)(testv - setv))/(float)(setv);
-	}else if(testv < setv){
-		rate = ((float)(setv - testv))/(float)(setv);	
-	}else if(testv == setv){
+		datamonitor = testv;
 		return 0;
-	}
-	if(rate>0.005/*0.0005*/)
-	{
-		return 1;
 	}else{
-		return 0;
+		if(testv > setv)
+		{
+			rate = ((float)(testv - setv))/(float)(setv);
+		}else if(testv < setv){
+			rate = ((float)(setv - testv))/(float)(setv);	
+		}else if(testv == setv){
+			return 0;
+		}
+		if(rate>0.005/*0.0005*/)
+		{
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 }
 
@@ -6905,6 +6913,9 @@ void Disp_Testvalue(uint8_t siwtch)
 //		LCD_ShowFontCN_40_55(90-40,95+55,40,55,(uint8_t*)Out_Assic+22*(55*40/8));
 	}else if(siwtch == 1)
 	{
+//		Hex_Format(datamonitor, 3 , 5 , 0);//错误数据记录
+//		WriteString_16(250, 2, DispBuf,  1);
+		
 		if(VError(Test_Dispvalue.Vmvalue.Num,SaveSIM.Voltage.Num))
 		{
 			Hex_Format(Test_Dispvalue.Vmvalue.Num, 3 , 5 , 0);//显示测试电压
